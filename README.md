@@ -137,6 +137,8 @@ Developed by Bii Kip
 
 .NET Developer | Financial Systems Specialist
 Experience in SACCO, loan processing, and accounting systems
-📬 Contact
+📬 Contact  
 
 For collaboration or opportunities, feel free to reach out.
+
+biikip.kip@gmail.com
