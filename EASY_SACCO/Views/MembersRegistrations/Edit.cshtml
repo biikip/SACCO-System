@@ -1,0 +1,315 @@
+﻿@model EASY_SACCO.Models.MembersRegistration
+
+@using Syncfusion.EJ2
+@using Newtonsoft.Json
+@{
+    ViewData["Title"] = "Edit Member";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+
+<head>
+    <link href="~/Syncfussion/styles/material.css" rel="stylesheet" />
+    <script src="~/Syncfussion/scripts/ej2.min.js"></script>
+</head>
+
+<div class="row bg-white shadow-sm p-0 mb-4">
+    <div class="col-8">
+        <div style="color:black;font-size:x-large;" class="text-capitalize">Update Member Details</div>
+        <div style="color:black">Modify existing member information</div>
+    </div>
+    <div class="col-4">
+        <div style="margin:8px;padding:8px;text-align:end">
+            <a asp-action="Index" asp-controller="MembersRegistrations" style="background:#0670ba;padding:4px;border-radius:8px;color:white"><i class="fa fa-eye" aria-hidden="true"></i> View Members</a>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="p-4 bg-white shadow-sm rounded">
+        <form asp-action="Edit" class="needs-validation" novalidate enctype="multipart/form-data">
+            <input type="hidden" asp-for="strId" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="row">
+                <!-- Column 1: Personal Information -->
+                <div class="col-md-3">
+                    <h5 class="text-primary">Personal Information</h5>
+                    <div class="mb-3">
+                        <label class="form-label">Member No</label>
+                        <input asp-for="strMemberNo" class="form-control" placeholder="Enter Member No" readonly required />
+                        <span asp-validation-for="strMemberNo" class="text-danger"></span>
+                    </div>
+                    @if (Model.MemberType == "Individual")
+                    {
+                        <div class="mb-3">
+                            <label class="form-label">Surname</label>
+                            <input asp-for="strSurName" class="form-control" placeholder="Enter Surname" required />
+                            <span asp-validation-for="strSurName" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Other Names</label>
+                            <input asp-for="strOtherName" class="form-control" placeholder="Enter Other Names" required />
+                            <span asp-validation-for="strOtherName" class="text-danger"></span>
+                        </div>
+                    }
+                    @if (Model.MemberType != "Individual")
+                    {
+                        <label class="form-label">Group Name</label>
+                        <input asp-for="GroupName" class="form-control form-control-sm" />
+                        <span asp-validation-for="GroupName" class="text-danger small"></span>
+                    }
+                    @if (Model.MemberType == "Individual")
+                    {
+                        <div class="mb-3">
+                            <label class="form-label">Gender</label>
+                            <ejs-dropdownlist id="strGender" ejs-for="strGender" placeholder="Select Gender" dataSource="@ViewBag.strGender">
+                                <e-dropdownlist-fields text="strGender" value="strGender"></e-dropdownlist-fields>
+                            </ejs-dropdownlist>
+                        </div>
+                    }
+                    @if (Model.MemberType == "Individual")
+                    {
+                        <div class="mb-3">
+                            <label class="form-label">Date of Birth</label>
+                            <input asp-for="strDOB" type="date" class="form-control" required />
+                            <span asp-validation-for="strDOB" class="text-danger"></span>
+                        </div>
+                    }
+                    <div class="mb-3">
+                        <label class="form-label">Member Type</label>
+                        <select asp-for="MemberType" class="form-control" required>
+                            <option value="">-- Select Member Type --</option>
+                            <option value="Individual">Individual</option>
+                            <option value="Group / Corporate">Group / Corporate</option>
+                        </select>
+                        <span asp-validation-for="MemberType" class="text-danger"></span>
+                    </div>
+                    @if (Model.MemberType == "Individual")
+                    {
+                        <div class="mb-3">
+                            <label class="form-label">KRA PIN</label>
+                            <input asp-for="KraPin" class="form-control form-control-sm" />
+                            <span asp-validation-for="KraPin" class="text-danger"></span>
+                        </div>                        
+                    }                    
+                    @if (Model.MemberType != "Individual")
+                    {
+                        <div class="mb-3">
+                            <label class="form-label">Chairman Name</label>
+                            <input asp-for="ChairmanName" class="form-control" placeholder="Enter Name" />
+                            <span asp-validation-for="ChairmanName" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Chairman ID No</label>
+                            <input asp-for="ChairmanIDNO" class="form-control" placeholder="Enter IDNO" />
+                            <span asp-validation-for="ChairmanIDNO" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Chairman Phone No</label>
+                            <input asp-for="ChairmanPhoneNo" class="form-control" placeholder="Enter Phoneno" />
+                            <span asp-validation-for="ChairmanPhoneNo" class="text-danger"></span>
+                        </div>
+                    }
+                </div>                     
+               @if (Model.MemberType != "Individual")
+                {
+                       <!-- Column 2: Contact Information -->
+                    <div class="col-md-3">
+                        <h5 class="text-primary">Contact Information</h5>
+                            <!-- Treasurer -->
+                            <div class="md-3">
+                                <label class="form-label">Treasurer Name</label>
+                            <input asp-for="TreasurerName" class="form-control" placeholder="Enter Name" />
+                                <span asp-validation-for="TreasurerName" class="text-danger"></span>
+                            </div>
+                            <div class="md-3">
+                                <label class="form-label">Treasurer ID No</label>
+                            <input asp-for="TreasurerIDNO" class="form-control" placeholder="Enter IDNO" />
+                                <span asp-validation-for="TreasurerIDNO" class="text-danger"></span>
+                            </div>
+                            <div class="md-3">
+                                <label class="form-label">Treasurer Phone No</label>
+                            <input asp-for="TreasurerPhoneNo" class="form-control" placeholder="Enter PhoneNo" />
+                                <span asp-validation-for="TreasurerPhoneNo" class="text-danger"></span>
+                            </div>
+
+                            <!-- Secretary -->
+                            <div class="md-3">
+                                <label class="form-label">Secretary Name</label>
+                            <input asp-for="SecretaryName" class="form-control" placeholder="Enter Name" />
+                                <span asp-validation-for="SecretaryName" class="text-danger"></span>
+                            </div>
+                            <div class="md-3">
+                                <label class="form-label">Secretary ID No</label>
+                            <input asp-for="SecretaryIDNO" class="form-control" placeholder="Enter IDNO" />
+                                <span asp-validation-for="SecretaryIDNO" class="text-danger"></span>
+                            </div>
+                            <div class="md-3">
+                                <label class="form-label">Secretary Phone No</label>
+                            <input asp-for="SecretaryPhoneNo" class="form-control" placeholder="Enter PhoneNo" />
+                                <span asp-validation-for="SecretaryPhoneNo" class="text-danger"></span>
+                            </div>
+
+                        </div>
+                    }
+                @if (Model.MemberType == "Individual")
+                {
+                    <!-- Column 2: Contact Information -->
+                    <div class="col-md-3">
+                        <h5 class="text-primary">Contact Information</h5>
+                        <div class="mb-3">
+                            <label class="form-label">Phone No</label>
+                            <input asp-for="strPhoneNo" class="form-control" placeholder="Enter Phone Number" required />
+                            <span asp-validation-for="strPhoneNo" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input asp-for="strEmail" type="email" class="form-control" placeholder="Enter Email" required />
+                            <span asp-validation-for="strEmail" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Address</label>
+                            <input asp-for="strAddress" class="form-control" placeholder="Enter Address" required />
+                            <span asp-validation-for="strAddress" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">ID NO</label>
+                            <input asp-for="strIdNo" class="form-control" placeholder="Enter Idno" required />
+                            <span asp-validation-for="strIdNo" class="text-danger"></span>
+                        </div>
+                    </div>
+                }
+
+                <!-- Column 3: Scanned ID & Group Cert -->
+                <div class="col-md-3 text-center">
+                    <h5 class="text-primary border-bottom pb-2 mb-3">Documents</h5>
+                    @if (Model.MemberType == "Individual")
+                    {
+                        <!-- Scanned ID -->
+                        <div class="mb-3">
+                            <label class="form-label">Current Scanned ID</label>
+                            <div class="mb-3">
+                                @if (!string.IsNullOrEmpty(Model.ScannedIdPath))
+                                {
+                                    <img src="@Model.ScannedIdPath" width="150" height="150" class="border rounded-circle" />
+                                }
+                                else
+                                {
+                                    <img src="https://via.placeholder.com/150?text=No+ID" width="150" height="150" class="border rounded-circle" />
+                                }
+                            </div>
+                            <input asp-for="ScannedIdPath" type="hidden" />
+                            <input asp-for="ImageFile" type="file" class="form-control" accept="image/*,.pdf" />
+                            <span asp-validation-for="ImageFile" class="text-danger"></span>
+                        </div>
+                    }
+                    @if (Model.MemberType == "Group / Corporate")
+                    {
+                        <!-- Scanned Group Certificate -->
+                        <div class="mb-3">
+                            <label class="form-label">Current Group Certificate</label>
+                            <div class="mb-3">
+                                @if (!string.IsNullOrEmpty(Model.GroupCertPath))
+                                {
+                                    <img src="@Model.GroupCertPath" width="150" height="150" class="border rounded" />
+                                }
+                                else
+                                {
+                                    <img src="https://via.placeholder.com/150?text=No+Cert" width="150" height="150" class="border rounded" />
+                                }
+                            </div>
+                            <input asp-for="GroupCertPath" type="hidden" />
+                            <input asp-for="GroupCertFile" type="file" class="form-control" accept="image/*,.pdf" />
+                            <span asp-validation-for="GroupCertFile" class="text-danger"></span>
+                        </div>
+                    }
+                </div>
+                @if (Model.MemberType == "Individual")
+                {
+                    <!-- Column 4: Passport Photo -->
+                    <div class="col-md-3 text-center">
+                        <h5 class="text-primary border-bottom pb-2 mb-3">Passport Photo</h5>
+
+                        <!-- Passport Photo -->
+                        <div class="mb-3">
+                            <label class="form-label">Current Passport Photo</label>
+                            <div class="mb-3">
+                                @if (!string.IsNullOrEmpty(Model.PassportPhotoPath))
+                                {
+                                    <img src="@Model.PassportPhotoPath" width="150" height="150" class="border rounded-circle" />
+                                }
+                                else
+                                {
+                                    <img src="https://via.placeholder.com/150?text=No+Photo" width="150" height="150" class="border rounded-circle" />
+                                }
+                            </div>
+                            <input asp-for="PassportPhotoPath" type="hidden" />
+                            <input asp-for="PassportPhotoFile" type="file" class="form-control" accept="image/*" />
+                            <span asp-validation-for="PassportPhotoFile" class="text-danger"></span>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-success w-50">Update Member</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    function strGender(e) {
+        var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strGender', 'startswith', e.text, true) : query;
+        e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strGender)), query);
+    }
+
+    function strStation(e) {
+        var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strStationName', 'startswith', e.text, true) : query;
+        e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strStation)), query);
+    }
+    function strMemberType(e) {
+        var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strMemberType', 'startswith', e.text, true) : query;
+        e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strMemberType)), query);
+    }
+    function strMaritalstatus(e) {
+        var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strMaritalStatus', 'startswith', e.text, true) : query;
+        e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strMaritalstatus)), query);
+    }
+    function strAgenId(e) {
+        var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strFullName', 'startswith', e.text, true) : query;
+        e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strAgenId)), query);
+    }
+    function strCIGGroupId(e) {
+        var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strName', 'startswith', e.text, true) : query;
+        e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strCIGGroupId)), query);
+    }
+    function strCounty(e) {
+        var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strCounty', 'startswith', e.text, true) : query;
+        e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strCounty)), query);
+    }
+    function strCompanyCode(e) {
+        var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strCompanyName', 'startswith', e.text, true) : query;
+        e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strCompanyCode)), query);
+    }
+    function strActiveStatus(e) {
+        var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strStatus', 'startswith', e.text, true) : query;
+        e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strActiveStatus)), query);
+    }
+</script>
+<ejs-scripts></ejs-scripts>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

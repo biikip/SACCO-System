@@ -1,0 +1,386 @@
+﻿@using Microsoft.AspNetCore.Http;
+@using Microsoft.AspNetCore.Http.Extensions;
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+    var userRole = HttpContextAccessor.HttpContext.Session.GetString("UserType");
+}
+
+<style>
+    .card {
+        border: none;
+        border-radius: 1rem;
+        transition: all 0.3s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .card .card-body {
+            position: relative;
+            overflow: hidden;
+        }
+
+    .text-muted {
+        font-size: 0.9rem;
+    }
+
+    .btn-custom {
+        background: #0d6efd;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+    }
+
+        .btn-custom:hover {
+            background: #0b5ed7;
+            color: #fff;
+        }
+
+    .wave-svg {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 50px;
+    }
+
+    .modal-footer a {
+        background: #dc3545;
+        color: #fff !important;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 50px;
+    }
+
+        .modal-footer a:hover {
+            background: #c82333;
+            color: #fff !important;
+        }
+
+    .section-header {
+        font-weight: 700;
+        font-size: 1.1rem;
+        letter-spacing: 0.5px;
+        color: #6c757d;
+    }
+</style>
+
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row bg-white py-3 px-4 align-items-center border-bottom shadow-sm mb-4 rounded">
+        <div class="col">
+            <h2 class="text-capitalize text-dark font-weight-bold mb-0">Dashboard</h2>
+        </div>
+        <div class="col text-right">
+            <span class="text-muted">@DateTime.UtcNow.AddHours(3).ToString("dddd, MMM dd yyyy")</span>
+        </div>
+    </div>
+
+    <!-- Welcome Card -->
+    <div class="row mb-4">
+        <div class="col">
+            <div class="card shadow-sm py-3 px-4 d-flex justify-content-between flex-row align-items-center">
+                <div>
+                    <h5 class="mb-1 text-dark">Welcome back,</h5>
+                    <h4 class="font-weight-bold text-primary">@EASY_SACCO.Controllers.HomeController.Username</h4>
+                </div>
+                <div>
+                    <a class="btn btn-custom" href="#" data-toggle="modal" data-target="#logoutModal">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Sign Out
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row">
+        <!-- Members -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <a href="@Url.Action("TotalMemberDetails", "Home")" style="text-decoration: none;">
+                <div class="card shadow-sm h-100 border-0 position-relative overflow-hidden">
+                    <div class="card-body">
+                        <div class="text-xs font-weight-bold text-uppercase text-primary mb-2">Members</div>
+                        <h4 class="font-weight-bold text-dark">@ViewBag.TotalMembers</h4>
+                        <p class="text-muted small">Total Members</p>
+                    </div>
+                    <svg class="position-absolute bottom-0 start-0 w-100" style="height: 50px;" viewBox="0 0 1440 320">
+                        <path fill="#0d6efd" fill-opacity="0.2" d="M0,256L48,240C96,224,192,192,288,197.3C384,203,480,245,576,234.7C672,224,768,160,864,133.3C960,107,1056,117,1152,149.3C1248,181,1344,235,1392,261.3L1440,288L1440,0L0,0Z"></path>
+                    </svg>
+                </div>
+            </a>
+        </div>
+        <!-- Savings -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <a href="@Url.Action("SavingDetails", "Home")" style="text-decoration: none;">
+                <div class="card shadow-sm h-100 border-0 position-relative overflow-hidden">
+                    <div class="card-body">
+                        <div class="text-xs font-weight-bold text-uppercase text-success mb-2">Savings</div>
+                        <h4 class="font-weight-bold text-dark">@ViewBag.Savings</h4>
+                        <p class="text-muted small">Current Savings</p>
+                    </div>
+                    <svg class="position-absolute bottom-0 start-0 w-100" style="height: 50px;" viewBox="0 0 1440 320">
+                        <path fill="#198754" fill-opacity="0.2" d="M0,256L48,240C96,224,192,192,288,197.3C384,203,480,245,576,234.7C672,224,768,160,864,133.3C960,107,1056,117,1152,149.3C1248,181,1344,235,1392,261.3L1440,288L1440,0L0,0Z"></path>
+                    </svg>
+                </div>
+            </a>
+        </div>
+
+        <!-- Registration Fees -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <a href="@Url.Action("RegistrationFeeDetails", "Home")" style="text-decoration: none;">
+                <div class="card shadow-sm h-100 border-0 position-relative overflow-hidden">
+                    <div class="card-body">
+                        <div class="text-xs font-weight-bold text-uppercase text-info mb-2">Registration Fees</div>
+                        <h4 class="font-weight-bold text-dark">@ViewBag.FEE</h4>
+                        <p class="text-muted small">Total Collection</p>
+                    </div>
+                    <svg class="position-absolute bottom-0 start-0 w-100" style="height: 50px;" viewBox="0 0 1440 320">
+                        <path fill="#0dcaf0" fill-opacity="0.2" d="M0,256L48,240C96,224,192,192,288,197.3C384,203,480,245,576,234.7C672,224,768,160,864,133.3C960,107,1056,117,1152,149.3C1248,181,1344,235,1392,261.3L1440,288L1440,0L0,0Z"></path>
+                    </svg>
+                </div>
+            </a>
+        </div>
+
+        <!-- Management Fees -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <a href="@Url.Action("TotalShareCapitalDetails", "Home")" style="text-decoration: none;">
+                <div class="card shadow-sm h-100 border-0 position-relative overflow-hidden">
+                    <div class="card-body">
+                        <div class="text-xs font-weight-bold text-uppercase text-warning mb-2">Total Shares</div>
+                        <h4 class="font-weight-bold text-dark">@ViewBag.Capital</h4>
+                        <p class="text-muted small">Total Payments</p>
+                    </div>
+                    <svg class="position-absolute bottom-0 start-0 w-100" style="height: 50px;" viewBox="0 0 1440 320">
+                        <path fill="#ffc107" fill-opacity="0.2" d="M0,256L48,240C96,224,192,192,288,197.3C384,203,480,245,576,234.7C672,224,768,160,864,133.3C960,107,1056,117,1152,149.3C1248,181,1344,235,1392,261.3L1440,288L1440,0L0,0Z"></path>
+                    </svg>
+                </div>
+            </a>
+        </div>
+
+    </div>
+    @* <div class="row">
+        <!-- Members -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <a href="@Url.Action("TotalLoansTaken", "Home")" style="text-decoration: none;">
+                <div class="card shadow-sm h-100 border-0 position-relative overflow-hidden">
+                    <div class="card-body">
+                        <div class="text-xs font-weight-bold text-uppercase text-primary mb-2">Loans Taken</div>
+                        <h4 class="font-weight-bold text-dark">@ViewBag.TotalLoansTaken</h4>
+                        <p class="text-muted small">Total Loans Taken</p>
+                    </div>
+                    <svg class="position-absolute bottom-0 start-0 w-100" style="height: 50px;" viewBox="0 0 1440 320">
+                        <path fill="#0d6efd" fill-opacity="0.2" d="M0,256L48,240C96,224,192,192,288,197.3C384,203,480,245,576,234.7C672,224,768,160,864,133.3C960,107,1056,117,1152,149.3C1248,181,1344,235,1392,261.3L1440,288L1440,0L0,0Z"></path>
+                    </svg>
+                </div>
+            </a>
+        </div>
+        <!-- Savings -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <a href="@Url.Action("TotalLoanBalances", "Home")" style="text-decoration: none;">
+                <div class="card shadow-sm h-100 border-0 position-relative overflow-hidden">
+                    <div class="card-body">
+                        <div class="text-xs font-weight-bold text-uppercase text-success mb-2">Balances</div>
+                        <h4 class="font-weight-bold text-dark">@ViewBag.TotalLoanBalances</h4>
+                        <p class="text-muted small">Loan Balances</p>
+                    </div>
+                    <svg class="position-absolute bottom-0 start-0 w-100" style="height: 50px;" viewBox="0 0 1440 320">
+                        <path fill="#198754" fill-opacity="0.2" d="M0,256L48,240C96,224,192,192,288,197.3C384,203,480,245,576,234.7C672,224,768,160,864,133.3C960,107,1056,117,1152,149.3C1248,181,1344,235,1392,261.3L1440,288L1440,0L0,0Z"></path>
+                    </svg>
+                </div>
+            </a>
+        </div>
+
+        <!-- Registration Fees -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <a href="@Url.Action("TotalLoansPaid", "Home")" style="text-decoration: none;">
+                <div class="card shadow-sm h-100 border-0 position-relative overflow-hidden">
+                    <div class="card-body">
+                        <div class="text-xs font-weight-bold text-uppercase text-info mb-2">Total Loans Paid</div>
+                        <h4 class="font-weight-bold text-dark">@ViewBag.TotalLoansPaid</h4>
+                        <p class="text-muted small">Loans Paid</p>
+                    </div>
+                    <svg class="position-absolute bottom-0 start-0 w-100" style="height: 50px;" viewBox="0 0 1440 320">
+                        <path fill="#0dcaf0" fill-opacity="0.2" d="M0,256L48,240C96,224,192,192,288,197.3C384,203,480,245,576,234.7C672,224,768,160,864,133.3C960,107,1056,117,1152,149.3C1248,181,1344,235,1392,261.3L1440,288L1440,0L0,0Z"></path>
+                    </svg>
+                </div>
+            </a>
+        </div>
+
+        <!-- Management Fees -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <a href="@Url.Action("TotalLoannees", "Home")" style="text-decoration: none;">
+                <div class="card shadow-sm h-100 border-0 position-relative overflow-hidden">
+                    <div class="card-body">
+                        <div class="text-xs font-weight-bold text-uppercase text-warning mb-2">Total Loanees</div>
+                        <h4 class="font-weight-bold text-dark">@ViewBag.TotalLoannees</h4>
+                        <p class="text-muted small">Total Loanees</p>
+                    </div>
+                    <svg class="position-absolute bottom-0 start-0 w-100" style="height: 50px;" viewBox="0 0 1440 320">
+                        <path fill="#ffc107" fill-opacity="0.2" d="M0,256L48,240C96,224,192,192,288,197.3C384,203,480,245,576,234.7C672,224,768,160,864,133.3C960,107,1056,117,1152,149.3C1248,181,1344,235,1392,261.3L1440,288L1440,0L0,0Z"></path>
+                    </svg>
+                </div>
+            </a>
+        </div>
+
+    </div> *@
+    <!-- Chart Section -->
+    <div class="row">
+        <div class="col-xl-6 col-md-6 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="text-primary font-weight-bold mb-3">Membership</h5>
+                    <canvas id="membershipChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6 col-md-6 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                        <h5 class="card-title">SACCO Financial Overview</h5>
+                        <canvas id="saccoChart"></canvas>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content shadow-sm">
+                <div class="modal-header">
+                    <h5 class="modal-title">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary rounded-pill" type="button" data-dismiss="modal">Cancel</button>
+                    <a asp-action="LogOut" asp-controller="Home">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+    .custom-container {
+        max-width: 600px; /* Adjust width as needed */
+        width: 100%;
+    }</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    fetch('/Home/GetMonthlyRegistrations')
+        .then(response => response.json())
+        .then(data => {
+            console.log("Chart Data:", data); // Debugging
+
+            if (!Array.isArray(data) || data.length === 0) {
+                console.warn("No membership data found!");
+                return;
+            }
+
+            // Ensure data is correctly formatted
+            const labels = data.map(d => d.month); // Use only month names
+            const values = data.map(d => Number(d.count) || 0);
+
+            // Destroy previous chart if exists
+            if (window.myChart) {
+                window.myChart.destroy();
+            }
+
+            // Create new Chart instance
+            const ctx = document.getElementById('membershipChart').getContext('2d');
+            window.myChart = new Chart(ctx, {
+                type: 'line',  // Change from 'bar' to 'line'
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Members',
+                        data: values,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)', // Light blue fill
+                        borderColor: 'rgba(54, 162, 235, 1)', // Blue line
+                        borderWidth: 2,
+                        pointRadius: 5,
+                        pointBackgroundColor: 'blue',
+                        fill: true, // Fill area under the line
+                        tension: 0.4 // Smooth curves
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            suggestedMax: Math.max(...values) + 5 // Adjust max value dynamically
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => console.error("Error fetching chart data:", error));
+        const ctx = document.getElementById('saccoChart').getContext('2d');
+    const saccoChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Savings', 'Registration Fees', 'Share Capital'],
+            datasets: [{
+                label: 'Amount (KES)',
+                data: [
+               @ViewBag.Savingss,
+               @ViewBag.Feess,
+               @ViewBag.Capitals
+                ],
+                backgroundColor: [
+                    'rgba(25, 135, 84, 0.7)',     // Green
+                    'rgba(13, 202, 240, 0.7)',    // Blue
+                    'rgba(255, 193, 7, 0.7)'      // Yellow
+                ],
+                borderColor: [
+                    'rgba(25, 135, 84, 1)',
+                    'rgba(13, 202, 240, 1)',
+                    'rgba(255, 193, 7, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return 'KES ' + value.toLocaleString();
+                        }
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return 'KES ' + context.parsed.y.toLocaleString();
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+</script>

@@ -1,0 +1,182 @@
+﻿@model List<EASY_SACCO.Models.RepayMentTable>
+
+@{
+    ViewData["Title"] = "Statement";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+<div class="row" style="background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+    <div class="col-8">
+
+        <div style="margin:8px;padding:8px;text-align:left">
+            <div style="color:black;font-size:xx-large;" class="text-capitalize"> Loan Statement </div>
+            <div style="color:gray;font-size:small;" class="text-capitalize"> Loan Statement </div>
+        </div>
+
+    </div>
+    <div class="col-4">
+        <div style="margin:8px;padding:8px;text-align:end">
+            <a asp-action="Shares_loansEnquiry" asp-controller="ShareTransactions" style="background:#0670ba;padding:4px;border-radius:8px;color:white"><i class="fa fa-eye" aria-hidden="true"></i> Back To Enquiry </a>
+        </div>
+    </div>
+</div>
+<br />
+<div class="container-fluid">
+   <div style="margin:2px;padding:2px;background-color:white">
+    <div class="row g-3 mb-4 align-items-center justify-content-between">
+        <div class="col-auto" style="margin:6px">
+        </div>
+        <div class="col-auto" style="margin:6px">
+
+            <div class="page-utilities">
+                <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+
+
+                    <div class="col-auto">
+
+                        <button type="button" class=" btn-primary btn-sm" onClick="printCertificate()">Print  <span class="fa fa-print"></span></button>
+
+
+                    </div>
+                    <div class="col-auto">
+
+                        <a asp-action="Shares_loansEnquiry" asp-controller="ShareTransactions" class=" btn-info btn-sm">Go Back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+  <div id="DefaultersLoanForm">
+    <br />
+        <div style="font-size:x-small;text-align:center"><h4 style="margin:2px;color:black"><strong>@ViewBag.saccos</strong></h4><br /></div>
+    <br />
+        <div style="font-size:x-small;text-align:center"><h4 style="margin:2px;color:black"><u>LOAN STATEMENT</u></h4><br /></div>
+    <br />
+    <div class="row">
+     <div class="col-md-3">
+                    <label style="color:black">Loan Number:<strong style="color:black">@ViewBag.loano</strong></label>
+           
+        </div>
+        <div class="col-md-3">
+                    <label style="color:black">Names:<strong style="color:black">@ViewBag.namss</strong></label>
+
+        </div>
+        <div class="col-md-3">
+                    <label style="color:black">Member Number:<strong style="color:black">@ViewBag.memberno</strong></label>
+
+        </div>
+    </div>
+    <div style="padding-top:3px;margin-top:2px;background-color:#ef3e74;height:7px;opacity:0.4"></div>
+            <div class="row">
+                <div class="col-md-3">
+                    &nbsp;
+                    <label style="color:black"> Total Loan Amount:<strong style="color:black">@Math.Round(ViewBag.loans,2)</strong></label>
+                </div>
+                    <div class="col-md-3">
+                        &nbsp;
+                        <label style="color:black"> Repay Period:<strong style="color:black">@ViewBag.repaypriod</strong></label>
+                    </div>
+                    
+            </div>
+    <div style="padding:2px;margin-top:10px;background-color:darkcyan;height:7px"></div>
+
+    <br />
+   
+        <table class="table   table-striped table-bordered  table-sm" style="color:black">
+                <thead style="background-color:whitesmoke;color:black;border:2px solid black">
+
+                <tr>
+
+                       <th style="border:2px solid black">
+                        Member No
+                    </th>
+
+                       <th style="border:2px solid black">
+                        Date Received
+                    </th>
+                       <th style="border:2px solid black">
+                        Principal
+                    </th>
+                      <th style="border:2px solid black">
+                        Interest
+                    </th>
+                      <th style="border:2px solid black">
+                        Total Repayment
+                    </th>
+                        <th style="border:2px solid black">
+                       Loan Balance
+                    </th>
+                     <th style="border:2px solid black">
+                       Remarks
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Any())
+
+                {
+                    @foreach (var item in Model)
+                    {
+                       
+
+                     <tr style="border:2px solid black">
+
+                                    <td style="border:2px solid black">
+                                @item.MemberNo
+                            </td>
+                          
+                                    <td style="border:2px solid black">
+                                @item.DateReceived.ToShortDateString()
+                            </td>
+                           
+                                    <td style="border:2px solid black">
+                                @Math.Round(item.Principal,2)
+                            </td>
+                                    <td style="border:2px solid black">
+                                @Math.Round(item.Interest,2)
+                            </td>
+                                    <td style="border:2px solid black">
+                                @Math.Round(item.TotalRepayment, 2)
+                            </td>
+                                    <td style="border:2px solid black">
+                                @Math.Round(item.LoanBalance,2)
+                            </td>
+                                    <td style="border:2px solid black">
+                                @item.Remarks
+                            </td>
+
+                        </tr>
+
+
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="14" style="text-align:center;color:red">No Records  Found </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+       
+    </div>
+        </div>
+    </div>
+    <br />
+    <br />
+    <br />
+    <br />
+</div>
+
+<script type="text/javascript">
+
+    function printCertificate() {
+        const printContents = document.getElementById('DefaultersLoanForm').innerHTML;
+        const originalContents = document.body.innerHTML;
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+    }
+</script>

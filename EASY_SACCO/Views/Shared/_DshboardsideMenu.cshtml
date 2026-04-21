@@ -1,0 +1,511 @@
+﻿@using Microsoft.AspNetCore.Http;
+@using Microsoft.AspNetCore.Http.Extensions;
+
+    @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    var image = "";
+    var name = "";
+    var desc = "";
+    var Connected = "";
+    var userRole = HttpContextAccessor.HttpContext.Session.GetString("UserType");
+}
+<aside class="main-sidebar">
+    <section class="sidebar">
+
+        <ul class="sidebar-menu" data-widget="tree">
+
+            <!-- Dashboard -->
+
+            <li class="treeview" style="height: auto;color:red">
+                @if (userRole != "MEMBER")
+                {
+                    <a href="javascript:void(0)" class="nav-link" onclick="navigateToDashboard()" style="color:black">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+
+                    <script>
+                        function navigateToDashboard() {
+                            // Automatically adapts to current hostname
+                            window.location.href = window.location.origin + '/Home/Dashboard';
+                        }
+                    </script>
+                }
+            </li>
+            @if (ViewBag.setuproles != null && (bool)ViewBag.setuproles)
+            {
+                <li class="treeview">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-cogs"></i>
+                        <span>Configuration</span>
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a asp-action="Index" asp-controller="SYSPARAM"><i class="fa fa-building"></i> Sacco Details</a></li>
+                        <li><a asp-action="Index" asp-controller="User_Group"><i class="fa fa-users-cog"></i> Roles & Permissions</a></li>
+                        @if (ViewBag.SystemUsersrole)
+                        {
+                            <li><a asp-action="Index" asp-controller="System_Users"><i class="fa fa-user-shield"></i> Manage Users</a></li>
+                        }
+                        @if (ViewBag.LoanTypesrole)
+                        {
+                            <li><a asp-controller="LoanTYpes" asp-action="Index"><i class="fa fa-coins"></i> Loan Products</a></li>
+                        }
+                        @if (ViewBag.ShareTypesrole)
+                        {
+                            <li><a asp-action="Index" asp-controller="ShareTypes"><i class="fa fa-chart-pie"></i> Share Categories</a></li>
+                        }
+                        @if (ViewBag.SaccoRegistrationrole)
+                        {
+                                    <li><a asp-action="Index" asp-controller="Co_operative"><i class="fa fa-building" aria-hidden="true"></i>Sacco Registration</a></li>
+                        }
+                        @if (ViewBag.CigRegistrationrole)
+                        {
+                                    <li><a asp-action="Index" asp-controller="CIG_Croups"><i class="fa fa-object-group" aria-hidden="true"></i>Group Registration</a></li>
+                        }
+                        @if (ViewBag.BankSetuprole)
+                        {
+                            <li><a asp-action="Index" asp-controller="BanksSetups"><i class="fa fa-university"></i> Banking Details</a></li>
+                        }
+                    </ul>
+                </li>
+            }
+
+            <!-- Member Records -->
+            @if (ViewBag.recordsrole ?? false)
+            {
+                <li class="treeview">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-folder-open"></i> <!-- More descriptive for "records" -->
+                        <span>Member Records</span>
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </a>
+                    <ul class="treeview-menu">
+                        @if (ViewBag.RecruitmentAgentsrole)
+                        {
+                            <li><a asp-action="Create" asp-controller="MEMBERS"><i class="fas fa-user-plus"></i> Online Registration</a></li>
+                        }
+                        @if (ViewBag.MembershipRegistrationrole)
+                        {
+                            <li><a asp-action="Create" asp-controller="MembersRegistrations"><i class="fas fa-address-card"></i> Membership Registration</a></li>
+                        }
+                        @if (ViewBag.MembershipRegistrationrole)
+                        {
+                            <li><a asp-action="Index" asp-controller="MembersRegistrations"><i class="fas fa-users"></i> Members</a></li>
+                        }
+                        @if (ViewBag.MembershipRegistrationrole)
+                        {
+                            <li><a asp-action="PendingApprovals" asp-controller="MembersRegistrations"><i class="fas fa-user-check"></i> Pending Approval</a></li>
+                        }
+                        @if (ViewBag.Beneficiariesrole)
+                        {
+                            <li><a asp-action="Index" asp-controller="Beneficiaries"><i class="fas fa-hand-holding-heart"></i> Beneficiaries</a></li>
+                        }
+                    </ul>
+                </li>
+            }
+
+            @if (ViewBag.transactionsRole ?? false)
+            {
+                <li class="treeview">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>Transactions</span>
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </a>
+                    <ul class="treeview-menu">
+                        @if (ViewBag.Receiptingrole)
+                        {
+                            <li><a asp-action="Create" asp-controller="ShareTransactions"><i class="fa fa-plus"></i>Receipting</a></li>
+                        }
+                    </ul>
+                </li>
+            }
+            @if (ViewBag.creditmanagementrole ?? false)
+            {
+                <li class="treeview">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-coins"></i>
+                        <span>Credit Management</span>
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </a>
+                    <ul class="treeview-menu">
+                        @if (ViewBag.LoanApplicationsrole)
+                        {
+                            <li><a asp-action="Index" asp-controller="LoanAplications"><i class="fa fa-file-alt"></i>Loan Applications</a></li>
+                        }
+                        @if (ViewBag.Appraisalsrole)
+                        {
+                            <li><a asp-action="AppraisalLoans" asp-controller="LoanAplications"><i class="fa fa-balance-scale"></i>Appraisals</a></li>
+                        }
+                        <li><a asp-action="EndorsementList" asp-controller="LoanAplications"><i class="fa fa-check-circle"></i>Approved Loans</a></li>
+
+                        <li><a asp-action="DisbursedLoan" asp-controller="LoanAplications"><i class="fa fa-money-bill-wave"></i>Disbursed Loans</a></li>
+
+                        @if (ViewBag.LoanSchedulerole)
+                        {
+                            <li><a href="#" hidden><i class="fa fa-eye"></i>Loan Schedule</a></li>
+                        }
+                        @if (ViewBag.ShareTransferrole)
+                        {
+                            <li><a href="#" hidden><i class="fa fa-eye"></i>Share Transfer</a></li>
+                        }
+                        @if (ViewBag.LoanSchedulerole)
+                        {
+                            <li><a href="#" hidden><i class="fa fa-eye"></i>Share To Loan Offsetting</a></li>
+                        }
+                        @if (ViewBag.TransactionsManagementrole)
+                        {
+                            <li><a href="#" hidden><i class="fa fa-eye"></i>Transactions Management</a></li>
+                        }
+                    </ul>
+                </li>
+            }
+            @if (ViewBag.accountsrole ?? false)
+            {
+                <li class="treeview">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-book"></i>
+                        <span>Accounting</span>
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a asp-controller="AccountSetupGLs" asp-action="IndexCategories"><i class="fa fa-tags"></i>Set Accounts Categories</a></li>
+
+                        <li><a asp-controller="AccountSetupGLs" asp-action="Index"><i class="fa fa-chart-pie"></i>Charts of Accounts</a></li>
+                        @if (ViewBag.GLInquiryrole)
+                        {
+                            <li><a asp-controller="Accounting" asp-action="GLInquiry"><i class="fa fa-search-dollar"></i>GL Inquiry</a></li>
+                        }
+                        @if (ViewBag.JournalPostingrole)
+                        {
+                            <li><a asp-controller="Accounting" asp-action="JournalPosting"><i class="fa fa-pen-nib"></i>Journal Posting</a></li>
+
+                            <li><a asp-controller="Accounting" asp-action="JournalPostingExpenses"><i class="fa fa-pen-nib"></i>Journal Posting Expenses</a></li>
+
+                            <li><a asp-controller="Accounting" asp-action="BooksOfAccounts"><i class="fa fa-book-open"></i>Books Of Accounts</a></li>
+
+                            <li><a asp-controller="Accounting" asp-action="JournalListing"><i class="fa fa-list-alt"></i>Journal Listing</a></li>
+ 
+                        }
+                    </ul>
+                </li>
+            }
+            @if (ViewBag.ProjectAndInvestmentManagementrole ?? false)
+            {
+                <li class="treeview">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-project-diagram"></i> 
+                        <span>Project Management</span>
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </a>
+                    <ul class="treeview-menu">
+                        @if (ViewBag.ProjectAndInvestmentsrole)
+                        {
+                            <li><a asp-controller="Investment" asp-action="Index"><i class="fas fa-briefcase"></i>Projects & Investments</a></li>
+                        }
+                        <li><a asp-controller="FundDrive" asp-action="Index"><i class="fas fa-donate"></i>Fund Allocations</a></li>
+
+                        @if (ViewBag.SubscribeToProjectrole)
+                        {
+                            <li><a asp-controller="FundDrive" asp-action="AllocatedFunds"><i class="fas fa-coins"></i>Allocated Funds</a></li>
+                        }
+                    </ul>
+                </li>
+            }
+
+            @if (ViewBag.enquiriesrole ?? false)
+            {  @if (userRole != "MEMBER")
+                {
+                    <li class="treeview">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-question-circle"></i>
+                            <span>Enquiries</span>
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a asp-action="Shares_loansEnquiry" asp-controller="ShareTransactions"><i class="fa fa-wallet"></i>Shares Inquiry/ Loans Inquiry</a></li>
+                        </ul>
+                    </li>
+                }
+            }
+            @if (ViewBag.enquiriesrole ?? false)
+            {  @if (userRole == "MEMBER")
+                {
+                    <li class="treeview">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-question-circle"></i>
+                            <span>Enquiries</span>
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a asp-action="Shares_loansEnquiry" asp-controller="ShareTransaction"><i class="fa fa-wallet"></i>Shares Inquiry/ Loans Inquiry</a></li>
+
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#" class="nav-link">
+                            <i class="fa fa-file-alt"></i>
+                            <span>Applications</span>
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+
+                            <li><a asp-action="Create" asp-controller="LoanAplication"><i class="fa fa-file-alt"></i>Loan Applications</a></li>
+                            <li><a asp-action="Create" asp-controller="Loanschd"><i class="fa fa-calculator"></i> Loan Calculator</a></li>
+
+                        </ul>
+                    </li> 
+                    <li class="treeview">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-project-diagram"></i>
+                            <span>Project Management</span>
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+
+                            <li><a asp-action="Index" asp-controller="Investment"><i class="fas fa-clipboard-list"></i>Subscribe To a Project</a></li>
+
+                        </ul>
+                    </li>
+                }
+            }
+            @if (ViewBag.reportsRole ?? false)
+            {
+                <li class="treeview">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Reports</span>
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a asp-action="MemberList" asp-controller="Reports"><i class="fa fa-users"></i> MemberShip Report</a></li>
+                        <li><a asp-action="LoansIssued" asp-controller="Reports"><i class="fa fa-hand-holding-usd"></i> Loans Issued</a></li>
+                        <li><a asp-action="Loan_Balances" asp-controller="Reports"><i class="fa fa-balance-scale"></i> Loans Balances</a></li>
+                    </ul>
+                </li>
+            }
+        </ul>
+    </section>
+    <!-- /.sidebar -->
+</aside>
+
+<!-- Custom CSS -->
+<style>
+    .main-sidebar {
+        background: #ffffff;
+        border-right: 1px solid #dee2e6;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+        min-height: 100vh;
+    }
+
+    .sidebar {
+        padding: 20px 0;
+    }
+
+    .sidebar-menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #333;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+            .sidebar-menu li a:hover {
+                background: #f1f3f5;
+                color: #0d6efd;
+            }
+
+            .sidebar-menu li a i {
+                margin-right: 12px;
+                font-size: 16px;
+            }
+
+    .treeview-menu {
+        padding-left: 20px;
+    }
+
+        .treeview-menu li a {
+            font-size: 14px;
+            padding: 10px 20px;
+            color: #1a1a1a !important; /* Dark and crisp */
+            background: #ffffff !important; /* Pure white background */
+            transition: background 0.3s, color 0.3s;
+        }
+
+            .treeview-menu li a:hover {
+                background: #f0f0f0 !important; /* Light grey hover */
+                color: #0d6efd !important; /* Primary blue on hover */
+            }
+
+    .treeview > a .fa-angle-left {
+        margin-left: auto;
+    }
+
+    .treeview-menu li a.active {
+        background: #e6f0ff !important; /* Same as hover */
+        color: #0b5ed7 !important;
+    }
+
+    .treeview-menu {
+        display: none;
+    }
+
+    .treeview > a:hover {
+        background: #f1f3f5 !important; /* Soft grey */
+        color: #333 !important; /* Darker text */
+    }
+
+    .treeview.active > a {
+        background: #343a40 !important;
+        color: #ffffff !important;
+    }
+
+        .treeview.active > a i {
+            color: #ffffff !important;
+        }
+
+    .treeview > a:hover i {
+        color: #333 !important;
+    }
+
+    .treeview.active .treeview-menu {
+        display: block;
+    }
+</style>
+
+<script>
+    document.querySelectorAll('.treeview > a').forEach(link => {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            // Close all treeviews except the one clicked
+            document.querySelectorAll('.treeview').forEach(tree => {
+                if (tree !== this.closest('.treeview')) {
+                    tree.classList.remove('active');
+                    tree.querySelectorAll('a').forEach(a => a.classList.remove('active'));
+                }
+            });
+
+            const parent = this.closest('.treeview');
+            parent.classList.toggle('active');
+        });
+    });
+
+    // Highlight submenu item on click
+    document.querySelectorAll('.treeview-menu li a').forEach(item => {
+        item.addEventListener('click', function () {
+            document.querySelectorAll('.treeview-menu li a').forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+</script>
+
+<script src="~/dist/js/adminlte.min.js"></script>
+<script src="~/js/chosen.jquery.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
+
+@*             <li class="treeview" style="height: auto;color:black">
+                @if (ViewBag.reportsRole)
+                {
+                    <a href="#" style="color:black">
+
+                        <i class="fas fa-chart-line" style="font-size:20px"></i>
+                        <span>Reports <br /></span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                }
+
+                <ul class="treeview-menu" style="display: none;">
+                    <li>
+                        <a asp-action="CIGsGroupReports" asp-controller="Home">
+                            <strong style="color:black">
+                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                List of CIGs Per SACCOS
+                            </strong>
+                        </a>
+                    </li>
+                    <li>
+                        @if (ViewBag.MembersPerCountyrole)
+                        {
+                            <a asp-action="CIGsGroupReportsPerSacco" asp-controller="Home">
+                                <strong style="color:black">
+                                    <i class="fa fa-eye" aria-hidden="true"></i>
+
+                                    CIGs Per SACCO
+                                </strong>
+                            </a>
+                        }
+                    </li>
+                    <li>
+                        <a asp-action="MembersReports" asp-controller="Home">
+                            <strong style="color:black">
+                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                Members Per SACCOS
+                            </strong>
+                        </a>
+                    </li>
+                    <li>
+                        @if (ViewBag.MembersPerCountyrole)
+                        {
+                            <a asp-action="MembersReportsPerCounty" asp-controller="Home">
+                                <strong style="color:black">
+                                    <i class="fa fa-eye" aria-hidden="true"></i>
+                                    Members Per County
+                                </strong>
+                            </a>
+                        }
+                    </li>
+                    <li>
+                        @if (ViewBag.MembersPerSaccorole)
+                        {
+                            <a asp-action="MembersReportsPerSaccos" asp-controller="Home">
+                                <strong style="color:black">
+                                    <i class="fa fa-eye" aria-hidden="true"></i>
+                                    Members Per SACCO
+                                </strong>
+                            </a>
+                        }
+                    </li>
+                    <li>
+                        <a href="#">
+                            <strong style="color:black">
+                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                Periodic Registered Members
+                            </strong>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-action="SharesTransactionReportsPerMember" asp-controller="Home">
+                            <strong style="color:black">
+                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                Shares Per Member
+                            </strong>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a asp-action="SharesTransactionReportsPerSharecode" asp-controller="Home">
+                            <strong style="color:black">
+                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                List of Shares Per Sharescode
+                            </strong>
+                        </a>
+
+                    </li>
+
+                </ul>
+
+
+            </li>*@

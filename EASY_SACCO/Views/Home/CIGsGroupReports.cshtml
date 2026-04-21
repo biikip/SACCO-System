@@ -1,0 +1,190 @@
+﻿@model General
+@using Syncfusion.EJ2
+@using Newtonsoft.Json
+@{
+    ViewData["Title"] = "MembersReport";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+<head>
+    <link href="~/Syncfussion/styles/material.css" rel="stylesheet" />
+    <script src="~/Syncfussion/scripts/ej2.min.js"></script>
+</head>
+<div class="row" style="background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+    <div class="col-8">
+
+        <div style="margin:8px;padding:8px;text-align:left">
+            <div style="color:black;font-size:xx-large;" class="text-capitalize"> GIGS  Per Saccos</div>
+            <div style="color:gray;font-size:small;" class="text-capitalize">List of  GIGS Per Saccos</div>
+        </div>
+
+    </div>
+    <div class="col-4">
+        @*  <div style="margin:8px;padding:8px;text-align:end">
+        <a asp-action="Create" asp-controller="MembersRegistrations" style="background:#0670ba;padding:4px;border-radius:8px;color:white"><i class="fa fa-plus" aria-hidden="true"></i> Add New Members </a>
+        </div>*@
+    </div>
+</div>
+<div class="container-fluid">
+    <div style="text-align:end;padding-top:8px">
+        <input type="submit" class="btn btn-sm btn-primary" value="Download/Print" />
+    </div>
+    <form asp-action="CIGGROUPSREPORTS">
+        <div class="row mt-3">
+            <div class="col-4">
+
+                <ejs-dropdownlist id="strCompanyId" name="strCompanyId" filterBarPlaceholder="Search" allowFiltering="true" filtering="strCompanyId" placeholder="Select Company" popupHeight="300px" dataSource="@ViewBag.strCompanyId">
+                    <e-dropdownlist-fields text="strCompanyName" value="strId"></e-dropdownlist-fields>
+                </ejs-dropdownlist>
+            </div>
+            <div class="col-4">
+                <input type="submit" value="Search" class="btn btn-sm btn-primary" />
+            </div>
+        </div>
+    </form>
+    <script>
+        function strCompanyId(e) {
+            var query = new ej.data.Query();
+            query = (e.text !== '') ? query.where('strCompanyName', 'contains', e.text, true) : query;
+            e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strCompanyId)), query);
+
+
+        }
+    </script>
+    <div style="margin:8px;padding:8px;background-color:white">
+        <table class="table   table-striped table-bordered  table-sm" style="color:black">
+            <thead style="background-color:#0f1230;color:white">
+                <tr>
+
+                    <th>
+                        CIG Name
+                    </th>
+                    <th>
+                        Email
+                    </th>
+                    <th>
+                        Tell
+                    </th>
+
+                    <th>
+                        Account No
+                    </th>
+
+                    <th>
+                        Contact Person
+                    </th>
+                    <th>
+                        County
+                    </th>
+                    <th>
+                        SubCounty
+                    </th>
+                    <th>
+                        Ward
+                    </th>
+                    <th>
+                        Village
+                    </th>
+                    @*<th>
+                    CIG Code
+                    </th>*@
+
+                    <th>
+                        status
+                    </th>
+                    <th>
+                        Pyhysical Address
+                    </th>
+                    <th>
+                        Company
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody id="myUL">
+                @if (Model.CIG_Croups.Count() != 0)
+                {
+                    @foreach (var item in Model.CIG_Croups)
+                    {
+                        var County = "n/a";
+                        var sub_Countyyy = "n/a";
+                        var warddd = "n/a";
+                        var companyName = "n/a";
+
+                        var ward = Model.locations.FirstOrDefault(k => k.strWardId == item.strWardId);
+                        if (ward != null)
+                        {
+                            County = ward.strCounty;
+                            sub_Countyyy = ward.strSubCounty;
+                            warddd = ward.strWard;
+
+                        }
+                        var comp = Model.co_Operatives.FirstOrDefault(k => k.strId.ToString() == item.strCompanyCode);
+                        if (comp != null)
+                        {
+                            companyName = comp.strCompanyName;
+                        }
+                        <tr>
+                            <td>
+                                <b> @Html.DisplayFor(modelItem => item.strName)</b>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.strEmail)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.strTellNo)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.strAccountNo)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.strContactPerson)
+                            </td>
+                            <td>
+                                @County
+                            </td>
+                            <td>
+                                @sub_Countyyy
+                            </td>
+                            <td>
+                                @warddd
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.strVillageName)
+                            </td>
+                            @*<td>
+                    @Html.DisplayFor(modelItem => item.strCIGCode)
+                    </td>*@
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.strBstatus)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.strPAddress)
+                            </td>
+                            <td>
+                                @companyName
+                            </td>
+
+
+                        </tr>
+
+                    }
+
+
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="14" style="text-align:center;color:red">No CIGs  Found </td>
+
+                    </tr>
+                }
+
+        </table>
+    </div>
+</div>
+
+
+<ejs-scripts></ejs-scripts>

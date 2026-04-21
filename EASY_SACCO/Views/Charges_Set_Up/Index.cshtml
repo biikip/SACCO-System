@@ -1,0 +1,105 @@
+﻿@model IEnumerable<EASY_SACCO.Models.Charges_Setup>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+
+<div class="row" style="background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+    <div class="col-8">
+
+        <div style="margin:8px;padding:8px;text-align:left">
+            <div style="color:black;font-size:xx-large;" class="text-capitalize"> Charges </div>
+            <div style="color:gray;font-size:small;" class="text-capitalize">List of Charges</div>
+        </div>
+
+    </div>
+    <div class="col-4">
+        <div style="margin:8px;padding:8px;text-align:end">
+            <a asp-action="Create" asp-controller="Collaterals" style="background:#0670ba;padding:4px;border-radius:8px;color:white"><i class="fa fa-plus" aria-hidden="true"></i> Add Collaterals </a>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <partial name="_Search" />
+    <div style="margin:8px;padding:8px;background-color:white">
+        <table class="table   table-striped table-bordered  table-sm" style="color:black">
+            <thead style="background-color:#0f1230;color:white">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ChargeName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ChargeCode)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Gl)
+                    </th>
+                    <th colspan="3">Action</th>
+                </tr>
+            </thead>
+            <tbody id="myUL">
+                @if (Model.Count() != 0)
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ChargeName)
+                            </td>
+                            <td>
+                                <b>@Html.DisplayFor(modelItem => item.ChargeCode)</b>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Gl)
+                            </td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.Id"><i class="fa fa-pencil" aria-hidden="true"></i> <span>Edit</span> </a>
+                            </td>
+                            <td>
+                                <a asp-action="Delete" data-toggle="modal" data-target="#_@item.Id" style="color:red" asp-route-id="@item.Id"><i class="fa fa-trash" aria-hidden="true"></i> <span>Remove</span> </a>
+                            </td>
+                        </tr>
+
+                        <!-- Modal -->
+                        <div id="_@item.Id" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+                            <div class="modal-dialog">
+
+                                <!-- Modal content-->
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <div style="font-size:large;font-weight:bold" class="modal-title text-danger">
+                                            <i class="fa fa-trash" aria-hidden="true"></i> Remove charge
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-body">
+                                        <div style="font-size:large;font-weight:bold;text-align:center" class="modal-title">@item.ChargeName</div>
+
+                                        <div class="alert alert-danger">Hey you are about to remove this charge name.Are you sure you want to continue??</div>
+                                    </div>
+                                    <form asp-action="Delete">
+                                        <input type="hidden" name="id" value="@item.Id" />
+                                        <div class="modal-footer">
+                                            <div class=" btn-success btn-sm" data-dismiss="modal">Cancel</div>
+                                            <input type="submit" id="completebutton" value="REMOVE CHARGES" class=" btn-danger btn-sm" />
+
+                                        </div>
+                                    </form>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="14" style="text-align:center;color:red"> No Callaterrals Found</td>
+                    </tr>
+                }
+
+        </table>
+    </div>
+</div>

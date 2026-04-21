@@ -1,0 +1,26 @@
+﻿@model FundDrive
+@{
+    ViewData["Title"] = "Create Fund Drive";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+<div class="container-fluid">
+    <div style="padding:8px;margin:8px;border-radius:16px;background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+
+<form asp-action="CreateFundDrive" method="post">
+    <div class="form-group">
+        <label>Project</label>
+        <select name="projectId" class="form-control">
+            @foreach (var project in ViewBag.Projects)
+            {
+                <option value="@project.Id">@project.ProjectName</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Total Collected</label>
+        <input type="number" name="amount" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-success">Save</button>
+</form>
+</div>
+</div>

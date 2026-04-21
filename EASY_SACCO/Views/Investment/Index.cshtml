@@ -1,0 +1,142 @@
+﻿@model List<Project>
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@using Syncfusion.EJ2
+@using Newtonsoft.Json
+@{
+    ViewData["Title"] = "Available Projects";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+    var userRole = HttpContextAccessor.HttpContext.Session.GetString("UserType");
+}
+<head>
+    <style>
+        .excel-button {
+            background-color: #217346;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+            .excel-button:hover {
+                background-color: #1E5A34;
+            }
+
+        .custom-table {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+            .custom-table th {
+                background-color: #0f1230;
+                color: white;
+                text-align: center;
+                padding: 12px;
+            }
+
+            .custom-table td {
+                padding: 12px;
+                font-size: 16px;
+                color: #333; 
+                font-weight: 500;
+            }
+
+        .progress {
+            height: 25px;
+            background-color: #e9ecef; /* Light gray background */
+            border: 1px solid #ddd; /* Add a border */
+        }
+
+        .progress-bar {
+            background-color: #28a745; /* Green */
+            color: white; /* White text */
+            text-align: center;
+        }
+
+        .edit-link {
+            background-color: #007bff;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            transition: 0.3s;
+        }
+
+            .edit-link:hover {
+                background-color: #0056b3;
+            }
+    </style>
+</head>
+
+<div class="row bg-white shadow-sm p-0 mb-4">
+    <div class="col-8">
+        <div style="color:black;font-size:x-large;" class="text-capitalize">
+            Projects
+        </div>
+        <div style="color:black;">
+            List of Projects
+        </div>
+    </div>
+    <div class="col-4">
+        <div style="margin:8px;padding:8px;text-align:end">
+                @if (userRole != "MEMBER")
+                {
+            <a asp-action="Create" asp-controller="Investment" style="background:#0670ba;padding:4px;border-radius:8px;color:white">
+                <i class="fa fa-eye" aria-hidden="true"></i> Add Projects
+            </a>
+                }
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="p-4 bg-white shadow-sm rounded">
+
+        <table class="table table-striped table-bordered table-sm" style="color: black; min-width: 1000px;" id="myTable">
+            <thead style="background-color: #0f1230; color: white">
+                <tr>
+                    <th>Project Code</th>
+                    <th>Project Name</th>
+                    <th>Description</th>
+                    <th>Cost</th>
+                    <th>Funds Raised</th>
+                    <th>Progress</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var project in Model)
+                {
+                    <tr>
+                        <td>@project.ProjectCode</td>
+                        <td>@project.ProjectName</td>
+                        <td>@project.Description</td>
+                        <td>@project.TotalCost.ToString("N2")</td>
+                        <td>@project.TotalFundsRaised.ToString("N2")</td>
+                        <td>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar"
+                                     style="width: @(project.TotalCost > 0 ? (project.TotalFundsRaised / project.TotalCost * 100) : 0)%;color:black"
+                                     aria-valuenow="@project.TotalFundsRaised" aria-valuemin="0" aria-valuemax="@project.TotalCost">
+                                    @((project.TotalCost > 0 ? (project.TotalFundsRaised / project.TotalCost * 100) : 0).ToString("N2"))%
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="col-auto">
+                            <a asp-action="Subscribe" asp-route-projectId="@project.Id" class="btn btn-primary">Subscribe</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        </div>
+    </div>

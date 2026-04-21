@@ -1,0 +1,144 @@
+﻿@model General
+
+@{
+    //ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+
+<div class="row" style="background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+    <div class="col-8">
+
+        <div style="margin:8px;padding:8px;text-align:left">
+            <div style="color:black;font-size:xx-large;" class="text-capitalize"> Loan Aplicants </div>
+            <div style="color:gray;font-size:small;" class="text-capitalize">List of Loan Aplicationts </div>
+        </div>
+
+    </div>
+    <div class="col-4">
+        <div style="margin:8px;padding:8px;text-align:end">
+            <a asp-action="Create" asp-controller="LoanAplications" style="background:#0670ba;padding:4px;border-radius:8px;color:white"><i class="fa fa-plus" aria-hidden="true"></i> Add LoanAplications </a>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+
+    <div style="margin:8px;padding:8px;background-color:white">
+        <table class="table table-striped table-bordered table-sm" style="color: black" id="loanapplicant">
+            <thead style="background-color: #0f1230; color: white">
+                <tr>
+                    <th>Member No</th>
+                    <th>Applied Amount</th>
+                    <th>Application Date</th>
+                    <th>Sacco Name</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.loanAplications)
+                {
+                    var Saccocode = "n/a";
+                    var guaranteedamount = Model.loanguars.Where(k => k.LoanNo == item.LoanNo).Sum(k => k.AmountGuaranteed);
+                    var Sacco = Model.co_Operatives.FirstOrDefault(k => k.strCompanyCode == item.CompanyCode);
+
+                    if (Sacco != null)
+                    {
+                        Saccocode = Sacco.strCompanyName;
+                    }
+                    <tr>
+                        <td>@item.MemberNo</td>
+                        <td>@Math.Round(item.AppliedAmount ?? 0, 2)</td>
+                        <td>@item.ApplicationDate.ToShortDateString()</td>
+                        <td>@Saccocode</td>
+                        <td>
+                            @if (item.status == 1)
+                            {
+                                <a asp-action="Appraisal" asp-controller="LoanAplications" asp-route-id="@item.Id" class="btn-primary btn-sm text-blue">Appraisal</a>
+                            }
+                            else if (item.status == 2)
+                            {
+                                <div class="btn-sm btn-warning">Appraised</div>
+                            }
+                            else if (item.status == 3)
+                            {
+                                <div class="btn-sm btn-primary">Approved</div>
+                            }
+                            else if (item.status == 4)
+                            {
+                                <div class="btn-sm btn-info">Disbursed</div>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+</div>
+</div>
+
+
+<!-- Your DataTables initialization script -->
+@section Scripts {
+    <script src="~/DataTable/js/JavaScript.js" asp-append-version="true"></script>
+    <script src="~/DataTable/js/JavaScript1.js"></script>
+    <script src="~/DataTable/js/JavaScript2.js"></script>
+    <script src="~/DataTable/js/JavaScript3.js"></script>
+    <script src="~/DataTable/js/JavaScript4.js"></script>
+    <script src="~/DataTable/js/JavaScript5.js"></script>
+    <script src="~/DataTable/js/JavaScript6.js"></script>
+    <script src="~/DataTable/js/JavaScript7.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var table = $('#loanapplicant').DataTable({
+                dom: 'Bf<"toolbar">tip', // Add buttons container
+                buttons: [
+                    {
+                        extend: 'excel',
+                        text: '<strong style="color:black">Excel</strong>',
+                        exportOptions: {
+                            columns: ':not(.exclude)'
+                        },
+                        filename: 'LoanApplicants_Excel', // Custom filename for Excel export
+                        customize: function (xlsx) {
+                            // Add title to the Excel sheet
+                            var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                            $('row c[r^="A"]', sheet).attr('s', '2');
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        text: '<strong style="color:black">PDF</strong>',
+                        exportOptions: {
+                            columns: ':not(.exclude)'
+                        },
+                        filename: 'LoanApplicants_PDF', // Custom filename for PDF export
+                        customize: function (doc) {
+                            // Add title to the PDF document
+                            doc.content.unshift({
+                                text: 'Loan Applicants',
+                                fontSize: 16,
+                                alignment: 'center',
+                                margin: [0, 0, 0, 12] // Adjust top margin as needed
+                            });
+                        }
+                    }
+                ],
+                columnDefs: [
+                    {
+                        targets: [4], // Assuming Status column is the 5th column (index 4)
+                        visible: true,
+                        className: 'exclude'
+                    }
+                ]
+            });
+        });
+
+
+
+     
+
+    </script>
+}
+
+

@@ -1,0 +1,208 @@
+﻿@model EASY_SACCO.Models.LoanTYpes
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+@using Syncfusion.EJ2
+@using Newtonsoft.Json
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+    var CompanyCode = HttpContextAccessor.HttpContext.Session.GetString("CompanyCode");
+    var CompanyName = HttpContextAccessor.HttpContext.Session.GetString("CompanyName");
+}
+<head>
+    <link href="~/Syncfussion/styles/material.css" rel="stylesheet" />
+    <script src="~/Syncfussion/scripts/ej2.min.js"></script>
+</head>
+<div class="row" style="background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+    <div class="col-8">
+
+        <div style="margin:8px;padding:8px;text-align:left">
+            <div style="color:black;font-size:xx-large;" class="text-capitalize">Update Loan Type Information</div>
+            <div style="color:gray;font-size:small;" class="text-capitalize">Edit/Updae Loan Type details</div>
+        </div>
+
+    </div>
+    <div class="col-4">
+        <div style="margin:8px;padding:8px;text-align:end">
+            <a asp-action="Index" asp-controller="LoanTYpes" style="background:#0670ba;padding:4px;border-radius:8px;color:white"><i class="fa fa-plus" aria-hidden="true"></i>  View  Loan Types</a>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+
+    <div style="padding:8px;margin:8px;border-radius:16px;background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+
+        <form asp-action="Edit">
+            <div class="row">
+                <div class="col-md-3">
+                    <input type="hidden" asp-for="Id" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="form-group">
+                        <label><strong style="color:black">Loan Code</strong></label>
+
+                        <input asp-for="strloancode" placeholder="Loan Code" class="form-control" />
+                        <span asp-validation-for="strloancode" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label><strong style="color:black">Loan Name</strong></label>
+
+                        <input asp-for="strLoanType" placeholder="Loan Type" class="form-control" />
+                        <span asp-validation-for="strLoanType" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label><strong style="color:black">R.Period (months)</strong></label>
+
+                        <input asp-for="strRPeriod" placeholder="R.Period (months)" class="form-control" />
+                        <span asp-validation-for="strRPeriod" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label><strong style="color:black">Loan to Share Ratio</strong></label>
+                        <input asp-for="LoanToShareRatio" placeholder="Loan to Share Ratio" class="form-control" />
+                        <span asp-validation-for="LoanToShareRatio" class="text-danger"></span>
+                    </div>
+
+                </div>
+                <div class="col-md-3">
+
+                    <div class="form-group">
+                        <label><strong style="color:black">Loan Control A/C</strong></label>
+
+                        <input asp-for="strLoanAccount" placeholder="Loan Control A/C" class="form-control" />
+                        <span asp-validation-for="strLoanAccount" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label><strong style="color:black">Intrest Control A/C</strong></label>
+
+                        <input asp-for="strInterestAccount" placeholder="Intrest A/C" class="form-control" />
+                        <span asp-validation-for="strInterestAccount" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label><strong style="color:black">Penalty Control A/C</strong></label>
+
+                        <input asp-for="strPenaltyAccount" placeholder="Penalty A/C" class="form-control" />
+                        <span asp-validation-for="strPenaltyAccount" class="text-danger"></span>
+                    </div>                 
+
+                    <div class="padding-top">
+                        <label><strong style="color:black">Repayment Method</strong></label>
+                        <ejs-dropdownlist id="strRepaymentMethod" ejs-for="strRepaymentMethod" filterBarPlaceholder="Search" allowFiltering="true" filtering="strRepaymentMethod" placeholder="Repayment Method" popupHeight="300px" dataSource="@ViewBag.strRepaymentMethod">
+                            <e-dropdownlist-fields text="strMethod" value="strMethod"></e-dropdownlist-fields>
+                        </ejs-dropdownlist>
+
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label><strong style="color:black">Interest Rate</strong></label>
+
+                        <input asp-for="strInterestRate" placeholder="Intrest Rate" class="form-control" />
+                        <span asp-validation-for="strInterestRate" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label><strong style="color:black">Max Loan</strong></label>
+
+                        <input asp-for="strMaxloan" placeholder="Max Loan" class="form-control" />
+                        <span asp-validation-for="strMaxloan" class="text-danger"></span>
+                    </div>
+                  
+
+                    <div class="padding-top">
+                        <label><strong style="color:black">Sacco Name</strong></label>
+
+                        <input value="@CompanyName" readonly class="form-control" />
+                        <input asp-for="CompanyCode" value="@CompanyCode" hidden class="form-control" />
+                        <span asp-validation-for="CompanyCode" class="text-danger"></span>
+
+                    </div>
+                </div>
+                <div class="col-md-3">
+
+                    <div class="padding-top">
+                        <ejs-dropdownlist id="strRate" ejs-for="strRate" filterBarPlaceholder="Search" allowFiltering="true" filtering="strRate" placeholder="Repayment Rate" popupHeight="300px" dataSource="@ViewBag.strRate">
+                            <e-dropdownlist-fields text="strRate" value="strRate"></e-dropdownlist-fields>
+                        </ejs-dropdownlist>
+
+                    </div>
+                    <br />
+                    <div class="padding-top">
+                        <ejs-dropdownlist id="strwhatToChange" ejs-for="strwhatToChange" filterBarPlaceholder="Search" allowFiltering="true" filtering="strwhatToChange" placeholder="What to charge" popupHeight="300px" dataSource="@ViewBag.strwhatToChange">
+                            <e-dropdownlist-fields text="strWhatToChange" value="strWhatToChange"></e-dropdownlist-fields>
+                        </ejs-dropdownlist>
+
+                    </div>
+
+
+
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="strAttractsPenalty" /> <strong style="color:black">@Html.DisplayNameFor(model => model.strAttractsPenalty)</strong>
+                        </label>
+                    </div>
+                    <label class="radio-inline m-1"><input type="radio" name="optradio" checked><strong style="color:black"> Fixed</strong></label>
+                    <label class="radio-inline m-1"><input type="radio" name="optradio"><strong style="color:black"> Percentage</strong></label>
+                    <input class=" m-1 form-control" type="hidden" value="0" asp-for="str" />
+
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="strCanitRefinance" /> <strong style="color:black"> @Html.DisplayNameFor(model => model.strCanitRefinance)</strong>
+                        </label>
+                    </div>
+
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="strRequiresGuarantors" /> <strong style="color:black">@Html.DisplayNameFor(model => model.strRequiresGuarantors)</strong>
+                        </label>
+                    </div>
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="strGuaranteeownloan" /><strong style="color:black"> @Html.DisplayNameFor(model => model.strGuaranteeownloan)</strong>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="Update Details" class="btn btn-primary" style="background-color:#0670ba;width:100%" />
+
+                    </div>
+
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+<script type="text/javascript">
+    function strCompanyId(e) {
+            var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strCompanyId', 'startswith', e.text, true) : query;
+            e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strCompanyId)), query);
+    }
+    function strRepaymentMethod(e) {
+            var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strMethod', 'startswith', e.text, true) : query;
+            e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strRepaymentMethod)), query);
+    }
+    function strRate(e) {
+            var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strRate', 'startswith', e.text, true) : query;
+            e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strRate)), query);
+    }
+    function strwhatToChange(e) {
+            var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strWhatToChange', 'startswith', e.text, true) : query;
+            e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strwhatToChange)), query);
+        }
+
+
+</script>
+<ejs-scripts></ejs-scripts>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

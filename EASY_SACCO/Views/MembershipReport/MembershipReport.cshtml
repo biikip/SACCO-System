@@ -1,0 +1,12 @@
+﻿@{
+    ViewData["Title"] = "Membership Report";
+    var report = (FastReport.Web.WebReport)ViewBag.WebReport;
+}
+
+<h2>Membership Report</h2>
+
+@report.Render()
+
+<!-- FastReport required scripts -->
+<link href="https://cdn.fast-report.com/opensource/fastreport.css" rel="stylesheet" />
+<script src="https://cdn.fast-report.com/opensource/fastreport.js"></script>

@@ -1,0 +1,117 @@
+﻿@model IEnumerable<EASY_SACCO.Models.LoansAppViewModel>
+
+@{
+    ViewBag.Title = "Total Loans Paid";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+<head>
+    <link href="~/Syncfussion/styles/material.css" rel="stylesheet" />
+    <script src="~/Syncfussion/scripts/ej2.min.js"></script>
+    <style>
+        .header-space {
+            margin-top: 0;
+            padding-top: 0;
+        }
+
+        .e-ddl.e-input-group input.e-input::placeholder {
+            font-size: 16px; /* Increase or decrease as needed */
+            color: darkgrey; /* Set to a more visible color */
+            opacity: 1; /* Ensure full opacity for better visibility */
+        }
+
+        .container {
+            margin-top: 3px; /* or adjust to your preferred spacing */
+        }
+    </style>
+</head>
+
+<div class="row bg-white shadow-sm p-0 mb-4">
+    <div class="col-md-8">
+        <div style="color:black;font-size:x-large;" class="text-capitalize">Members Paid Loans</div>
+        <p><strong>Total Loans Paid:</strong> @ViewBag.TotalAmount.ToString("N2")</p>
+    </div>
+        <div class="col-4">
+        <div style="margin:8px;padding:8px;text-align:end">
+        <a asp-action="Dashboard" asp-controller="Home" style="background:#0670ba;padding:4px;border-radius:8px;color:white"><i class="fa fa eye" aria-hidden="true"></i>Go Back</a>
+    </div>
+    </div>
+</div>
+<div class="container-fluid">
+<div class="container-fluid mt-4">
+    <div class="p-4 bg-white shadow-sm rounded">
+        <table class="table table-striped table-bordered table-sm" style="color: black; min-width: 700px;" id="myTable">
+            <thead style="background-color: #0f1230; color: white">
+        <tr>
+            <th>Member No</th>
+            <th>Name</th>
+            <th>ID No</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Loan Amount</th>
+            <th>Loan Balance</th>
+            <th>Date Paid</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var m in Model)
+        {
+            <tr>
+                <td>@m.MemberNo</td>
+                <td>@m.SurName @m.OtherName</td>
+                <td>@m.IdNo</td>
+                <td>@m.PhoneNo</td>
+                <td>@m.Email</td>
+                <td>@m.LoanAmount.ToString("N2")</td>
+                <td>@m.LoanBalance.ToString("N2")</td>
+                <td>@Convert.ToDateTime(m.ApplicationDate).ToString("yyyy-MM-dd")</td>
+            </tr>
+        }
+    </tbody>
+        </table>
+    </div>
+</div>
+</div>
+@section Scripts {
+
+
+    <script src="~/DataTable/js/JavaScript.js" asp-append-version="true"></script>
+    <script src="~/DataTable/js/JavaScript1.js"></script>
+    <script src="~/DataTable/js/JavaScript2.js"></script>
+    <script src="~/DataTable/js/JavaScript3.js"></script>
+    <script src="~/DataTable/js/JavaScript4.js"></script>
+    <script src="~/DataTable/js/JavaScript5.js"></script>
+    <script src="~/DataTable/js/JavaScript6.js"></script>
+    <script src="~/DataTable/js/JavaScript7.js"></script>
+    <style>
+        .dataTables_wrapper .dataTables_filter label {
+            font-weight: bold;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+                    $('#myTable').DataTable({
+                        responsive: true,
+                        pageLength: 10,
+                        ordering: true,
+                        dom: 'Bf<"toolbar">tip',
+                        buttons: [
+                            {
+                                extend: 'excel',
+                                text: '<strong style="color:black">Excel</strong>',
+                                exportOptions: {
+                                    columns: [0, 1, 2, 3, 4, 5, 6, 7] // exclude Actions column (index 7)
+                                }
+                            },
+                            {
+                                extend: 'pdf',
+                                text: '<strong style="color:black">PDF</strong>',
+                                exportOptions: {
+                                    columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                                }
+                            }
+                        ]
+                    });
+                });
+    </script>
+    }

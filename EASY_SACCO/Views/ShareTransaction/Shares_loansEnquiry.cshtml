@@ -1,0 +1,302 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@model General
+
+@using Syncfusion.EJ2
+@using Newtonsoft.Json
+@{
+    ViewData["Title"] = "Shares_loansEnquiry";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+
+}
+
+<head>
+    <link href="~/Syncfussion/styles/material.css" rel="stylesheet" />
+    <script src="~/Syncfussion/scripts/ej2.min.js"></script>
+    <style>
+        .accordion {
+            background-color: #eee;
+            color: #444;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+            transition: 0.4s;
+        }
+
+            .active, .accordion:hover {
+                background-color: #ccc;
+            }
+
+            .accordion:after {
+                content: '\002B';
+                color: #777;
+                font-weight: bold;
+                float: right;
+                margin-left: 5px;
+            }
+
+        .active:after {
+            content: "\2212";
+        }
+
+        .panel {
+            padding: 0 18px;
+            background-color: white;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.2s ease-out;
+        }
+    </style>
+</head>
+<div class="row" style="background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+    <div class="col-8">
+
+        <div style="margin:8px;padding:8px;text-align:left">
+            <div style="color:black;font-size:xx-large;" class="text-capitalize">Member Shares / Loans Inquiry</div>
+            <div style="color:gray;font-size:small;" class="text-capitalize">Member Shares / Loans Inquiry</div>
+        </div>
+
+    </div>
+
+</div>
+<div class="container-fluid">
+
+    <div style="padding:8px;margin:8px;border-radius:16px;background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="row">
+
+                <div class="col-md-3">
+                    <lebel class="text-black"><strong>Member No</strong> </lebel>
+                    <br />
+                    <input name="strFullName"  id="filter" placeholder="Member No" class="form-control" />
+
+                </div>
+                <div class="col-md-3">
+                    <lebel class="text-black"><strong>Member Names</strong></lebel>
+                    <br />
+                    <input name="strUserName"  readonly id="namesid" placeholder="Member Names" class="form-control" />
+
+                </div>
+                <div class="col-md-3">
+
+                    <lebel class="text-black"><strong>Outstanding Loans</strong></lebel>
+                    <br />
+                    <input name="strPhoneNo" value="0.00" id="Outstandingloans" readonly placeholder="Outstanding Loans" class="form-control" />
+
+                </div>
+                <div class="col-md-3">
+
+                    <lebel class="text-black"><strong>Loan Balance</strong></lebel>
+                    <br />
+                    <input name="strEmail" value="0.00" id="loanbal" readonly placeholder="Loan Balance" class="form-control" />
+
+                </div>
+
+
+                <div class="col-md-3">
+                    <lebel class="text-black"><strong>Share Capital</strong></lebel>
+                    <br />
+
+                    <input name="strPassword" value="0.00" id="sharecapital" readonly placeholder="Share Capital" class="form-control" />
+
+                </div>
+                <div class="col-md-3">
+                    <lebel class="text-black"><strong>Deposits</strong></lebel>
+                    <br />
+
+                    <input name="strPassword" value="0.00" id="depositss" readonly placeholder="Shares Type" class="form-control" />
+
+                </div>
+       
+            </div>
+            <br /> <br />
+        </form>
+        <br />
+       
+            <div class="row">
+                <div class="col-sm-12">
+                    <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="KYC-tab" data-toggle="tab" href="#KYC" role="tab" aria-controls="KYC" aria-selected="true">Total Contributions</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="false">Loans</a>
+                        </li>
+                    </ul>
+                    <br /><br />
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="col-sm-12">
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="KYC" role="tabpanel" aria-labelledby="KYC-tab">
+                        <div style="margin:8px;padding:8px;background-color:white">
+                            <table class="table table-striped table-bordered table-sm" style="color:black" id="customers">
+                                <thead style="background-color:#0f1230;color:white">
+                                    <tr>
+                                        <th>Memberno</th>
+                                        <th>Member Name</th>
+                                        <th>Total Contributions</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="intakes"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                        <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
+                            <div style="margin:8px;padding:8px;background-color:white">
+                            <table class="table table-striped table-bordered table-sm" style="color:black" id="customers">
+                                <thead style="background-color:#0f1230;color:white">
+                                    <tr>
+                                        <th>Loan No</th>
+                                        <th>Date Disbursed</th>
+                                        <th>Amount</th>
+                                        <th>Repay Period</th>
+                                        <th>Loan Code</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="intakess"></tbody>
+                            </table>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+     
+
+          
+        </div>
+
+    </div>
+</div>
+<br />
+<br />
+
+<script type="text/javascript">
+
+    $(function () {
+        getSelectedDateIntakes();
+      
+        $('#filter').on('keyup', function () {
+            getSelectedDateIntakes();
+        });
+        function getSelectedDateIntakes() {
+            var filter = $("#filter").val();
+            
+            $.ajax({
+                type: 'POST',
+                url: "getmemberstatement?filter=" + filter,
+                contentType: 'application/json',
+                success: function (response) {
+                    debugger
+                    populateIntake(response.individualTotals);
+                    populateIntake1(response.loans);
+                    var sharecapital = response.sharecapital.toFixed(2);
+                    var deposit = response.deposit.toFixed(2);
+                    var membernames = response.names;
+                    var loansbal = response.loanbal.toFixed(2);
+                    var outstandingloans = response.outstandingloan;
+
+                   
+                    $("#sharecapital").val(sharecapital);
+                    $("#depositss").val(deposit);
+                    $("#namesid").val(membernames);
+                    $("#loanbal").val(loansbal);
+                    $("#Outstandingloans").val(outstandingloans);
+                },
+                failure: function (response) {
+                }
+            }).then(function () {
+                // ...
+            });
+            //}
+        }
+        function populateIntake(intakes) {
+            var filter = $("#filter").val();
+           
+            let itemTableRows = new Array();
+            intakes.forEach(i => {
+
+                var d = "/ShareTransaction/Getcontributions/" + i.id;
+
+                var edit = "<a class='btn-success text -white' href=" + d +">View Contributions</a >";
+                itemTableRows.push(`<tr>
+
+                                                         <td>${i.memberNo}</td>
+                                                        <td>${i.name}</td>
+                                                         <td>${i.totalAmount}</td>
+                                                           <td>${edit}</td>
+                                                   
+                                                </tr>`)
+            });
+
+            $('#intakes').html(itemTableRows);
+        }
+        function populateIntake1(intakess) {
+            var filter = $("#filter").val();
+
+            let itemTableRowss = new Array();
+            intakess.forEach(i => {
+
+                var d = "/ShareTransaction/Statement/" + i.id;
+                let parsedDate = Date.parse(i.disburseDate);
+                if (!isNaN(parsedDate)) { // Check if the parsed date is valid
+                    let dateObj = new Date(parsedDate);
+                    let year = dateObj.getFullYear();
+                    let month = String(dateObj.getMonth() + 1).padStart(2, '0'); // Adding 1 because getMonth() returns zero-based month index
+                    let day = String(dateObj.getDate()).padStart(2, '0');
+                    let formattedDate = `${year}-${month}-${day}`;
+
+                    var edit = "<a class='btn-success text -white' href=" + d + ">View Statement</a >";
+                    itemTableRowss.push(`<tr>
+
+                                                   <td>${i.memberNo}  </td>
+                                                   <td>${formattedDate}</td>
+                                                  <td>${i.disburseAmount}</td>
+                                                  <td>${i.repaymentPeriod}</td>
+                                                  <td>${i.loanCode}</td>
+                                                   <td>${edit}</td>
+                                                                                 
+
+                                                    </tr>`)
+                }
+            });
+
+            $('#intakess').html(itemTableRowss);
+
+        }
+    });
+
+
+
+
+
+
+    var acc = document.getElementsByClassName("accordion");
+    var i;
+
+    for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var panel = this.nextElementSibling;
+            if (panel.style.maxHeight) {
+                panel.style.maxHeight = null;
+            } else {
+                panel.style.maxHeight = panel.scrollHeight + "px";
+            }
+        });
+    }
+
+</script>
+
+

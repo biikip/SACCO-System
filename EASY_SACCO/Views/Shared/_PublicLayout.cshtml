@@ -1,0 +1,140 @@
+﻿@using Microsoft.AspNetCore.Http;
+@using Microsoft.AspNetCore.Http.Extensions;
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+<head>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="~/Fontawsome.css" rel="stylesheet" />
+    <link rel="shortcut icon" type="image/x-icon"  />
+    <meta name="theme-color" content="#581845">
+    <!-- Windows Phone -->
+    <meta name="msapplication-navbutton-color" content="#581845">
+    <!-- iOS Safari -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="#581845">
+
+    <style>
+        .defaultbtnlogout {
+            background-color: orangered;
+            color: white;
+        }
+    </style>
+    <style>
+        /* Override toastr styles to match Bootstrap */
+        .toast {
+            background-color: #fff !important;
+            color: #333 !important;
+            border-color: #ccc !important;
+            border-radius: 4px !important;
+            box-shadow: 0 0 12px rgba(0,0,0,.175) !important;
+        }
+
+            .toast.toast-success {
+                background-color: green !important;
+                border-color: #c3e6cb !important;
+                color: white !important;
+            }
+
+            .toast.toast-info {
+                background-color: #cce5ff !important;
+                border-color: #b8daff !important;
+                color: #004085 !important;
+            }
+
+            .toast.toast-warning {
+                background-color: #fff3cd !important;
+                border-color: #ffeeba !important;
+                color: #856404 !important;
+            }
+
+            .toast.toast-error {
+                background-color: red !important;
+                border-color: #f5c6cb !important;
+                color: white !important;
+            }
+    </style>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+
+    <link href="~/fontawesome-free-6.4.2-web/css/all.min.css" rel="stylesheet" />
+    <link href="~/fontawesome-free-6.4.2-web/css/regular.min.css" rel="stylesheet" />
+    <link href="~/fontawesome-free-6.4.2-web/css/solid.min.css" rel="stylesheet" />
+    <link href="~/font-awesome-4.7.0/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" asp-append-version="true" />
+    <link rel="stylesheet" href="~/dist/css/AdminLTE.min.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/dist/css/skins/skin-blue.min.css">
+
+    <link href="~/Syncfussion/styles/material.css" rel="stylesheet" />
+    <script src="~/Syncfussion/scripts/ej2.min.js"></script>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <link href="~/DataTable/css/StyleSheet.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/DataTable/css/StyleSheet1.css" rel="stylesheet" />
+
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini bg-white">
+    <div class="">
+        <header class="main-header border-bottom box-shadow">
+            <a href="#" class="logo" style="background-color:white">
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                @* <span class="logo-mini">  <img src="~/Icons/AMTEC LOGO.jpg" onerror="this.src='/Icons/AMTEC LOGO.jpg'" style="width:auto;height:30px;" class="user-image" alt="F"></span> *@
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg" style="color:black">
+                </span>
+            </a>
+
+        </header>
+
+        <style>
+            .Categoryyy {
+                color: black;
+            }
+
+                .Categoryyy:hover {
+                    background-color: ghostwhite;
+                    border-left: solid 3px black;
+                }
+        </style>
+        <div class="content-wrapper" style="background-color:#dfdefa;font-family:'Century Gothic';font-size:small">
+            <div style="padding-left:24px;padding-right:24px;padding-top:4px;padding-bottom:4px;background-color:white;" class="border-bottom box-shadow">
+            </div>
+            @RenderBody()
+        </div>
+    <footer class="border-top footer text-muted text-center">
+        <div class="container">
+            &copy; @DateTime.Now.Year - CARGEN BODA BODA SACCO
+        </div>
+    </footer>
+
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    </environment>
+    <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+
+    <script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="~/javascript/JavaScript.js"></script>
+    <script src="~/js/site.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/toastr.js/toastr.min.js"></script>
+    <ejs-scripts></ejs-scripts>
+    @await Html.PartialAsync("_notificationPartial")
+    @RenderSection("Scripts", required: false)
+
+   </div>
+
+</body>

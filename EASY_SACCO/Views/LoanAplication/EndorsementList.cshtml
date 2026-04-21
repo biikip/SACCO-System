@@ -1,0 +1,259 @@
+﻿@model General
+
+@{
+    ViewData["Title"] = "EndorsementList";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+
+}
+
+<div class="row" style="background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+    <div class="col-8">
+
+        <div style="margin:8px;padding:8px;text-align:left">
+            <div style="color:black;font-size:xx-large;" class="text-capitalize">Loans Approved </div>
+            <div style="color:gray;font-size:small;" class="text-capitalize">List of Loans Approved </div>
+        </div>
+
+    </div>
+    <div class="col-4">
+        <div style="margin:8px;padding:8px;text-align:end">
+@*             <a asp-action="Create" asp-controller="LoanAplications" style="background:#0670ba;padding:4px;border-radius:8px;color:white"><i class="fa fa-plus" aria-hidden="true"></i> Add LoanAplications </a>
+ *@        </div>
+    </div>
+</div>
+<div class="container-fluid">
+   
+    <div style="margin:8px;padding:8px;background-color:white">
+        <table class="table  table-bordered  table-sm" style="color:black" id="approvedloans">
+            <thead style="background-color:#0f1230;color:white">
+                <tr>
+
+                    <th>
+                        Member No
+                    </th>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Loan Code
+                    </th>
+                    <th>
+                        Applied Amount
+                    </th>
+                    <th>
+                        Approved Amount
+                    </th>
+                   
+                    <th>
+                        Sacco Name
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                    <th>
+                        Disbursement
+                    </th>
+                    <th>
+                        Report
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+               
+                    @foreach (var item in Model.loanAplications)
+                    {
+                        var Saccocode = "n/a";
+                        var membername = "n/a";
+                        var Docnumber1 = Model.Customer_Balances.FirstOrDefault(k => k.Memberno == item.MemberNo).Documentnumber;
+                        var amountchargedprocessing = Model.Charges.Where(k => k.LoanCode == item.LoanCode && k.ProductCode.Contains("Processing")).Sum(k => k.Amount);
+
+                        var amountchargedInsuarance = Model.Charges.Where(k => k.LoanCode == item.LoanCode && k.ProductCode.Contains("Insuarance")).Sum(k => k.Amount);
+                        var listcharges = Model.Charges.Where(k => k.LoanCode == item.LoanCode).ToList();
+                        var totalcharges = amountchargedprocessing + amountchargedInsuarance;
+                        var guaranteedamount = Model.loanguars.Where(k => k.LoanNo == item.LoanNo).Sum(k => k.AmountGuaranteed);
+                        var name = Model.membersRegistrations.FirstOrDefault(k => k.strMemberNo == item.MemberNo);
+                        if (name != null)
+                        {
+                            membername = name.strOtherName + " " + name.strSurName;
+                        }
+
+                        var Sacco = Model.co_Operatives.FirstOrDefault(k => k.strCompanyCode == item.CompanyCode);
+
+                        if (Sacco != null)
+                        {
+                            Saccocode = Sacco.strCompanyName;
+                        }
+
+                        <tr>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MemberNo)
+                            </td>
+                            <td>
+                                @membername
+                            </td>
+                            <td>@item.LoanCode</td>
+                            <td>
+                                @Math.Round(item.AppliedAmount ?? 0, 2)
+                            </td>
+                            <td>@Math.Round(item.ApprovedAmount ?? 0, 2)</td>
+                        
+                            <td>
+                                @Saccocode
+                            </td>
+                            <td>
+                                @if (item.status == 3)
+                                {
+                                    <div class="btn-success btn-sm">Approved</div>
+                                }
+                            </td>
+                            <td>
+                                <a asp-action="Disburse" asp-controller="LoanAplications" asp-route-id="@item.Id" class="btn-Primary btn-sm text-blue">Disburse</a>
+                            </td>
+                            <td>
+                                <a asp-action="LoanAppraisalReport" asp-controller="LoanAplications" asp-route-id="@item.Id" class="btn-Primary  text-blue">Appraisal Report</a>
+                            </td>
+
+
+                        </tr>
+                       
+                        
+                    }
+                   
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+@section scripts {
+
+    <script src="~/DataTable/js/JavaScript.js" asp-append-version="true"></script>
+    <script src="~/DataTable/js/JavaScript1.js"></script>
+    <script src="~/DataTable/js/JavaScript2.js"></script>
+    <script src="~/DataTable/js/JavaScript3.js"></script>
+    <script src="~/DataTable/js/JavaScript4.js"></script>
+    <script src="~/DataTable/js/JavaScript5.js"></script>
+    <script src="~/DataTable/js/JavaScript6.js"></script>
+    <script src="~/DataTable/js/JavaScript7.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var table = $('#approvedloans').DataTable({
+                dom: 'Bf<"toolbar">tip', // Add buttons container
+                buttons: [
+                    {
+                        extend: 'excel',
+                        text: '<strong style="color:black">Excel</strong>',
+                        exportOptions: {
+                            columns: ':not(.exclude)'
+                        },
+                        filename: 'ApprovedLoans_Excel', // Custom filename for Excel export
+                        customize: function (xlsx) {
+                            // Add title to the Excel sheet
+                            var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                            $('row c[r^="A"]', sheet).attr('s', '2');
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        text: '<strong style="color:black">PDF</strong>',
+                        exportOptions: {
+                            columns: ':not(.exclude)'
+                        },
+                        filename: 'ApprovedLoans_PDF', // Custom filename for PDF export
+                        customize: function (doc) {
+                            // Add title to the PDF document
+                            doc.content.unshift({
+                                text: 'Approved Loans',
+                                fontSize: 16,
+                                alignment: 'center',
+                                margin: [0, 0, 0, 12] // Adjust top margin as needed
+                            });
+                        }
+                    }
+                ],
+                columnDefs: [
+                    {
+                        targets: [6, 7, 8], // Assuming Status column is the 5th column (index 4)
+                        visible: true,
+                        className: 'exclude'
+                    }
+                ]
+            });
+        });
+
+
+
+
+        $(document).on('keyup', '#AmountI', function () {
+            var NetPay = document.getElementById("netpay").value
+            var NetPaywithnocoma = parseFloat(NetPay.replaceAll(",", ""));
+
+            var $field = $(this);
+
+            var amountI = parseInt($field.val());
+
+            if (amountI > NetPaywithnocoma) {
+                toastr.error('Payment exeeds Net Pay Amount ', { timeOut: 5000 });
+                $field.val("");
+            }
+        });
+
+
+
+        $(document).on('keyup', '#amount', function () {
+            var amount = document.getElementById('amount').value;
+            var Rperiod = document.getElementById('repayperiod').value;
+
+            var interestid = document.getElementById('interestrateid').value;
+
+
+            var PrincipalAmount = (amount / Rperiod);
+            var roundedPrincipalAmount = PrincipalAmount.toFixed(2);
+
+            var interestamount = ((amount * interestid) / 100);
+            var roundedinterestamount = interestamount.toFixed(2);
+
+            var totalrepayment = (PrincipalAmount + interestamount);
+            var roundedtotalrepaymentt = totalrepayment.toFixed(2);
+
+
+
+            document.getElementById('principal').value = roundedPrincipalAmount;
+            document.getElementById('interest').value = roundedinterestamount;
+            document.getElementById('repayment').value = roundedtotalrepaymentt;
+
+        });
+        window.onload = function () {
+            var date = new Date();
+            var dates = '01/01/2023';
+
+            var Mes = String(date.getMonth() + 1).padStart(2, '0');
+            var Dia = String(date.getDate()).padStart(2, '0');
+            var Anio = date.getFullYear();
+            document.getElementById("dates").value = Anio + "-" + Mes + "-" + Dia;
+
+        };
+
+        document.getElementById("repaymentMethod").addEventListener("click", function getFieldRefno() {
+            var cash = $("#cash").val();
+            if (cash!=null) 
+            {
+                (document.getElementById("docrfno").style.display === "none")
+            }
+
+            if (document.getElementById("docrfno").style.display === "block") document.getElementById("docrfno").style.display = "none";
+            else document.getElementById("docrfno").style.display = "block";
+        });
+
+      
+
+       
+
+    </script>
+
+}

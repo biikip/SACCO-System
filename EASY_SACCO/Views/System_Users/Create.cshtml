@@ -1,0 +1,211 @@
+﻿@model EASY_SACCO.Models.System_Users
+
+@using Syncfusion.EJ2
+@using Newtonsoft.Json
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+<head>
+    <link href="~/Syncfussion/styles/material.css" rel="stylesheet" />
+    <script src="~/Syncfussion/scripts/ej2.min.js"></script>
+</head>
+<div class="row" style="background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+    <div class="col-8">
+
+        <div style="margin:8px;padding:8px;text-align:left">
+            <div style="color:black;font-size:xx-large;" class="text-capitalize">Add System Users</div>
+            <div style="color:gray;font-size:small;" class="text-capitalize">Add Users to the system</div>
+        </div>
+
+    </div>
+    <div class="col-4">
+        <div style="margin:8px;padding:8px;text-align:end">
+            <a asp-action="Index" asp-controller="System_Users" style="background:#0670ba;padding:4px;border-radius:8px;color:white"><i class="fa fa-eye" aria-hidden="true"></i>  View System Users</a>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+
+    <div style="padding:8px;margin:8px;border-radius:16px;background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div style="  background-color: #f3f3f3;color:#8b8b8b;margin-bottom: 8px;padding:8px;margin-top:8px;">
+                <strong style="color:black">PERSONAL INFO</strong>
+            </div>
+            <div class="row">
+
+                <div class="col-md-3">
+
+                    <label><strong style="color:black">First Name</strong></label>
+
+                    <input asp-for="strFirstName" class="form-control" required />
+                    <span asp-validation-for="strFirstName" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+
+                    <label><strong style="color:black">Last Name</strong></label>
+
+                    <input asp-for="strLastName" class="form-control" required />
+                    <span asp-validation-for="strLastName" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+
+                    <label><strong style="color:black">User Name</strong></label>
+
+                    <input asp-for="strUserName" class="form-control" required />
+                    <span asp-validation-for="strUserName" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+
+                    <label><strong style="color:black">Phone Number</strong></label>
+
+                    <input asp-for="strPhoneNo" class="form-control" required />
+                    <span asp-validation-for="strPhoneNo" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+                    <br />
+                    <label><strong style="color:black">Email</strong></label>
+
+                    <input asp-for="strEmail" class="form-control" required />
+                    <span asp-validation-for="strEmail" class="text-danger"></span>
+                </div>
+           
+                <div class="col-md-3">
+
+                    <br />
+                    <label><strong style="color:black">User Type</strong></label>
+
+                    <div class="padding-top">
+@*                         <ejs-dropdownlist id="strUserType" ejs-for="strUserType" filterBarPlaceholder="Search" allowFiltering="true" filtering="onfilteringgggg" placeholder="Select a User Type" popupHeight="300px" dataSource="@ViewBag.UserTypes">
+                            <e-dropdownlist-fields text="strGroupName" value="strId"></e-dropdownlist-fields>
+                        </ejs-dropdownlist> *@
+                        <ejs-dropdownlist id="strUserType" ejs-for="strUserType" filterBarPlaceholder="Search" required
+                                          allowFiltering="true" filtering="onfilteringgggg" placeholder="Select a User Type"
+                                          popupHeight="300px" dataSource="@ViewBag.UserTypes"
+                                          change="onUserTypeChange">
+                            <e-dropdownlist-fields text="strGroupName" value="strId"></e-dropdownlist-fields>
+                        </ejs-dropdownlist>
+
+                    </div>
+                </div>
+       
+            
+                <div class="col-md-3">
+                    <br />
+                    <div class="padding-top">
+                        <label><strong style="color:black">Sacco Name</strong></label>
+
+                        <ejs-dropdownlist id="strCompanyId" ejs-for="strCompanyId" filterBarPlaceholder="Search" allowFiltering="true" filtering="strCompanyId" placeholder="Select Company" popupHeight="300px" dataSource="@ViewBag.strCompanyId" >
+                            <e-dropdownlist-fields text="strCompanyName" value="strCompanyCode"></e-dropdownlist-fields>
+                        </ejs-dropdownlist>
+
+                    </div>
+
+                 
+                </div>
+                <div class="col-md-3">
+                    <br />
+                    <label><strong style="color:black">Password</strong></label>
+
+                    <input asp-for="strPassword" type="password" class="form-control" required />
+                    <span asp-validation-for="strPassword" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+                    <br />
+                    <label><strong style="color:black">Confirm Password</strong></label>
+
+                    <input asp-for="ConfirmPassword" type="password" class="form-control" required />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-3" id="memberNoContainer" style="display: none;">
+                    <br />
+                    <label><strong style="color:black">MemberNo</strong></label>
+                    <input asp-for="MemberNo" class="form-control" />
+                    <span asp-validation-for="MemberNo" class="text-danger"></span>
+                </div>
+
+
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <br />
+                    <input type="submit" value="Save Details" class="btn btn-primary" style="background-color:#0670ba;width:100%" />
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    function countrychange() {
+        // disable the state DropDownList
+        var state = document.getElementById('state').ej2_instances[0];
+        var city = document.getElementById('city').ej2_instances[0];
+        var country = document.getElementById('country').ej2_instances[0];
+        state.enabled = true;
+        var tempQuery = new ej.data.Query().where('strCountyId', 'equal', country.value);
+        state.query = tempQuery;
+        state.text = null;
+        state.dataBind();
+        city.text = null;
+        city.enabled = false;
+        city.dataBind();
+    }
+    function statechange() {
+        var city = document.getElementById('city').ej2_instances[0];
+        var state = document.getElementById('state').ej2_instances[0];
+        city.enabled = true;
+        var tempQuery = new ej.data.Query().where('strSubCountyId', 'equal', state.value);
+        city.query = tempQuery;
+        city.text = null;
+        city.dataBind();
+
+    }
+    function strUserType(e) {
+        var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strUserType', 'startswith', e.text, true) : query;
+        e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strUserType)), query);
+    }
+</script>
+<script type="text/javascript">
+    function country(e) {
+            var query = new ej.data.Query();
+            query = (e.text !== '') ? query.where('strCounty', 'startswith', e.text, true) : query;
+            e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strCounty)), query);
+    }
+    function onfilteringgggg(e) {
+            var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strGroupName', 'contains', e.text, true) : query;
+            e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.salesdispalysearches)), query);
+
+
+    }
+        function onfilteringgggg(e) {
+            var query = new ej.data.Query();
+            query = (e.text !== '') ? query.where('strCompanyName', 'contains', e.text, true) : query;
+            e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.salesdispalysearches)), query);
+
+
+    }
+    function strCompanyId(e) {
+            var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strCompanyName', 'contains', e.text, true) : query;
+            e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strCompanyId)), query);
+    }
+        function onUserTypeChange(args) {
+            var userTypeDropdown = document.getElementById("strUserType").ej2_instances[0];
+            var memberNoContainer = document.getElementById("memberNoContainer");
+            console.log("Selected Value:", userTypeDropdown.value);
+            if (userTypeDropdown.text === "MEMBER") {
+                memberNoContainer.style.display = "block";
+            } else {
+                memberNoContainer.style.display = "none";
+            }
+        }       
+
+</script>
+

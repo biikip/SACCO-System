@@ -1,0 +1,339 @@
+﻿@model General
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+<head>
+    <style>
+        .excel-button {
+            background-color: #217346; /* Excel's green color */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+            .excel-button:hover {
+                background-color: #1E5A34; /* Darker green on hover */
+            }
+
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    <link href="~/Syncfussion/styles/material.css" rel="stylesheet" />
+    <script src="~/Syncfussion/scripts/ej2.min.js"></script>
+    <script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/linways/table-to-excel@v1.0.4/dist/tableToExcel.js"></script>
+
+</head>
+<div class="row" style="background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+    <div class="col-8">
+
+        <div style="margin:8px;padding:8px;text-align:left">
+            <div style="color:black;font-size:xx-large;" class="text-capitalize"> CIG/GROUPS </div>
+            <div style="color:gray;font-size:small;" class="text-capitalize">List of  Groups</div>
+        </div>
+
+    </div>
+    <div class="col-4">
+        <div style="margin:8px;padding:8px;text-align:end">
+            <a asp-action="Create" asp-controller="CIG_Croups" style="background:#0670ba;padding:4px;border-radius:8px;color:white"><i class="fa fa-plus" aria-hidden="true"></i> Add CIG/Group </a>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div>
+        <button id="exportBtn" class="excel-button">Export to Excel</button> <button id="exportPdf" class="excel-button">Export to PDF</button>
+    </div>
+    <partial name="_Search" />
+
+    <div style="margin:8px;padding:8px;background-color:white">
+        <table class="table   table-striped table-bordered  table-sm" id="myTable" style="color:black">
+            <thead style="background-color:#0f1230;color:white">
+                <tr>
+                    <th>
+                        CIG Name
+                    </th>
+                  
+                    <th>
+                        Tell
+                    </th>
+
+                    <th>
+                        Account No
+                    </th>
+
+                    <th>
+                        Contact Person
+                    </th>
+                    <th>
+                        County
+                    </th>
+                    <th>
+                        SubCounty
+                    </th>
+                    <th>
+                        Ward
+                    </th>
+                    <th>
+                        Village
+                    </th>
+                    @*<th>
+                        CIG Code
+                    </th>*@
+
+                    <th>
+                        status
+                    </th>
+                @*    <th>
+                        Pyhysical Address
+                    </th>*@
+                   @* <th>
+                        Company
+                    </th>*@
+                   @* <th>
+                        Email
+                    </th>*@
+                   <th colspan="3">
+                     Action
+                   </th>  
+                </tr>
+            </thead>
+            <tbody id="myUL">
+                @if (Model.CIG_Croups.Count() != 0)
+                {
+           
+                @foreach (var item in Model.CIG_Croups)
+                {
+                    var County = "n/a";
+                    var sub_Countyyy = "n/a";
+                    var warddd = "n/a";
+                    var companyName = "n/a";
+
+                    var ward = Model.locations.FirstOrDefault(k => k.strWardId == item.strWardId);
+                    if (ward != null)
+                    {
+                        County = ward.strCounty;
+                        sub_Countyyy = ward.strSubCounty;
+                        warddd = ward.strWard;
+
+                    }
+                    var comp = Model.co_Operatives.FirstOrDefault(k => k.strId.ToString() == item.strCompanyCode);
+                    if (comp != null)
+                    {
+                        companyName = comp.strCompanyName;
+                    }
+                <tr>
+                    <td>
+                        <b>     @Html.DisplayFor(modelItem => item.strName)</b>
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.strTellNo)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.strAccountNo)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.strContactPerson)
+                    </td>
+                    <td>
+                        @County
+                    </td>
+                    <td>
+                        @sub_Countyyy
+                    </td>
+                    <td>
+                        @warddd
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.strVillageName)
+                    </td>
+                    @*<td>
+                        @Html.DisplayFor(modelItem => item.strCIGCode)
+                    </td>*@
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.strBstatus)
+                    </td>
+                   @* <td>
+                        @Html.DisplayFor(modelItem => item.strPAddress)
+                    </td>*@
+                 @*   <td>
+                        @companyName
+                    </td>*@
+                           @* <td>
+                                @Html.DisplayFor(modelItem => item.strEmail)
+                            </td>*@
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id"><i class="fa fa-pencil" aria-hidden="true"></i> <span>Edit</span> </a>
+                    </td>
+                    <td>
+                        <a asp-action="Delete" data-toggle="modal" data-target="#_@item.Id" style="color:red" asp-route-id="@item.Id"><i class="fa fa-trash" aria-hidden="true"></i> <span>Remove</span> </a>
+                    </td>
+                </tr>
+
+                    <!-- Modal -->
+                    <div id="_@item.Id" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+                        <div class="modal-dialog">
+
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <div style="font-size:large;font-weight:bold" class="modal-title text-danger">
+                                        <i class="fa fa-trash" aria-hidden="true"></i> Remove CIG/Group
+                                    </div>
+
+                                </div>
+                                <div class="modal-body">
+                                    <div style="font-size:large;font-weight:bold;text-align:center" class="modal-title">@item.strName</div>
+
+                                    <div class="alert alert-danger">Hey you are about to remove this Group.Are you sure you want to continue??</div>
+                                </div>
+                                <form asp-action="Delete">
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <div class="modal-footer">
+                                        <div class=" btn-success btn-sm" data-dismiss="modal">Cancel</div>
+                                        <input type="submit" id="completebutton" value="REMOVE GROUP" class=" btn-danger btn-sm" />
+
+                                    </div>
+                                </form>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    }
+           
+
+                }
+                else
+                {
+                <tr>
+                    <td colspan="14" style="text-align:center;color:red">No CIG  Found </td>
+
+                </tr>
+            }
+
+            </table>
+        </div>
+    <script type="text/javascript">
+        debugger;
+        $('#exportBtn').click(function () {
+            debugger;
+            var tableData = [];
+
+            // Define indexes of columns to exclude
+            var excludeColumns = [8, 9, 10]; // Example: Exclude the first and third columns (0-indexed)
+
+            // Add headers
+            var headerData = [];
+            $('#myTable thead tr').each(function () {
+                $(this).find('th').each(function (index) {
+                    if (!excludeColumns.includes(index)) {
+                        headerData.push($(this).text()); // Only add header if it's not in the exclude list
+                    }
+                });
+            });
+            if (headerData.length > 0) {
+                tableData.push(headerData);
+            }
+
+            // Add rows
+            $('#myTable tbody tr').each(function () {
+                var rowData = [];
+                $(this).find('td').each(function (index) {
+                    if (!excludeColumns.includes(index)) {
+                        rowData.push($(this).text()); // Only add cell data if it's not in the exclude list
+                    }
+                });
+                tableData.push(rowData);
+            });
+
+            // Make the AJAX call
+            $.ajax({
+                url: '/CIG_Croups/ExportToExcel', // Adjust according to your routes
+                type: "POST",
+                data: JSON.stringify(tableData), // Send the tableData directly as JSON
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    window.location = response.fileUrl; // Assuming the server sends back a URL to download the file
+                },
+                error: function (xhr, status, error) {
+                    console.error('Export error:', error);
+                }
+            });
+        });
+        $(document).ready(function () {
+            // Function to extract table data and send it to the server
+            function generatePDF() {
+                debugger;
+                // Create an object to store table headers and body data
+                var pdfData = {
+                    headers: [], // Array to store table headers
+                    body: []     // Array to store table body data
+                };
+
+                // Specify the indices of columns to exclude
+                var excludedColumns = [8, 9, 10]; // Columns at index 8 and 9 (zero-based index) will be excluded
+
+                // Extract headers from the table headers
+                $('#myTable thead tr th').each(function (index) {
+                    // Only add headers if the column is not excluded
+                    if (!excludedColumns.includes(index)) {
+                        pdfData.headers.push($(this).text().trim());
+                    }
+                });
+
+                // Loop through each row in the table body
+                $('#myTable tbody tr').each(function () {
+                    // Create an array to store data for each row
+                    var rowData = [];
+
+                    // Loop through each cell in the row
+                    $(this).find('td').each(function (index) {
+                        // Only add cell data if the column is not excluded
+                        if (!excludedColumns.includes(index)) {
+                            // Get the text content of the cell and push it to the rowData array
+                            rowData.push($(this).text().trim());
+                        }
+                    });
+
+                    // Push the rowData array to the body data array
+                    pdfData.body.push(rowData);
+                });
+
+                // Make an AJAX POST request to the server
+                $.ajax({
+                    url: '/CIG_Croups/GeneratePDF', // Adjust the URL according to your application's routing
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(pdfData), // Convert pdfData object to JSON string
+                    success: function (response) {
+                        window.open(response.fileUrl, '_blank'); // Assuming the server sends back a URL to download the file
+
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle error
+                        console.error('Error generating PDF:', error);
+                    }
+                });
+            }
+            // Attach click event listener to the export button
+            $('#exportPdf').click(function () {
+                // Call the generatePDF function when the button is clicked
+                generatePDF();
+            });
+        });
+    </script>
+</div>

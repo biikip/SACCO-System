@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="04/15/2025 16:16:05" ReportInfo.Modified="04/15/2025 21:05:01" ReportInfo.CreatorVersion="2025.2.0.0">
+  <ScriptText>
+		using System;
+		using System.Collections;
+		using System.Collections.Generic;
+		using System.ComponentModel;
+		using System.Windows.Forms;
+		using System.Drawing;
+		using System.Data;
+		using FastReport;
+		using FastReport.Data;
+		using FastReport.Dialog;
+		using FastReport.Barcode;
+		using FastReport.Table;
+		using FastReport.Utils;
+
+		namespace FastReport
+		{
+		public class ReportScript
+		{
+		}
+		}
+	</ScriptText>
+  <Styles Name="Blue">
+    <Style Name="Title" Font="Arial, 12pt, style=Bold"/>
+    <Style Name="Header" Fill.Color="LightSkyBlue" Font="Arial, 10pt, style=Bold"/>
+    <Style Name="Group" Font="Arial, 10pt, style=Bold"/>
+    <Style Name="Data" Font="Arial, 10pt"/>
+    <Style Name="Footer" Fill.Color="LightSkyBlue" Font="Arial, 10pt"/>
+    <Style Name="EvenRows" Fill.Color="AliceBlue" Font="Arial, 10pt"/>
+  </Styles>
+  <Dictionary/>
+  <ReportPage Name="Page1" Landscape="true" PaperWidth="297" PaperHeight="210" Watermark.Font="Arial, 60pt">
+    <ReportTitleBand Name="ReportTitle1" Width="1047.06" Height="37.8">
+      <TextObject Name="Text1" Width="1047.06" Height="37.8" Dock="Fill" Text="MembersRegistrations" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" Style="Title"/>
+    </ReportTitleBand>
+    <PageHeaderBand Name="PageHeader1" Top="41.8" Width="1047.06" Height="28.35">
+      <TextObject Name="Text3" Width="85.05" Height="18.9" Fill.Color="LightSkyBlue" Text="MemberNo" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text7" Left="85.05" Width="85.05" Height="18.9" Fill.Color="LightSkyBlue" Text="PhoneNo" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text9" Left="179.55" Width="85.05" Height="18.9" Fill.Color="LightSkyBlue" Text="RegDate" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text11" Left="264.6" Width="85.05" Height="18.9" Fill.Color="LightSkyBlue" Text="SurName" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text13" Left="359.1" Width="85.05" Height="18.9" Fill.Color="LightSkyBlue" Text="OtherName" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text17" Left="444.15" Width="75.6" Height="18.9" Fill.Color="LightSkyBlue" Text="Gender" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text19" Left="519.75" Width="75.6" Height="18.9" Fill.Color="LightSkyBlue" Text="IdNo" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text21" Left="604.8" Width="75.6" Height="18.9" Fill.Color="LightSkyBlue" Text="DOB" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text23" Left="680.4" Width="75.6" Height="18.9" Fill.Color="LightSkyBlue" Text="Email" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text25" Left="756" Width="75.6" Height="18.9" Fill.Color="LightSkyBlue" Text="IsApproved" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text27" Left="841.05" Width="75.6" Height="18.9" Fill.Color="LightSkyBlue" Text="KraPin" Font="Arial, 10pt, style=Bold" Style="Header"/>
+    </PageHeaderBand>
+    <DataBand Name="Data1" Top="74.15" Width="1047.06" Height="368.55" Style="Data" EvenStyle="EvenRows">
+      <TextObject Name="Text2" Width="85.05" Height="94.5" Text="[MembersRegistrations.strMemberNo]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text6" Left="85.05" Width="85.05" Height="18.9" Text="[MembersRegistrations.strPhoneNo]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text8" Left="179.55" Width="85.05" Height="18.9" Text="[MembersRegistrations.strRegDate]" Format="Date" Format.Format="d" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text10" Left="264.6" Width="85.05" Height="18.9" Text="[MembersRegistrations.strSurName]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text12" Left="359.1" Width="85.05" Height="18.9" Text="[MembersRegistrations.strOtherName]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text16" Left="444.15" Width="75.6" Height="18.9" Text="[MembersRegistrations.strGender]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text18" Left="519.75" Width="75.6" Height="18.9" Text="[MembersRegistrations.strIdNo]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text20" Left="604.8" Width="75.6" Height="18.9" Text="[MembersRegistrations.strDOB]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text22" Left="680.4" Width="75.6" Height="18.9" Text="[MembersRegistrations.strEmail]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text24" Left="756" Width="75.6" Height="18.9" Text="[MembersRegistrations.IsApproved]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text26" Left="841.05" Width="75.6" Height="18.9" Text="[MembersRegistrations.KraPin]" Font="Arial, 10pt" Style="Data"/>
+    </DataBand>
+    <ReportSummaryBand Name="ReportSummary1" Top="446.7" Width="1047.06" Height="37.8"/>
+    <PageFooterBand Name="PageFooter1" Top="488.5" Width="1047.06" Height="18.9">
+      <TextObject Name="Text28" Width="1047.06" Height="18.9" Dock="Fill" Fill.Color="LightSkyBlue" Text="[PageN]" HorzAlign="Right" Font="Arial, 10pt" Style="Footer"/>
+    </PageFooterBand>
+  </ReportPage>
+</Report>

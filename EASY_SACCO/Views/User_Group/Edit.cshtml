@@ -1,0 +1,347 @@
+﻿@model EASY_SACCO.Models.User_Group
+
+@using Syncfusion.EJ2
+@using Newtonsoft.Json
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+<head>
+    <link href="~/Syncfussion/styles/material.css" rel="stylesheet" />
+    <script src="~/Syncfussion/scripts/ej2.min.js"></script>
+</head>
+<div class="row" style="background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+    <div class="col-8">
+
+        <div style="margin:8px;padding:8px;text-align:left">
+            <div style="color:black;font-size:xx-large;" class="text-capitalize">Update User Group Info</div>
+            <div style="color:gray;font-size:small;" class="text-capitalize">Edit/Update User Groups</div>
+        </div>
+
+    </div>
+    <div class="col-4">
+        <div style="margin:8px;padding:8px;text-align:end">
+            <a asp-action="Index" asp-controller="User_Group" style="background:#0670ba;padding:4px;border-radius:8px;color:white"><i class="fa fa-eye" aria-hidden="true"></i>View User Grpups</a>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+
+    <div style="padding:8px;margin:8px;border-radius:16px;background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="strId" />
+            <div class="row">
+
+                <div class="col-md-3">
+
+                    <div class="form-group">
+                        <label class="control-label" style="color:black">Group Code</label>
+                        <input asp-for="GroupId" class="form-control" />
+                        <span asp-validation-for="GroupId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label asp-for="strGroupName" class="control-label" style="color:black"></label>
+                        <input asp-for="strGroupName" class="form-control" />
+                        <span asp-validation-for="strGroupName" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <div class="form-group">
+                        <input asp-for="Setup" type="checkbox" />
+                        <label asp-for="Setup" style="color:black"></label>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                            <div class="col-md-3 ml-md-auto">
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <div class="form-group">
+                                <input asp-for="SystemUsers" type="checkbox" />
+                                <label asp-for="SystemUsers" style="color:black"></label>
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="LoanTypes" type="checkbox" />
+                                <label asp-for="LoanTypes" style="color:black"></label>
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="ShareTypes" type="checkbox" />
+                                <label asp-for="ShareTypes" style="color:black"></label>
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="CigRegistration" type="checkbox" />
+                                <label asp-for="CigRegistration" style="color:black"></label>
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="BankSetup" type="checkbox" />
+                                <label asp-for="BankSetup" style="color:black"></label>
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="ChargesSetup" type="checkbox" />
+                                <label asp-for="ChargesSetup" style="color:black"></label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <div class="form-group">
+                        <input asp-for="Records" type="checkbox" />
+                        <label asp-for="Records" style="color:black"></label>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                            <div class="col-md-3 ml-md-auto">
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <div class="form-group">
+                                <input asp-for="MembershipRegistration" type="checkbox" />
+                                <label asp-for="MembershipRegistration" style="color:black"></label>
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="SaccoRegistration" type="checkbox" />
+                                <label asp-for="SaccoRegistration" style="color:black"></label>
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="RecruitmentAgents" type="checkbox" />
+                                <label asp-for="RecruitmentAgents" style="color:black"></label>
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="Beneficiaries" type="checkbox" />
+                                <label asp-for="Beneficiaries" style="color:black"></label>
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="MemberWithdrawal" type="checkbox" />
+                                <label asp-for="MemberWithdrawal" style="color:black"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <div class="form-group">
+                        <input asp-for="Transactions" type="checkbox" />
+                        <label asp-for="Transactions" style="color:black"></label>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                            <div class="col-md-3 ml-md-auto">
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+
+                            <div class="form-group">
+                                <input asp-for="Receipting" type="checkbox" />
+                                <label asp-for="Receipting" style="color:black"></label>
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="JournalPosting" type="checkbox" />
+                                <label asp-for="JournalPosting" style="color:black"></label>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <div class="form-group">
+                        <input asp-for="CreditManagement" type="checkbox" />
+                        <label asp-for="CreditManagement" style="color:black"></label>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12">
+                            <div class="col-md-3 ml-md-auto">
+                            </div>
+                        </div>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                            <div class="form-group">
+                                <input asp-for="LoanApplications" type="checkbox" />
+                                <label asp-for="LoanApplications" style="color:black"></label>
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="Appraisals" type="checkbox" />
+                                <label asp-for="Appraisals" style="color:black"></label>
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="Endorsements" type="checkbox" />
+                                <label asp-for="Endorsements" style="color:black"></label>
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="LoanSchedule" type="checkbox" />
+                                <label asp-for="LoanSchedule" style="color:black"></label>
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="ReceiptPosting" type="checkbox" />
+                                <label asp-for="ReceiptPosting" style="color:black"></label>
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="ReprintMemberReceipt" type="checkbox" />
+                                <label asp-for="ReprintMemberReceipt" style="color:black"></label>
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="TransfersAndOffsettings" type="checkbox" />
+                                <label asp-for="TransfersAndOffsettings" style="color:black"></label>
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="ShareTransfer" type="checkbox" />
+                                <label asp-for="ShareTransfer" style="color:black"></label>
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="ShareToLoanOffsetting" type="checkbox" />
+                                <label asp-for="ShareToLoanOffsetting" style="color:black"></label>
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="DividendsProcessing" type="checkbox" />
+                                <label asp-for="DividendsProcessing" style="color:black"></label>
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="DividendsPayment" type="checkbox" />
+                                <label asp-for="DividendsPayment" style="color:black"></label>
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="TransactionsManagement" type="checkbox" />
+                                <label asp-for="TransactionsManagement" style="color:black"></label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <div class="form-group">
+                        <input asp-for="Accounting" type="checkbox" />
+                        <label asp-for="Accounting" style="color:black"></label>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                            <div class="col-md-3 ml-md-auto">
+                            </div>
+                        </div>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                            <div class="form-group">
+                                <input asp-for="AccountSetup" type="checkbox" />
+                                <label asp-for="AccountSetup" style="color:black"></label>
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="GLInquiry" type="checkbox" />
+                                <label asp-for="GLInquiry" style="color:black"></label>
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="BookOfAccounts" type="checkbox" />
+                                <label asp-for="BookOfAccounts" style="color:black"></label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <div class="form-group">
+                        <input asp-for="ProjectAndInvestmentManagement" type="checkbox" />
+                        <label asp-for="ProjectAndInvestmentManagement" style="color:black"></label>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                            <div class="col-md-3 ml-md-auto">
+                            </div>
+                        </div>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                            <div class="form-group">
+                                <input asp-for="ProjectAndInvestments" type="checkbox" />
+                                <label asp-for="ProjectAndInvestments" style="color:black"></label>
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="FundDrives" type="checkbox" />
+                                <label asp-for="FundDrives" style="color:black"></label>
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="SubscribeToProject" type="checkbox" />
+                                <label asp-for="SubscribeToProject" style="color:black"></label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <div class="form-group">
+                        <input asp-for="Enquiries" type="checkbox" />
+                        <label asp-for="Enquiries" style="color:black"></label>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                            <div class="col-md-3 ml-md-auto">
+                            </div>
+                        </div>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                            <div class="form-group">
+                                <input asp-for="SharesInquiry" type="checkbox" />
+                                <label asp-for="SharesInquiry" style="color:black"></label>
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="LoansInquiry" type="checkbox" />
+                                <label asp-for="LoansInquiry" style="color:black"></label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <div class="form-group">
+                        <input asp-for="Reports" type="checkbox" />
+                        <label asp-for="Reports" style="color:black"></label>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                            <div class="col-md-3 ml-md-auto">
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <div class="form-group">
+                                <input asp-for="MembersPerSacco" type="checkbox" />
+                                <label asp-for="MembersPerSacco" style="color:black"></label>
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="CigsPerSacco" type="checkbox" />
+                                <label asp-for="CigsPerSacco" style="color:black"></label>
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="MembersPerCounty" type="checkbox" />
+                                <label asp-for="MembersPerCounty" style="color:black"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+
+                <input type="submit" value="Update Details" class="btn btn-primary" style="background-color:#0670ba;width:100%" />
+            </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

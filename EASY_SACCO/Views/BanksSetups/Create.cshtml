@@ -1,0 +1,144 @@
+﻿@model EASY_SACCO.Models.BanksSetup
+
+
+
+@using Syncfusion.EJ2
+@using Newtonsoft.Json
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+<head>
+    <link href="~/Syncfussion/styles/material.css" rel="stylesheet" />
+    <script src="~/Syncfussion/scripts/ej2.min.js"></script>
+</head>
+<div class="row" style="background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+    <div class="col-8">
+
+        <div style="margin:8px;padding:8px;text-align:left">
+            <div style="color:black;font-size:xx-large;" class="text-capitalize">BanksSetups </div>
+            <div style="color:gray;font-size:small;" class="text-capitalize">Add BanksSetups  to the System</div>
+        </div>
+
+    </div>
+    <div class="col-4">
+        <div style="margin:8px;padding:8px;text-align:end">
+            <a asp-action="Index" asp-controller="BanksSetups" style="background:#0670ba;padding:4px;border-radius:8px;color:white"><i class="fa fa-plus" aria-hidden="true"></i>  View Banks Setup  </a>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+
+    <div style="padding:8px;margin:8px;border-radius:16px;background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <div class="col-md-3">
+                    <label><strong style="color:black">Bank Code</strong></label>
+                <input asp-for="strBankCode" class="form-control" />
+                <span asp-validation-for="strBankCode" class="text-danger"></span>
+            </div>
+                <div class="col-md-3">
+                    <label><strong style="color:black">Bank Name</strong></label>
+                    <input asp-for="strBankName" class="form-control" />
+                    <span asp-validation-for="strBankName" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+                    <label><strong style="color:black">Bank AccNo</strong></label>
+                <input asp-for="strBankAccno" class="form-control" />
+                <span asp-validation-for="strBankAccno" class="text-danger"></span>
+            </div>
+                <div class="col-md-3">
+                    <label><strong style="color:black">Phone NO.</strong></label>
+                <input asp-for="strPhoneNo" class="form-control" />
+                <span asp-validation-for="strPhoneNo" class="text-danger"></span>
+            </div>
+                <div class="col-md-3">
+                    <br />
+                    <div class="padding-top">
+                        <label><strong style="color:black">Associated GL</strong></label>
+                        <ejs-dropdownlist id="strAssociatedGL" ejs-for="strAssociatedGL"
+                                          filterBarPlaceholder="Search"
+                                          allowFiltering="true"
+                                          filtering="strAccountNoFilter"
+                                          placeholder="Select Associated GL"
+                                          popupHeight="300px"
+                                          dataSource="@ViewBag.strAccountNo">
+                            <e-dropdownlist-fields text="strAccountName" value="strAccountNo"></e-dropdownlist-fields>
+                        </ejs-dropdownlist>
+
+
+                    </div>
+            </div>
+                <div class="col-md-3">
+                    <label><strong style="color:black">Branch Name</strong></label>
+                <input asp-for="strBranchName" class="form-control" />
+                <span asp-validation-for="strBranchName" class="text-danger"></span>
+            </div>
+                <div class="col-md-3">
+                    <label><strong style="color:black">Branch Code</strong></label>
+                    <input asp-for="strBranchCode" class="form-control" />
+                    <span asp-validation-for="strBranchCode" class="text-danger"></span>
+                </div>
+             
+                <div class="col-md-3">
+                    <br />
+                    <div class="padding-top">
+                        <label><strong style="color:black">Account Type</strong></label>
+                        <ejs-dropdownlist id="strAccountType"
+                                          ejs-for="strAccountType"
+                                          filterBarPlaceholder="Search"
+                                          allowFiltering="true"
+                                          filtering="strAccountTypeFilter"
+                                          placeholder="Select Account Type"
+                                          popupHeight="300px"
+                                          dataSource="@ViewBag.strAccountType">
+                            <e-dropdownlist-fields text="strAccountType" value="strAccountType"></e-dropdownlist-fields>
+                        </ejs-dropdownlist>
+
+                    </div>
+            </div>
+                <div class="col-md-3">
+                    <label><strong style="color:black">Address</strong></label>
+                <input asp-for="strAddress" class="form-control" />
+                <span asp-validation-for="strAddress" class="text-danger"></span>
+            </div>
+                <div class="col-md-3">
+                    <br />
+                    <input type="submit" value="Save Details" class="btn btn-primary" style="background-color:#0670ba;width:100%" />
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+    function strAccountNo(e) {
+        var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strAccountNo', 'startswith', e.text, true) : query;
+        e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strAccountNo)), query);
+    }
+
+    function strAccountType(e) {
+        var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strAccountType', 'startswith', e.text, true) : query;
+        e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strAccountType)), query);
+    }
+        function strAccountNoFilter(e) {
+        var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strAccountName', 'startswith', e.text, true) : query;
+        e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strAccountNo)), query);
+    }
+        function strAccountTypeFilter(e) {
+        var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strAccountType', 'startswith', e.text, true) : query;
+        e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strAccountType)), query);
+    }
+  
+  
+
+</script>
+<ejs-scripts></ejs-scripts>
+
+

@@ -1,0 +1,79 @@
+﻿@model EASY_SACCO.Models.LoanAplication
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>LoanAplication</h4>
+    <hr />
+    @* <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strLoanTypeId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strLoanTypeId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strMemberId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strMemberId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strLoanNo)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strLoanNo)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strAmount)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strAmount)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strApplicationDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strApplicationDate)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strRepaymentPeriod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strRepaymentPeriod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strInterestRate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strInterestRate)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strRepaymentMethod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strRepaymentMethod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strEndoresmentDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strEndoresmentDate)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strEndorsementStatus)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strEndorsementStatus)
+        </dd>
+    </dl> *@
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

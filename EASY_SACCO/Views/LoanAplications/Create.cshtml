@@ -1,0 +1,1173 @@
+﻿@model EASY_SACCO.Models.Loanguar
+@using Syncfusion.EJ2
+@using Newtonsoft.Json
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+
+    var MemberNo = HttpContextAccessor.HttpContext.Session.GetString("MemberNo");
+    var Username = HttpContextAccessor.HttpContext.Session.GetString("Username");
+
+}
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+<head>
+    <style>
+        .accordion {
+            background-color: #eee;
+            color: #444;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+            transition: 0.4s;
+        }
+
+            .active, .accordion:hover {
+                background-color: #ccc;
+            }
+
+            .accordion:after {
+                content: '\002B';
+                color: #777;
+                font-weight: bold;
+                float: right;
+                margin-left: 5px;
+            }
+
+        .active:after {
+            content: "\2212";
+        }
+
+        .panel {
+            padding: 0 18px;
+            background-color: white;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.2s ease-out;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+            z-index: 999; /* Ensure the overlay is behind the loader and message */
+        }
+
+        .loader {
+            border: 8px solid #f3f3f3; /* Light grey */
+            border-top: 8px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            display: none; /* Hide the loader by default */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000; /* Ensure the loader is on top of other elements */
+        }
+
+        .message {
+            display: none; /* Hide the message by default */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: lightgreen;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1001; /* Ensure the message is on top of other elements */
+        }
+
+    </style>
+    <link href="~/Syncfussion/styles/material.css" rel="stylesheet" />
+    <script src="~/Syncfussion/scripts/ej2.min.js"></script>
+</head>
+
+
+<div class="row" style="background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+
+    @if (TempData["save"] != null)
+    {
+        <div style="background-color:white;margin-top:25px;padding:20px">
+            <div class="@TempData["save"]   alert-dismissible alert alert-info">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                @TempData["save"]
+            </div>
+        </div>
+    }
+    @if (TempData["repayperiod"] != null)
+    {
+        <div style="background-color:white;margin-top:25px;padding:20px">
+            <div class="@TempData["repayperiod"]   alert-dismissible alert alert-danger">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                @TempData["repayperiod"]
+            </div>
+        </div>
+    }
+    @if (TempData["Loanexist"] != null)
+    {
+        <div style="background-color:white;margin-top:25px;padding:20px">
+            <div class="@TempData["Loanexist"]   alert-dismissible alert alert-danger">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                @TempData["Loanexist"]
+            </div>
+        </div>
+    }
+
+    <div class="col-8">
+
+        <div style="margin:8px;padding:8px;text-align:left">
+            <div style="color:black;font-size:xx-large;" class="text-capitalize">Loan Applications </div>
+            <div style="color:gray;font-size:small;" class="text-capitalize">Add new Loan Aplication to the system</div>
+        </div>
+
+    </div>
+    @*  <div class="col-4">
+    <div style="margin:8px;padding:8px;text-align:end">
+    <a asp-action="Index" asp-controller="LoanAplications" style="background:#0670ba;padding:4px;border-radius:8px;color:white"><i class="fa fa-plus" aria-hidden="true"></i>  View LoanAplications</a>
+    </div>
+    </div>*@
+</div>
+<div id="overlay" class="overlay"></div>
+<div id="loader" class="loader"></div>
+<div id="message" class="message"></div>
+
+<div class="container-fluid">
+    <div style="padding:20px;margin:8px;border-radius:16px;background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+        <div class="col-md-3" style="padding:0px;margin-top:0px">
+            <br />
+            <input type="button" value="Search Member" class="btn btn-primary" id="toggleVisibilityButton" style="background-color:#0670ba;width:100%" />
+
+        </div>
+        <br />
+        <div class="row" style="display:none" id="displaytable">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="normal-table-list mg-t-3">
+                    <div class="row">
+                        <div class="col-sm-2 col-xs-12">
+                        </div>
+                        <div class="col-sm-6 col-xs-12">
+                            <h4 class="text-black">Search Members</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                            <div class="form-group">
+                                <select id="membersconditions" class="form-control">
+                                    <option></option>
+                                    <option>MemberNo</option>
+                                    <option>Name</option>
+                                    <option>IdNo</option>
+                                    <option>PhoneNo</option>
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
+                            <div class="form-group">
+                                <input id="searchmembers" autocomplete="off" placeholder="Search" class="form-control" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div style="margin:8px;padding:8px;background-color:white">
+                        <table class="table   table-striped table-bordered  table-sm" style="color:black " id="customers">
+                            <thead style="background-color:#0f1230;color:white">
+
+                                <tr>
+                                    <th>
+                                        Full Name
+                                    </th>
+                                    <th>
+                                        Member No
+                                    </th>
+                                    <th>
+                                        Phone No
+                                    </th>
+                                    <th>
+                                        Status
+                                    </th>
+
+                                    <th>
+                                        ID No
+                                    </th>
+
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="intakes">
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+
+        <form>
+            <div class="row">
+
+                <div class="col-md-3">
+                    <label class="text-black"><strong>Member No</strong> </label>
+                    <br />
+                    <input id="Membernoids3" autocomplete="off" class="form-control" />
+                    @*   <input  id="Membernoid" value="@ViewBag.memberno" class="form-control" /> *@
+
+                </div>
+                <div class="col-md-3">
+                    <label class="text-black"><strong>Member Names</strong></label>
+                    <br />
+                    <input name="strUserName" value="@ViewBag.name" id="names" readonly placeholder="Member Names" class="form-control" />
+
+                </div>
+                <div class="col-md-3">
+                    <label class="text-black"><strong>Deposit</strong></label>
+                    <br />
+                    <input name="strUserName" value="@ViewBag.deposit" id="Deposit" readonly class="form-control" />
+
+                </div>
+                <div class="col-md-3">
+                    <label class="text-black"><strong>Share Capital</strong></label>
+                    <br />
+                    <input name="strUserName" value="@ViewBag.capital" id="Capital" readonly class="form-control" />
+
+                </div>
+                <div class="col-md-3">
+                    <label class="text-black"><strong>Matured Shares</strong></label>
+                    <br />
+                    <input name="strUserName" value="@ViewBag.maturedshares" id="Maturedsharess" readonly class="form-control" />
+
+                </div>
+
+                <div class="col-md-3">
+                    <label class="text-black"><strong>Max Loan Amount</strong></label>
+                    <br />
+                    <input name="strUserName" id="maxloan" readonly placeholder="Max loan" class="form-control" />
+
+                </div>
+                <div class="col-md-3">
+
+                    <label class="text-black"><strong>Outstanding Loans</strong></label>
+                    <br />
+                    <input name="strPhoneNo" value="0.00" id="Outstandingloans" readonly placeholder="Outstanding Loans" class="form-control" />
+
+                </div>
+                <div class="col-md-3">
+
+                    <label class="text-black"><strong>Loan Balance</strong></label>
+                    <br />
+                    <input name="strEmail" value="0.00" readonly id="loanbal" placeholder="Loan Balance" class="form-control" />
+
+                </div>
+            </div>
+
+            <br />
+            <hr style="color:black" />
+
+            <div class="row">
+                <div class="col-md-3">
+
+                    <label class="text-black"><strong>Loan Type</strong></label>
+
+                    <select name="LoanCode" asp-items="@ViewBag.loantypes" readonly required class="form-control" id="loantypeid" onchange="getInterestRate()">
+                        <option>Select Loan Type</option>
+                    </select>
+                    <br />
+                </div>
+
+
+                <div class="col-md-3">
+
+                    <label class="text-black"><strong>Loan No</strong></label>
+
+                    <input name="LoanNo" placeholder="Loan No" id="Loannoid" readonly required class="form-control" />
+
+
+                    <br />
+
+                </div>
+                <div class="col-md-3">
+
+                    <label class="text-black"><strong>Loan Amount</strong></label>
+
+
+
+                    <input name="LoanAmt" placeholder="Loan Amount" id="AmountI" type="number" required class="form-control" />
+
+
+
+                </div>
+                <div class="col-md-3">
+
+                    <label class="text-black"><strong>Application Date </strong></label>
+                    <input name="ApplicDate" type="date" class="form-control" id="applicationdate" max="" required onchange="updateMaxDate()">
+
+
+                </div>
+                <div class="col-md-3">
+
+                    <label class="text-black"><strong>Repay Period</strong></label>
+
+                    <input name="RepayPeriod" placeholder="Repay Period" id="repayperiod" autocomplete="off" required class="form-control" />
+
+
+                </div>
+                <div class="col-md-3">
+                    <br />
+
+                    <input name="strOtherName" placeholder="Loan Code" id="loancodeid" readonly required class="form-control" />
+
+                    <br />
+
+
+                    <br />
+
+
+                </div>
+                <div class="col-md-3">
+                    <label class="text-black"><strong>Interest Rate</strong></label>
+
+                    <input name="Interest" placeholder="Interest Rate" readonly id="interestrateid" required class="form-control" />
+
+
+                </div>
+                <div class="col-md-3">
+                    <label class="text-black"><strong>Repay Method </strong></label>
+
+                    <input name="RepayMethod" placeholder="Repay Method " id="repaymethod" readonly required class="form-control" />
+
+                </div>
+
+
+            </div>
+
+        </form>
+
+        <hr style="color:black" />
+        <button id="addGuarantorButton" class="accordion" style="display:none;">
+            <strong>Add Guarantor</strong>
+        </button>
+
+        <div class="panel">
+            <div class="row">
+
+                <div class="col-md-3">
+                    <br />
+                    <input type="button" value="Search Guarantor" class="btn btn-primary" id="toggleVisibilityButtons" style="background-color:#0670ba;width:100%" />
+                </div>
+                <br />
+            </div>
+
+
+            <div class="row" style="display:none" id="displaytables">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="normal-table-list mg-t-3">
+                        <div class="row">
+                            <div class="col-sm-2 col-xs-12">
+                            </div>
+                            <div class="col-sm-6 col-xs-12">
+                                <h4 class="text-black">Search Guarantor</h4>
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                                <div class="form-group">
+                                    <select id="guaranorconditions" class="form-control">
+                                        <option></option>
+                                        <option>MemberNo</option>
+                                        <option>Name</option>
+
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
+                                <div class="form-group">
+                                    <input id="searchguarantor" autocomplete="off" placeholder="Search" class="form-control" />
+                                </div>
+                            </div>
+
+                        </div>
+                        <div style="margin:8px;padding:8px;background-color:white">
+                            <table class="table   table-striped table-bordered  table-sm" style="color:black " id="customersss">
+                                <thead style="background-color:#0f1230;color:white">
+
+                                    <tr>
+                                        <th>
+                                            Memberno
+                                        </th>
+                                        <th> Member Name</th>
+                                        <th>
+                                            Total Contributions
+                                        </th>
+                                        <th style="width:30%">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="guarantors">
+                                </tbody>
+
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+
+            <hr style="color:black" />
+
+
+            <div style="background-color: #f3f3f3;color:#8b8b8b;margin-bottom: 8px;padding:8px;margin-top:8px;text-align:center">
+                <strong style="color:black">Guarantor Details</strong>
+            </div>
+            <form>
+                <div class="row">
+
+
+
+                    <div class="col-md-3">
+                        <label class="text-black"><strong>Member No</strong> </label>
+                        <br />
+                        <input id="Membernoids1" name="MemberNo" value="@ViewBag.memberno" placeholder="Member No" required class="form-control" />
+
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="text-black"><strong>Guarantor Names</strong></label>
+                        <br />
+                        <input id="namess" name="FullNames" value="@ViewBag.names" readonly placeholder="Guarantor Names" class="form-control" />
+
+                    </div>
+                    <div class="col-md-3">
+                        <label class="text-black"><strong>Guarantor Deposit </strong></label>
+                        <br />
+                        <input name="AmountDeposit" value="@ViewBag.totaldeposit" id="currentshares" readonly placeholder="Current Shares" class="form-control" />
+
+                    </div>
+                    <div class="col-md-3">
+                        <label class="text-black"><strong>Amount Available </strong></label>
+                        <br />
+                        <input name="AmountAvailable" value="@ViewBag.AmtAvailable" id="availableshares" readonly placeholder="Amount Available" class="form-control" />
+
+                    </div>
+                    <div class="col-md-3">
+                        <label class="text-black"><strong>Amount Guaranteed</strong></label>
+                        <br />
+                        <input name="AmountGuaranteed" id="AmountI2" placeholder="Amount guaranteed" autocomplete="off" required class="form-control" />
+                        <br />
+
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <br />
+                        <button id="addToList" onclick="validguarantor()" class="btn-primary" value="Add To List" style="width:200px;">Add To List</button>
+                        <br />
+                    </div>
+                </div>
+
+
+
+            </form>
+            <br />
+            <table id="detailsTable" class="table table-striped table-bordered table-responsive-sm  table-sm" style="color:black">
+                <thead style="background-color:#0f1230;color:white">
+                    <tr>
+
+                        <th style="width:30%">Member No</th>
+                        <th style="width:25%">Guarantor Name</th>
+                        <th style="width:20%">Guarantor Deposit</th>
+                        <th style="width:20%">Amount Guarantee </th>
+
+                        <th style="width:30%">Action</th>
+
+                    </tr>
+                </thead>
+                <tbody></tbody>
+
+            </table>
+
+
+
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+
+
+            <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+            <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+            @section scripts {
+                <script>
+
+                    //Add Multiple list.
+                    $("#addToList").click(function (e) {
+                        e.preventDefault();
+
+                        if ($.trim($("#Membernoids1").val()) == "" ||
+                            $.trim($("#namess").val()) == "" ||
+                            $.trim($("#currentshares").val()) == "" ||
+                            $.trim($("#availableshares").val()) == "" ||
+                            $.trim($("#AmountI2").val()) == "") {
+                            toastr.error('Please all the fields are required!!!', { timeOut: 5000 })
+                            return;
+                        }
+
+
+
+                        // if ($("#households").val() == "" ||$("#genders").val() == "" || $("#highesteducationlevel").val() == "" || $("#SNO").val() == "" || $("#User").val() == "" || $("#Branch").val() == "" || $("#Cooperative").val() == "") return;
+                        let MemberNo = document.getElementById("Membernoids1").value;
+                        let FullNames = document.getElementById("namess").value;
+                        let AmountDeposits = document.getElementById("currentshares").value.replace(",", "");
+                        let AmountGuaranteed = document.getElementById("AmountI2").value;
+                        // let LoanNo = document.getElementById("Loannoid").value;
+
+
+                        // detailsTableBody = $("#detailsTable tbody");
+
+                        // var productItem = '<tr><td>' + MemberNo + '</td><td>' + FullNames + '</td><td>' + AmountDeposits + '</td><td>' + AmountGuaranteed + '</td><td><a data-itemId="0" href="#" class="deleteItem">Remove</a></td></tr>';
+                        // detailsTableBody.append(productItem);
+                        // Check if the MemberNo already exists in the table
+                        let existingRecords = $("#detailsTable tbody tr").filter(function () {
+                            return $(this).find('td:eq(0)').text() === MemberNo;
+                        });
+
+                        // If record already exists, do not append
+                        if (existingRecords.length > 0) {
+                            toastr.error("Record with Member No " + MemberNo + " already exists.", { timeOut: 5000 })
+                            clearItem();
+                            return false; // Prevent further execution
+                        }
+
+                        // Append the record if it doesn't already exist
+                        detailsTableBody = $("#detailsTable tbody");
+                        var productItem = '<tr><td>' + MemberNo + '</td><td>' + FullNames + '</td><td>' + AmountDeposits + '</td><td>'  + AmountGuaranteed + '</td><td><a data-itemId="0" href="#" class="deleteItem">Remove</a></td></tr>';
+                        detailsTableBody.append(productItem);
+
+                        clearItem();
+                        return true; // Record appended successfully
+
+
+                    });
+                    //After Add A New Order In The List, Clear Clean The Form For Add More Order.
+                    function clearItem() {
+                        document.getElementById("Membernoids1").value = "";
+                        document.getElementById("namess").value = "";
+                        document.getElementById("currentshares").value = "";
+                        document.getElementById("availableshares").value = "";
+                        document.getElementById("AmountI2").value = "";
+
+
+                    }
+                    //After Add A New Order In The List, Clear Clean The Form For Add More records.
+                    function clearItemss() {
+
+                        document.getElementById("Membernoids3").value = "";
+                        document.getElementById("AmountI").value = "";
+                        document.getElementById("Deposit").value = "";
+                        document.getElementById("Capital").value = "";
+                        document.getElementById("Outstandingloans").value = "";
+                        document.getElementById("loanbal").value = "";
+                        document.getElementById("Loannoid").value = "";
+
+                        document.getElementById("applicationdate").value = "";
+                        document.getElementById("loancodeid").value = "";
+                        document.getElementById("interestrateid").value = "";
+                        document.getElementById("repaymethod").value = "";
+                        document.getElementById("names").value = "";
+                        document.getElementById("repayperiod").value = "";
+                        document.getElementById("loantypeid").value = "";
+                        document.getElementById("maxloan").value = "";
+                        document.getElementById("Maturedsharess").value = "";
+
+                    }
+                    // After Add A New Order In The List, If You Want, You Can Remove It.
+                    $(document).on('click', 'a.deleteItem', function (e) {
+                        e.preventDefault();
+                        var $self = $(this);
+                        if ($(this).attr('data-itemId') == "0") {
+                            $(this).parents('tr').css("background-color", "#ff6347").fadeOut(800, function () {
+                                $(this).remove();
+                            });
+                        }
+                    });
+                    //data with no commas
+                    function numberWithnoCommas(x) {
+                        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "");
+                    }
+                    //After Click Save Button Pass All Data View To Controller For Save Database
+                     function saveOrder(data) {
+                         debugger
+                        return $.ajax({
+                            type: 'POST',
+                            url: "/LoanAplications/SaveOrder",
+                            contentType: 'application/json; charset=utf-8',
+                            data: JSON.stringify(data),
+                            success: function (result) {
+                                debugger;
+                                if (result.success === false) {
+                                    toastr.error(result.message, { timeOut: 5000 });
+                                } else {
+                                    toastr.success(result.message, { timeOut: 5000 });
+                                    clearItemss();
+                                    clearItem();
+                                    $("#detailsTable tbody tr").remove();
+                                }
+                            },
+                            error: function () {
+                                toastr.error('Error! Something went wrong, please try again.', { timeOut: 5000 });
+                            }
+                        });
+                    }
+
+                    //Collect Multiple Order List For Pass To Controller
+                    $("#saveOrder").click(function (e) {
+
+                        e.preventDefault();
+                        //clearItem1();
+
+
+                        var detailsArr = [];
+                        detailsArr.length = 0;
+
+
+                        $.each($("#detailsTable tbody tr"), function () {
+                            var detail = {
+                                MemberNo: $(this).find('td:eq(0)').html(),
+                                FullNames: $(this).find('td:eq(1)').html(),
+                                AmountDeposit: $(this).find('td:eq(2)').html(),
+                                AmountGuaranteed: $(this).find('td:eq(3)').html(),
+
+                            };
+                            detailsArr.push(detail);
+                        });
+
+                    var data = {
+                        loanguars: detailsArr,
+                        MemberNo: $("#Membernoids3").val(),
+                        Deposit: parseFloat($("#Deposit").val().replace(",", "")),
+                        ShareCapital: parseFloat($("#Capital").val().replace(",", "")),
+                        OutstandingLoan: parseFloat($("#Outstandingloans").val().replace(",", "")),
+                        LoanBalance: parseFloat($("#loanbal").val().replace(",", "")),
+                        LoanNo: $("#Loannoid").val(),
+                        AppliedAmount: parseFloat($("#AmountI").val().replace(",", "")),
+                        ApplicationDate: $("#applicationdate").val(),
+                        RepaymentPeriod: parseInt($("#repayperiod").val()),
+                        LoanCode: $("#loancodeid").val(),
+                        InterestRate: parseFloat($("#interestrateid").val()),
+                        RepaymentMethod: $("#repaymethod").val(),
+                    };
+
+                        console.log(data);
+
+                        // Check if memberNo is null, if null, override with a value
+                        if (!data.MemberNo) {
+                            toastr.error('Member No Cannot be empty!', { timeOut: 5000 });
+                            return;
+                        }
+                        // Check if appliedAmount is null, if null, override with a value
+                        if (!data.AppliedAmount) {
+                            toastr.error('Loan Amount Cannot be empty!', { timeOut: 5000 });
+                            return;
+                        }
+                        // Check if loanCode is null, if null, override with a value
+                        if (!data.LoanCode) {
+                            toastr.error('Loan Type Cannot be empty!', { timeOut: 5000 });
+                            return;
+                        }
+
+
+
+                        $.when(saveOrder(data)).then(function (response) {
+                            console.log(response);
+
+
+                        }).fail(function (err) {
+                            console.log(err);
+                        });
+
+                    });
+
+
+                </script>
+            }
+
+
+        </div>
+
+        <input id="saveOrder" type="submit" onclick="validateDate()" value="Save" class="btn btn-primary" style="background-color:#0670ba;width:10%">
+    </div>
+    <br />
+    <br />
+</div>
+
+
+
+<script type="text/javascript">
+    $(function () {
+        getSelectedDateIntakes();
+        $('#membersconditions').click(function () {
+            getSelectedDateIntakes();
+        });
+        $('#searchmembers').on('keyup', function () {
+            getSelectedDateIntakes();
+        });
+        $('#Membernoids3').on('keyup', function () {
+            getSelectedDateIntakes();
+        });
+        function getSelectedDateIntakes() {
+            var memberrnos = $("#Membernoids3").val();
+            var memberss = $("#searchmembers").val();
+            var membersconditionss = $("#membersconditions").val();
+
+
+            $.ajax({
+                type: 'POST',
+                url: "/LoanAplications/getmembers?memberrnos=" + memberrnos + "&memberss=" + memberss + "&membersconditionss=" + membersconditionss,
+                contentType: 'application/json',
+                success: function (response) {
+            // Handle error returned from server
+                 if (response.error) {
+                alert(response.error); // or use your custom modal/notification
+                return; // stop execution if there's an error
+                }
+                    populateIntake(response.members);
+                    var memberno3 = response.membernos;
+                    var namess = response.names;
+                    var deposists = response.totaldeposit.toFixed(2);
+                    var sharecapitals = response.totalsharecapital.toFixed(2);
+                    //var maxloans = response.maxloan.toFixed(2);
+                    var maturedshares = response.maturedshares.toFixed(2);
+                    var loansbal = response.loanbal.toFixed(2);
+                    var outstandingloans = response.outstandingloan;
+
+
+
+                    $("#names").val(namess);
+                    $("#Deposit").val(deposists);
+                    $("#Capital").val(sharecapitals);
+                   // $("#maxloan").val(maxloans);
+                    $("#Maturedsharess").val(maturedshares);
+                    $("#loanbal").val(loansbal);
+                    $("#Outstandingloans").val(outstandingloans);
+                },
+                failure: function (response) {
+                }
+            }).then(function () {
+                // ...
+            });
+            //}
+        }
+
+        function populateIntake(intakes) {
+
+            let itemTableRows = new Array();
+            intakes.forEach(i => {
+
+
+
+                var memberss = `<button class="btn-success text-white select-button-member" data-id="${i.strId}">Select</button>`;
+                itemTableRows.push(`<tr>
+
+                                                     <td>${i.strOtherName} ${i.strSurName} </td>
+                                                    <td>${i.strMemberNo}</td>
+                                                     <td>${i.strPhoneNo}</td>
+                                                    <td>${i.strActiveStatus}</td>
+
+                                                     <td>${i.strIdNo}</td>
+
+                                                             <td>${memberss}</td>
+                                                </tr>`)
+            });
+
+            $('#intakes').html(itemTableRows);
+            // Add click event listener to select button
+            $('.select-button-member').click(function () {
+                var Id = $(this).data('id');
+                // Make AJAX call
+                $.ajax({
+                    type: 'POST',
+                    url: "/LoanAplications/PopulateMemberdetails?Id=" + Id,
+                    contentType: 'application/json',
+
+                    success: function (response) {
+
+                        var memberno = response.membernos;
+                        var namess = response.names;
+                        var deposists = numberWithCommas(response.totaldeposit.toFixed(2));
+                        var sharecapitals = numberWithCommas(response.totalsharecapital.toFixed(2));
+                       // var maxloans = numberWithCommas(response.maxloan.toFixed(2));
+                        var maturedshares = numberWithCommas(response.maturedshares.toFixed(2));
+                        var loansbal = numberWithCommas(response.loanbal.toFixed(2));
+                        var outstandingloans = numberWithCommas(response.outstandingloan);
+
+
+                        $("#Membernoids3").val(memberno);
+                        $("#names").val(namess);
+                        $("#Deposit").val(deposists);
+                        $("#Capital").val(sharecapitals);
+                        //$("#maxloan").val(maxloans);
+                        $("#Maturedsharess").val(maturedshares);
+                        $("#loanbal").val(loansbal);
+                        $("#Outstandingloans").val(outstandingloans);
+
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle error
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+
+            function numberWithCommas(x) {
+                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+        }
+    });
+    $(function () {
+        getSelectedGuarantor();
+        $('#guaranorconditions').click(function () {
+            getSelectedGuarantor();
+        });
+        $('#searchguarantor').on('keyup', function () {
+            getSelectedGuarantor();
+        });
+
+        $('#Membernoids1').on('keyup', function () {
+            getSelectedGuarantor();
+        });
+        function getSelectedGuarantor() {
+            var guarantorMemberno = $("#Membernoids1").val();
+            var Guarantor = $("#searchguarantor").val();
+            var guarantorscconditions = $("#guaranorconditions").val();
+
+            $.ajax({
+                type: 'POST',
+                url: "/LoanAplications/getguarantor?guarantorMemberno=" + guarantorMemberno + "&Guarantor=" + Guarantor + "&guarantorscconditions=" + guarantorscconditions,
+                contentType: 'application/json',
+                success: function (response) {
+                    debugger
+                    populateGuarantors(response.individualTotals);
+                    var membernos = response.membernos;
+                    var namess = response.names;
+                    var deposists = response.totaldeposit.toFixed(2);
+                    var AmtAvailable = response.amtAvailable.toFixed(2);
+
+                    $("#namess").val(namess);
+                    $("#currentshares").val(deposists);
+                    $("#availableshares").val(AmtAvailable);
+                },
+                failure: function (response) {
+                }
+            }).then(function () {
+                // ...
+            });
+            //}
+        }
+            $.ajax({
+        url: '/LoanAplications/getmembers',
+        type: 'POST',
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        success: function(response) {
+            if (response.error) {
+                // Show popup or custom alert
+                alert(response.error);
+                return; // Stop JS execution here
+            }
+
+            // Continue your normal logic
+            console.log(response.members);
+            populateIntake(response.members);
+        }
+    });
+
+        function populateGuarantors(guarantors) {
+
+
+            let itemTableRows = new Array();
+            guarantors.forEach(i => {
+
+                //var d = "/LoanAplications/PopulateGuarantor/" + i.id;
+
+                var guarantorss = `<button class="btn-success text-white select-button-guarantor" data-id="${i.id}">Select</button>`;
+                itemTableRows.push(`<tr>
+                                        <td>${i.memberNo}</td>
+                                        <td>${i.name}</td>
+                                        <td>${i.totalAmount}</td>
+                                            <td>${guarantorss}</td>
+                                    </tr>`);
+            });
+
+            $('#guarantors').html(itemTableRows);
+
+            // Add click event listener to select button
+            $('.select-button-guarantor').click(function () {
+                var guarantorId = $(this).data('id');
+                debugger
+                $.ajax({
+                    type: 'POST',
+                    url: "/LoanAplications/PopulateGuarantor?guarantorId=" + guarantorId,
+                    contentType: 'application/json',
+                    success: function (response) {
+                    console.log(response); // See what is coming back first.
+
+                    var memberno = response.membernos || "";
+                    var namess = response.names || "";
+                    var deposists = numbersWithCommass((response.totaldeposit || 0).toFixed(2));
+
+                     // CAREFUL: Check if AmtAvailable exists before using
+                     var AmttAvailable = "0.00";
+                     if (response.amtAvailable !== undefined && response.amtAvailable !== null) {
+                         AmttAvailable = numbersWithCommass(response.amtAvailable.toFixed(2));
+                     }
+
+                    $("#Membernoids1").val(memberno);
+                    $("#namess").val(namess);
+                    $("#currentshares").val(deposists);
+                    $("#availableshares").val(AmttAvailable);
+                    },
+
+                    error: function (xhr, status, error) {
+                        // Handle error
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+
+            function numbersWithCommass(xx) {
+                return xx.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+        }
+
+
+    });
+
+
+    document.getElementById("toggleVisibilityButton").addEventListener("click", function (button) {
+        if (document.getElementById("displaytable").style.display === "none") document.getElementById("displaytable").style.display = "block";
+        else document.getElementById("displaytable").style.display = "none";
+    });
+    //search Guarantor
+
+    document.getElementById("toggleVisibilityButtons").addEventListener("click", function (button) {
+        if (document.getElementById("displaytables").style.display === "none") document.getElementById("displaytables").style.display = "block";
+        else document.getElementById("displaytables").style.display = "none";
+    });
+
+
+    $(document).on('keyup', '#repayperiod', function () {
+        // var period = document.getElementById("repayperiod").value
+
+        var $field = $(this);
+
+        var repayperiod = parseInt($field.val());
+
+        if (repayperiod > 12) {
+            toastr.error('The Period should not exceed the maximum repay period', { timeOut: 5000 });
+            $field.val("");
+        }
+    });
+    $(document).on('keyup', '#AmountI', function () {
+        var Maxloan = document.getElementById("maxloan").value
+        var Maxloanwithnocoma = parseFloat(Maxloan.replaceAll(",", ""));
+
+        var $field = $(this);
+
+        var amountI = parseInt($field.val());
+
+        if (amountI > Maxloanwithnocoma) {
+            toastr.error('Amount exeeds Maximum loan', { timeOut: 5000 });
+            $field.val("");
+        }
+    });
+    $(document).on('keyup', '#AmountI2', function () {
+        var AmountAvailable = document.getElementById("availableshares").value
+        var AmountDepositwithnocoma = parseFloat(AmountAvailable.replaceAll(",", ""));
+
+        var $field = $(this);
+
+        var amountI2 = parseInt($field.val());
+
+        if (amountI2 > AmountDepositwithnocoma) {
+            toastr.error('You cannot Guarantee more than your Available Deposits ', { timeOut: 5000 });
+
+            $field.val("");
+        }
+    });
+
+    var acc = document.getElementsByClassName("accordion");
+    var i;
+
+    for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var panel = this.nextElementSibling;
+            if (panel.style.maxHeight) {
+                panel.style.maxHeight = null;
+            } else {
+                panel.style.maxHeight = panel.scrollHeight + "px";
+            }
+        });
+    }
+
+    function getInterestRate() {
+        var LoanCode = $("#loantypeid").val();
+        var MemberNo = $("#Membernoids3").val();
+
+        $.ajax({
+            url: "../LoanAplications/populateInterestrate",
+            type: "POST",
+            data: { LoanCode: LoanCode, MemberNo: MemberNo },
+            dataType: "json",
+            success: function (data) {
+                console.log("Response:", data); // Debugging: Log the response
+
+                if (data.error) {
+                    alert("Error: " + data.error);
+                    return;
+                }
+                debugger;
+                // Update fields with received data
+                $("#loancodeid").val(data.loancode);
+                $("#interestrateid").val(data.interestrate);
+                $("#repayperiod").val(data.repaypriod);
+                $("#repaymethod").val(data.repaymethod);
+                $("#Loannoid").val(data.loancount);
+
+                var depositRaw = $("#Deposit").val();
+                var depositCleaned = depositRaw.replace(/,/g, ''); // Remove commas
+                var totaldeposit = parseFloat(depositCleaned) || 0;
+                var loantoshareratio = parseFloat(data.loantoshareratios) || 0;
+                var maxloans = totaldeposit * loantoshareratio;
+                $("#maxloan").val(maxloans.toFixed(2));
+
+                // 🚀 New Part: Handle Guarantor requirement
+                if (data.requiresGuarantor === true) {
+                    $("#addGuarantorButton").show();
+                } else {
+                    $("#addGuarantorButton").hide();
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX Error:", error);
+                alert("Failed to retrieve loan details. Please try again.");
+            }
+        });
+    }
+
+
+
+    function showLoader() {
+        document.getElementById("loader").style.display = "block";
+    }
+
+    function hideLoader() {
+        document.getElementById("loader").style.display = "none";
+    }
+
+    function showMessage(message) {
+        var messageElement = document.getElementById("message");
+        messageElement.innerText = message;
+        messageElement.style.display = "block";
+    }
+
+    function hideMessage() {
+        document.getElementById("message").style.display = "none";
+    }
+
+    function showOverlay() {
+        document.getElementById("overlay").style.display = "block";
+    }
+
+    function hideOverlay() {
+        document.getElementById("overlay").style.display = "none";
+    }
+
+
+       function validateDate() {
+        // Show overlay, loader, and message
+
+
+        showOverlay();
+        showLoader();
+        showMessage("Please wait while we are processing your request...");
+
+        // Simulate an asynchronous request (replace with actual request)
+        setTimeout(function () {
+            // Hide overlay, loader, and message when the processing is completed
+            hideOverlay();
+            hideLoader();
+            hideMessage();
+        }, 5000); // Change 5000 to the actual time it takes to complete your request
+
+
+
+
+        // Get the selected date from the date picker input
+        var selectedDate = new Date(document.getElementById('applicationdate').value);
+        // Get the current date
+        var currentDate = new Date();
+
+        // Check if the selected date is before the current date
+        if (selectedDate > currentDate) {
+            // If the selected date is in the past, show an alert
+            toastr.error('Application date can not exceed the current date.', { timeOut: 5000 });
+
+            // Clear the date picker input
+            document.getElementById('applicationdate').value = '';
+        }
+    }
+
+
+    function updateMaxDate() {
+        // Set the max attribute of the date input to the current date
+        var currentDate = new Date().toISOString().split('T')[0];
+        document.getElementById('applicationdate').setAttribute('max', currentDate);
+    }
+
+    // Set the default value of the date picker to the current date
+    document.getElementById('applicationdate').valueAsDate = new Date();
+
+
+</script>
+<ejs-scripts></ejs-scripts>
+
+

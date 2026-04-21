@@ -1,0 +1,68 @@
+﻿@model List<EASY_SACCO.Models.FundDriveAllocation>
+
+@{
+    ViewData["Title"] = "Fund Drive Allocation - " + ViewBag.ProjectName;
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+
+<div class="container-fluid">
+    <h2>Fund Drive Allocation for @ViewBag.ProjectName</h2>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    <!-- Display message if no funds were contributed -->
+    @if (!string.IsNullOrEmpty(ViewBag.Message))
+    {
+        <div class="alert alert-warning">@ViewBag.Message</div>
+    }
+    else
+    {
+        <form id="allocateForm" asp-action="AllocateFunds" asp-controller="FundDrive" method="post">
+            <input type="hidden" name="projectId" value="@ViewBag.ProjectId" />
+            <button type="submit" class="btn btn-primary">Allocate Funds</button>
+        </form>
+
+        <!-- Fund Allocation Table -->
+        <div class="container-fluid mt-4">
+            <div class="p-4 bg-white shadow-sm rounded">
+                <table class="table table-striped table-bordered table-sm" style="color: black; min-width: 700px;">
+                    <thead style="background-color: #0f1230; color: white">
+                        <tr>
+                            <th>Member No</th>
+                            <th>Contribution Amount</th>
+                            <th>Ownership %</th>
+                            <th>Allocation Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            @foreach (var allocation in Model)
+                            {
+                                <tr>
+                                    <td>@allocation.MemberNo</td>
+                                    <td>@allocation.ContributionAmount.ToString("N2")</td>
+                                    <td>@allocation.OwnershipPercentage.ToString("N2")%</td>
+                                    <td>@allocation.AllocationDate.ToString("yyyy-MM-dd")</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center">No allocations found.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>

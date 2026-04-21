@@ -1,0 +1,410 @@
+﻿@model EASY_SACCO.Models.LoanTYpes
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+
+    var CompanyName = HttpContextAccessor.HttpContext.Session.GetString("CompanyName");
+    var CompanyCodes = HttpContextAccessor.HttpContext.Session.GetString("CompanyCode");
+}
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+@using Syncfusion.EJ2
+@using Newtonsoft.Json
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+<head>
+    <link href="~/Syncfussion/styles/material.css" rel="stylesheet" />
+    <script src="~/Syncfussion/scripts/ej2.min.js"></script>
+</head>
+<div class="row" style="background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+    <div class="col-8">
+
+        <div style="margin:8px;padding:8px;text-align:left">
+            <div style="color:black;font-size:xx-large;" class="text-capitalize">Loan Type Registration</div>
+            <div style="color:gray;font-size:small;" class="text-capitalize">Add new Loan Type to the system</div>
+        </div>
+
+    </div>
+    <div class="col-4">
+        <div style="margin:8px;padding:8px;text-align:end">
+            <a asp-action="Index" asp-controller="LoanTYpes" style="background:#0670ba;padding:4px;border-radius:8px;color:white"><i class="fa fa-eye" aria-hidden="true"></i>  View  Loan Types</a>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+
+    <div style="padding:8px;margin:8px;border-radius:16px;background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+
+        <form asp-action="Create">
+            <div class="row">
+                <!-- Left Column -->
+                <div class="col-md-3">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <!-- Loan Code -->
+                    <div class="form-group">
+                        <label><strong style="color:black">Loan Code</strong></label>
+                        <input asp-for="strloancode" id="loancodeid" class="form-control" />
+                        <span asp-validation-for="strloancode" class="text-danger"></span>
+                    </div>
+
+                    <!-- Loan Name -->
+                    <div class="form-group">
+                        <label><strong style="color:black">Loan Name</strong></label>
+                        <input asp-for="strLoanType" id="loantypid" class="form-control" />
+                        <span asp-validation-for="strLoanType" class="text-danger"></span>
+                    </div>
+
+                    <!-- Repayment Period -->
+                    <div class="form-group">
+                        <label><strong style="color:black">R.Period (months)</strong></label>
+                        <input asp-for="strRPeriod" id="period" class="form-control" />
+                        <span asp-validation-for="strRPeriod" class="text-danger"></span>
+                    </div>
+
+                    <!-- Repayment Method -->
+                    <div class="form-group">
+                        <label><strong style="color:black">Repayment Method</strong></label>
+                        <ejs-dropdownlist id="strRepaymentMethod" value="0" ejs-for="strRepaymentMethod" filterBarPlaceholder="Search" allowFiltering="true" filtering="strRepaymentMethod" placeholder="Repayment Method" popupHeight="300px" dataSource="@ViewBag.strRepaymentMethod">
+                            <e-dropdownlist-fields text="strMethod" value="strMethod"></e-dropdownlist-fields>
+                        </ejs-dropdownlist>
+                    </div>
+                </div>
+
+                <!-- Middle Column -->
+                <div class="col-md-3">
+                    <!-- Loan Control A/C -->
+                    <div class="form-group">
+                        <label><strong style="color:black">Loan Control A/C</strong></label>
+                        <ejs-dropdownlist id="strLoanAccount" value="0" ejs-for="strLoanAccount" filterBarPlaceholder="A/C No or A/C Name" allowFiltering="true" filtering="strLoanAccount" placeholder="Loan Control A/C" popupHeight="300px" dataSource="@ViewBag.accountInfos">
+                            <e-dropdownlist-fields text="AcountDesc" value="AcountNo"></e-dropdownlist-fields>
+                        </ejs-dropdownlist>
+                    </div>
+
+                    <!-- Interest Control A/C -->
+                    <div class="form-group">
+                        <label><strong style="color:black">Interest Control A/C</strong></label>
+                        <ejs-dropdownlist id="strInterestAccount" value="0" ejs-for="strInterestAccount" filterBarPlaceholder="A/C No or A/C Name" allowFiltering="true" filtering="strLoanAccount" placeholder="Interest Control A/C" popupHeight="300px" dataSource="@ViewBag.accountInfos">
+                            <e-dropdownlist-fields text="AcountDesc" value="AcountNo"></e-dropdownlist-fields>
+                        </ejs-dropdownlist>
+                    </div>
+
+                    <!-- Penalty Control A/C -->
+                    <div class="form-group">
+                        <label><strong style="color:black">Penalty Control A/C</strong></label>
+                        <ejs-dropdownlist id="strPenaltyAccount" value="0" ejs-for="strPenaltyAccount" filterBarPlaceholder="A/C No or A/C Name" allowFiltering="true" filtering="strLoanAccount" placeholder="Penalty Control A/C" popupHeight="300px" dataSource="@ViewBag.accountInfos">
+                            <e-dropdownlist-fields text="AcountDesc" value="AcountNo"></e-dropdownlist-fields>
+                        </ejs-dropdownlist>
+                    </div>
+
+                    <!-- Interest Rate -->
+                    <div class="form-group">
+                        <label><strong style="color:black">Interest Rate</strong></label>
+                        <input asp-for="strInterestRate" id="intereratestid" placeholder="Interest Rate" class="form-control" />
+                        <span asp-validation-for="strInterestRate" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="col-md-3">
+                    <!-- Max Loan -->
+                    <div class="form-group">
+                        <label><strong style="color:black">Max Loan</strong></label>
+                        <input asp-for="strMaxloan" id="maxloanid" placeholder="Max Loan" class="form-control" />
+                        <span asp-validation-for="strMaxloan" class="text-danger"></span>
+                    </div>
+
+                    <!-- Loan to Share Ratio -->
+                    <div class="form-group">
+                        <label><strong style="color:black">Loan to Share Ratio</strong></label>
+                        <input asp-for="LoanToShareRatio" id="LoanToShare" class="form-control" />
+                        <span asp-validation-for="LoanToShareRatio" class="text-danger"></span>
+                    </div>
+
+                    <!-- Repayment Frequency -->
+                    <div class="form-group">
+                        <label><strong style="color:black">Repayment Frequency</strong></label>
+                        <ejs-dropdownlist id="strRate" value="0" ejs-for="strRate" filterBarPlaceholder="Search" allowFiltering="true" filtering="strRate" placeholder="Repayment Rate" popupHeight="300px" dataSource="@ViewBag.strRate">
+                            <e-dropdownlist-fields text="strRate" value="strRate"></e-dropdownlist-fields>
+                        </ejs-dropdownlist>
+                    </div>
+
+                    <!-- What to Charge -->
+                    <div class="form-group">
+                        <label><strong style="color:black">What to charge</strong></label>
+                        <ejs-dropdownlist id="strwhatToChange" value="0" ejs-for="strwhatToChange" filterBarPlaceholder="Search" allowFiltering="true" filtering="strwhatToChange" placeholder="What to charge" popupHeight="300px" dataSource="@ViewBag.strwhatToChange">
+                            <e-dropdownlist-fields text="strWhatToChange" value="strWhatToChange"></e-dropdownlist-fields>
+                        </ejs-dropdownlist>
+                    </div>
+                </div>
+
+                <!-- Extra Column for Checkbox and Radio Options -->
+                <div class="col-md-3">
+                    <!-- Attracts Penalty -->
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input type="checkbox" name="strAttractsPenalty" id="penalty" />
+                            <strong style="color:black">Attracts Penalty</strong>
+                        </label>
+                    </div>
+
+                    <!-- Repayment Type (Fixed or Percentage) -->
+                    <div class="form-group">
+                        <label class="radio-inline m-1">
+                            <input type="radio" name="str" id="fixedid" value="Fixed" checked>
+                            <strong style="color:black">Fixed</strong>
+                        </label>
+                        <label class="radio-inline m-1">
+                            <input type="radio" name="str" id="percentageid" value="Percentage">
+                            <strong style="color:black">Percentage</strong>
+                        </label>
+                    </div>
+
+                    <!-- Can Refinance -->
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input type="checkbox" name="strCanitRefinance" id="refinanceid" />
+                            <strong style="color:black">Can Refinance</strong>
+                        </label>
+                    </div>
+
+                    <!-- Requires Guarantors -->
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input type="checkbox" name="strRequiresGuarantors" id="guarantorsid" />
+                            <strong style="color:black">Requires Guarantors</strong>
+                        </label>
+                    </div>
+
+                    <!-- Guarantee Own Loan -->
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input type="checkbox" name="strGuaranteeownloan" id="guaranteeloanid" />
+                            <strong style="color:black">Guarantee Own Loan</strong>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <input id="saveOrder" type="submit" value="Save" class="btn btn-primary" style="background-color:#0670ba;width:10%">
+        </form>
+
+
+
+    </div>
+</div>
+<br />
+<br />
+<br />
+<link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+@section Scripts
+{
+
+    <script>
+        $(document).ready(function () {
+            // Add multiple list items
+            $("#addToList").click(function (e) {
+                e.preventDefault();
+
+                if ($.trim($("#chargenameid").val()) == "" ||
+                    $.trim($("#chargecodeid").val()) == "" ||
+                    $.trim($("#glaccountid").val()) == "") {
+                    toastr.error('Please fill in all required fields!', { timeOut: 5000 });
+                    return;
+                }
+
+                let ProductCode = $("#chargenameid").val();
+                let ChargeCode = $("#chargecodeid").val();
+                let Amount = $("#amountid").val() || 0;
+                let Percentage = $("#percentage").val() || 0;
+                let GLAccount = $("#glaccountid").val();
+
+                let detailsTableBody = $("#detailsTable tbody");
+
+                let productItem = `<tr>
+                        <td>${ProductCode}</td>
+                        <td>${ChargeCode}</td>
+                        <td>${Amount}</td>
+                        <td>${Percentage}</td>
+                        <td>${GLAccount}</td>
+                        <td><a data-itemId="0" href="#" class="deleteItem">Remove</a></td>
+                    </tr>`;
+
+                detailsTableBody.append(productItem);
+                clearItem();
+            });
+
+            // Clear fields after adding a new item
+            function clearItem() {
+                $("#chargenameid, #chargecodeid, #amountid, #percentage, #glaccountid").val("");
+            }
+
+            // Clear all form fields
+            function clearForm() {
+                $("#loantypid, #loancodeid, #period, #strRepaymentMethod, #strLoanAccount, #strInterestAccount, #strPenaltyAccount, #LoanToShare, #intereratestid, #maxloanid, #strRate, #strwhatToChange").val("");
+
+                // Explicitly reset checkboxes and radio buttons
+                $('input[type="radio"][name="str"], input[name="strAttractsPenalty"], input[name="strCanitRefinance"], input[name="strRequiresGuarantors"], input[name="strGuaranteeownloan"]').prop("checked", false);
+
+                // Clear the charges table
+                $("#detailsTable tbody").empty();
+            }
+
+            // Remove an item from the list
+            $(document).on("click", ".deleteItem", function (e) {
+                e.preventDefault();
+                var $self = $(this);
+                if ($self.attr("data-itemId") == "0") {
+                    $self.parents("tr").css("background-color", "#ff6347").fadeOut(800, function () {
+                        $(this).remove();
+                    });
+                }
+            });
+
+            // Save order function
+            function saveOrder(data) {
+                return $.ajax({
+                    type: "POST",
+                    url: "/LoanTYpes/SaveOrder",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(data),
+                    success: function (result) {
+                        if (result != null) {
+                            toastr.success("Records saved successfully!", { timeOut: 5000 });
+                        }
+                        clearForm();
+                    },
+                    error: function () {
+                        toastr.error("Error: Something went wrong, please try again!", { timeOut: 5000 });
+                    }
+                });
+            }
+
+            // Collect multiple order list for submission
+            $("#saveOrder").click(function (e) {
+                e.preventDefault();
+
+                let detailsArr = [];
+
+                $("#detailsTable tbody tr").each(function () {
+                    let detail = {
+                        ProductCode: $(this).find("td:eq(0)").text().trim(),
+                        ChargeCode: $(this).find("td:eq(1)").text().trim(),
+                        Amount: $(this).find("td:eq(2)").text().trim(),
+                        Percentage: $(this).find("td:eq(3)").text().trim(),
+                        GLAccount: $(this).find("td:eq(4)").text().trim(),
+                    };
+                    detailsArr.push(detail);
+                });
+
+                let selected = $("input[type='radio'][name='str']:checked");
+
+                let data = {
+                    charges: detailsArr,
+                    strLoanType: $("#loantypid").val(),
+                    strloancode: $("#loancodeid").val(),
+                    strRPeriod: $("#period").val(),
+                    strRepaymentMethod: $("#strRepaymentMethod").val(),
+                    strLoanAccount: $("#strLoanAccount").val(),
+                    strInterestAccount: $("#strInterestAccount").val(),
+                    strPenaltyAccount: $("#strPenaltyAccount").val(),
+                    strInterestRate: $("#intereratestid").val(),
+                    strMaxloan: $("#maxloanid").val(),
+                    LoanToShareRatio: $("#LoanToShare").val(),
+                    strRate: $("#strRate").val(),
+                    strwhatToChange: $("#strwhatToChange").val(),
+                    strAttractsPenalty: $("#penalty").is(":checked"),
+                    str: selected.length > 0 ? selected.val() : 0,
+                    strCanitRefinance: $("#refinanceid").is(":checked"),
+                    strRequiresGuarantors: $("#guarantorsid").is(":checked"),
+                    strGuaranteeownloan: $("#guaranteeloanid").is(":checked"),
+                };
+
+                console.log(data);
+
+                $.when(saveOrder(data)).then(function (response) {
+                    console.log(response);
+                }).fail(function (err) {
+                    console.log(err);
+                });
+            });
+        });
+    </script>
+
+}
+<ejs-scripts></ejs-scripts>
+
+<script type="text/javascript">
+    function getChargecode() {
+
+        var Chargename = $("#chargenameid").val();
+
+        $.ajax({
+            url: "../LoanTYpes/populateChargcode?Chargename=" + Chargename,
+            type: "Post",
+            dataType: 'text',
+            success: function (data) {
+                console.log(data);
+                var interestrate = JSON.parse(data);
+
+                var esult = JSON.parse(data);
+
+                var splitted = esult.split(",");
+                var chargecode = splitted[0];
+
+                $("#chargecodeid").val(chargecode);
+
+
+
+
+            },
+
+            error: function (data) {
+                alert(data);
+            }
+        });
+
+
+    }
+
+
+
+    function strCompanyId(e) {
+        var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strCompanyId', 'startswith', e.text, true) : query;
+        e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strCompanyId)), query);
+    }
+    function strRepaymentMethod(e) {
+        var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strMethod', 'startswith', e.text, true) : query;
+        e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strRepaymentMethod)), query);
+    }
+    function strRate(e) {
+        var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strRate', 'startswith', e.text, true) : query;
+        e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strRate)), query);
+    }
+    function strwhatToChange(e) {
+        var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strWhatToChange', 'startswith', e.text, true) : query;
+        e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strwhatToChange)), query);
+    }
+    function strLoanAccount(e) {
+        var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('AcountDesc', 'contains', e.text, true) : query;
+        e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.accountInfos)), query);
+    }
+
+
+</script>
+
+

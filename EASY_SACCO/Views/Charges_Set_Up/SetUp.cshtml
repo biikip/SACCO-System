@@ -1,0 +1,65 @@
+﻿   @model EASY_SACCO.Models.Charges_Setup
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+<div class="row" style="background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+    <div class="col-8">
+
+        <div style="margin:8px;padding:8px;text-align:left">
+            <div style="color:black;font-size:xx-large;" class="text-capitalize">Charges Setup  </div>
+            <div style="color:gray;font-size:small;" class="text-capitalize">Add new Charges Setup   to the system</div>
+        </div>
+
+    </div>
+    <div class="col-4">
+        <div style="margin:8px;padding:8px;text-align:end">
+            <a asp-action="Index" asp-controller="Charges_Set_Up" style="background:#0670ba;padding:4px;border-radius:8px;color:white"><i class="fa fa-eye" aria-hidden="true"></i>  View  Charges Set Up</a>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+   <div style="padding:20px;margin:8px;border-radius:16px;background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+
+        <form asp-action="SetUp" asp-controller="Charges_Set_Up">
+            <div class="row">
+
+                <div class="col-md-3">
+                    <lebel class="text-black"><strong>Charge Name</strong> </lebel>
+                    <br />
+                    <input asp-for="ChargeName" class="form-control" />
+
+                </div>
+                
+                <div class="col-md-3">
+                    <lebel class="text-black"><strong>Charge Code</strong></lebel>
+                    <br />
+                    <input asp-for="ChargeCode" class="form-control" />
+
+                </div>
+                <div class="col-md-3">
+                    <br />
+                    <div class="padding-top">
+                        <select asp-for="Gl" asp-items="@ViewBag.gl" required class="form-control">
+                            <option>Select Gl Account</option>
+                        </select>
+
+
+                    </div>
+
+                </div>
+             
+                
+                </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <br />
+                    <input type="submit" value="Save" class="btn btn-primary" />
+
+                </div>
+                 </div>
+                </form>
+              </div>
+            </div>
+               

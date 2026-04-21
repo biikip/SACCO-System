@@ -1,0 +1,113 @@
+﻿@model EASY_SACCO.Models.MembersRegistration
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>MembersRegistration</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strCompanyCode)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strCompanyCode)
+        </dd>
+       
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strMemberNo)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strMemberNo)
+        </dd>
+     
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strPhoneNo)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strPhoneNo)
+        </dd>
+       
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strMaritalstatus)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strMaritalstatus)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strRegDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strRegDate)
+        </dd>
+       
+       
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strSurName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strSurName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strGender)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strGender)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strDOB)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strDOB)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strEmail)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strEmail)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strActiveStatus)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strActiveStatus)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strAddress)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strAddress)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strCIGGroupId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strCIGGroupId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strCountyId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strCountyId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strOtherName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strOtherName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strIdNo)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strIdNo)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.strId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

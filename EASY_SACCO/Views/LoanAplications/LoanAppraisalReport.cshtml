@@ -1,0 +1,211 @@
+﻿
+
+@{
+ 
+    ViewData["Title"] = "LoanAppraisalReport";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+
+
+
+}
+
+
+<br />
+<br />
+
+
+@{
+
+    ViewData["Title"] = "LoanAppraisalReport";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+
+
+
+}
+
+
+<div class="container-fluid">
+    <div style="margin:2px;padding:2px;background-color:white">
+   
+        <div class="row g-3 mb-4 align-items-center justify-content-between">
+            <div class="col-auto" style="margin:6px">
+
+            </div>
+            <div class="col-auto" style="margin:6px">
+
+                <div class="page-utilities">
+                    <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+
+
+                        <div class="col-auto">
+
+                            <button type="button" class=" btn-primary btn-sm" onClick="printCertificate()">Print  <span class="fa fa-print"></span></button>
+
+
+                        </div>
+                        <div class="col-auto">
+
+                            <a asp-action="AppraisalLoans" asp-controller="LoanAplications" class=" btn-info btn-sm">Back to List</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="DefaultersLoanForm">
+            <br />
+            <strong style="color:#494172;margin-left:90px;font-size:55px;text-align:center;font-family:'Times New Roman', Times, serif;font-weight:900;">&nbsp;LOAN &nbsp APPRAISAL &nbsp REPORT</strong>
+
+        <div class="container-fluid">
+       
+
+                 
+                <strong style="color:black"> <hr style="color:black"/></strong>
+
+                <style>
+                 
+
+                    h1 {
+                        text-align: center;
+                    }
+
+                    .container {
+                        max-width: 800px;
+                        margin: 10px ;
+                    }
+
+                    .section {
+                        margin-bottom: 20px;
+                    }
+
+                    .row {
+                        display: flex;
+                        justify-content: space-around;
+                        margin-bottom: 10px;
+                        margin: 10px;
+                    }
+
+                    .label {
+                        font-weight: bold;
+                    }
+                </style>
+               
+                <h6><strong style="color:black;margin-left:60px">LOAN APPLICATION DETAILS </strong></h6>
+                <strong style="color:black"> <hr style="color:black;margin:0px" /></strong>
+                    <div class="container">
+                    
+
+                        <div class="section">
+                   
+                        <div class="row">
+                         
+                                <div class="column">
+
+                                <div><strong style="color:black;margin-right:100px">Loan No &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  @ViewBag.loanno </strong></div>
+                                <div><strong style="color:black">Application Date&nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @ViewBag.applicationdate.ToShortDateString()</strong></div>
+                                <div><strong style="color:black">Loan Type&nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@ViewBag.loantype </strong></div>
+                                <div><strong style="color:black">Member No &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @ViewBag.memberno</strong></div>
+                                <div><strong style="color:black">Member Name &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @ViewBag.membername</strong></div>
+                                <div><strong style="color:black">Amount Applied&nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @Math.Round(ViewBag.appliedamount,2)</strong></div>
+                                </div>
+                                <div class="column" style="padding-right:150px">
+
+                                <div><strong style="color:black">Installments &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @ViewBag.installment</strong></div>
+                                <div><strong style="color:black">No. Of Guarantors&nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @ViewBag.noofguarantor</strong></div>
+                                <div><strong style="color:black">Repayment Amount&nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @Math.Round(ViewBag.repayamount,2)</strong></div>
+                                   
+                                </div>
+                            </div>
+                        </div>
+
+                    
+                    </div>
+                <h6 style="margin-right:2px;"><strong style="color:black;margin-left:60px"> DEPOSITS ANALYSIS </strong></h6>
+                <strong style="color:black"> <hr style="color:black;margin:0px" /></strong>
+                <div class="container">
+                 <div class="column">
+
+                        <div><strong style="color:black;">&nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Member Deposits &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@ViewBag.Deposits </strong></div>
+                        <div><strong style="color:black">&nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Deposits Multiplier &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@ViewBag.depositsmultiplier</strong></div>
+                        <div><strong style="color:black">&nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Loan Balance&nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.00 </strong></div>
+                        <div><strong style="color:black">&nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Qualifying Amount&nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@ViewBag.qualifyingamount</strong></div>
+                       
+                  </div>
+                       
+                    
+                </div>
+                <h6 style="margin-right:2px;"><strong style="color:black;margin-left:60px">GUARANTOR INFORMATION </strong></h6>
+                <strong style="color:black"> <hr style="color:black;margin:0px" /></strong>
+                <div class="container">
+                    <div class="column">
+                        <table class="table  table-bordered  table-sm" style="color:black;">
+                            <thead style="background-color:whitesmoke;color:black;border:2px solid black">
+
+                            <th style="border:2px solid black">Member No</th>
+                            <th style="border:2px solid black">Name</th>
+                            <th style="border:2px solid black">Amount Guaranteed</th>
+                            <th style="border:2px solid black">Guarantor Deposit</th>
+                           </thead>
+                           <tbody>
+                                @foreach (var item in ViewBag.listofguarantor)
+                                {
+
+
+                                    <tr style="border:2px solid black">
+                                        <td style="border:2px solid black">@item.MemberNo</td>
+                                        <td style="border:2px solid black">@item.FullNames</td>
+                                        <td style="border:2px solid black">@Math.Round(item.AmountGuaranteed,2)</td>
+                                        <td style="border:2px solid black">@Math.Round(item.AmountDeposit,2)</td>
+                                    </tr>
+                                }
+                                
+                           </tbody>
+                       </table>
+
+                    </div>
+
+
+                </div>
+                <h6 style="margin-right:2px;"><strong style="color:black;margin-left:60px"> QUALIFICATION CRITERIA </strong></h6>
+                <strong style="color:black"> <hr style="color:black;margin:0px" /></strong>
+                <div class="container">
+                    <div class="column">
+
+                        <div><strong style="color:black;">&nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Guarantorship(Amount Guaranteed) &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  @Math.Round(ViewBag.amountguarantor, 2)</strong></div>
+                        <div><strong style="color:black">&nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Deposits Multiplier &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  @Math.Round(ViewBag.depositsmultiplier,2) </strong></div>
+                        <div><strong style="color:black">&nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Amount Applied&nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Math.Round(ViewBag.appliedamount,2) </strong></div>
+                        <div><strong style="color:black">&nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Recommended Amount&nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @Math.Round(ViewBag.recommeded,2)</strong></div>
+                        <div><strong style="color:black">&nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Approved Amount&nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @Math.Round(ViewBag.approved,2)</strong></div>
+                        <br />
+                        <h6 style="margin-right:2px;"><strong style="color:black;margin-left:35px"> LOAN CHARGES</strong></h6>
+                        <div><strong style="color:black">&nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Processing fee&nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @Math.Round(ViewBag.chargedprocessing, 2)</strong></div>
+                        <div><strong style="color:black">&nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Loan insuarance&nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Math.Round(ViewBag.chargedinsuarnce,2)</strong></div>
+                        <br />
+                        <div><strong style="color:black">&nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Net Disbursement&nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Math.Round(ViewBag.approved -(ViewBag.chargedprocessing + ViewBag.chargedinsuarnce), 2)</strong></div>
+                        
+                      
+                    </div>
+
+
+                </div>
+                  </div>
+            </div>
+
+        </div>
+
+  
+<br />
+<br />
+
+<script type="text/javascript">
+   
+    function printCertificate() {
+        const printContents = document.getElementById('DefaultersLoanForm').innerHTML;
+        const originalContents = document.body.innerHTML;
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+    }
+</script>
+
+
+

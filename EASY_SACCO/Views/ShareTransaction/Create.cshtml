@@ -1,0 +1,975 @@
+﻿@model EASY_SACCO.Models.Customer_Balance
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using Syncfusion.EJ2
+@using Newtonsoft.Json
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+
+    var CompanyCode = HttpContextAccessor.HttpContext.Session.GetString("CompanyCode");
+}
+<style>
+       .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+            z-index: 999; /* Ensure the overlay is behind the loader and message */
+        }
+
+        .loader {
+            border: 8px solid #f3f3f3; /* Light grey */
+            border-top: 8px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            display: none; /* Hide the loader by default */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000; /* Ensure the loader is on top of other elements */
+        }
+
+        .message {
+            display: none; /* Hide the message by default */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color:lightgreen;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1001; /* Ensure the message is on top of other elements */
+        }
+</style>
+<head>
+    <link href="~/Syncfussion/styles/material.css" rel="stylesheet" />
+    <script src="~/Syncfussion/scripts/ej2.min.js"></script>
+</head>
+<div class="row" style="background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+    <div class="col-8">
+
+        <div style="margin:8px;padding:8px;text-align:left">
+            <div style="color:black;font-size:xx-large;" class="text-capitalize">Receipting </div>
+            <div style="color:gray;font-size:small;" class="text-capitalize">Receipting</div>
+        </div>
+
+    </div>
+    <div class="col-4">
+        <div style="margin:8px;padding:8px;text-align:end">
+            <a asp-action="Index" asp-controller="ShareTransactions" style="background:#0670ba;padding:4px;border-radius:8px;color:white"><i class="fa fa-eye" aria-hidden="true"></i>  View Receipting</a>
+        </div>
+    </div>
+</div>
+
+<div id="overlay" class="overlay"></div>
+<div id="loader" class="loader"></div>
+<div id="message" class="message"></div>
+<div class="container-fluid">
+
+    <div style="padding:8px;margin:8px;border-radius:16px;background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+        <div class="col-md-3">
+            <br />
+            <input type="button" value="Search Member" class="btn btn-primary" id="toggleVisibilityButton" style="background-color:#0670ba;width:100%" />
+
+        </div>
+        <br />
+        <div class="row" style="display:none" id="displaytable">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="normal-table-list mg-t-3">
+                    <div class="row">
+                        <div class="col-sm-2 col-xs-12">
+                        </div>
+                        <div class="col-sm-6 col-xs-12">
+                            <h4 class="text-black">Search Members</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                            <div class="form-group">
+                                <select id="condition" class="form-control">
+                                    <option></option>
+                                    <option>MemberNo</option>
+                                    <option>Name</option>
+                                    <option>IdNo</option>
+                                    <option>PhoneNo</option>
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
+                            <div class="form-group">
+                                <input id="filter" autocomplete="off" placeholder="Search" class="form-control" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div style="margin:8px;padding:8px;background-color:white">
+                        <table class="table   table-striped table-bordered  table-sm" style="color:black " id="customers">
+                            <thead style="background-color:#0f1230;color:white">
+
+                                <tr>
+                                    <th>
+                                        Full Name
+                                    </th>
+                                    <th>
+                                        Member No
+                                    </th>
+                                    <th>
+                                        Phone No
+                                    </th>
+                                    <th>
+                                        Status
+                                    </th>
+
+                                    <th>
+                                        ID No
+                                    </th>
+
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="intakes">
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+          
+            <div class="row">
+              
+                
+                <div class="col-md-3">
+                  <br />
+                    <label class="text-black"><strong><b>Member No</b></strong></label>
+                    <input name="MemberNo" value="@ViewBag.memberno" id="memberno1" class="form-control" />
+           
+                </div>
+               
+                <div class="col-md-3">
+                    <br />
+                    <label class="text-black"><strong><b>Name</b></strong></label>
+                    <input name="Name" value="@ViewBag.name" id="name" class="form-control" />
+
+                </div>
+                <div class="col-md-3" id="loannoid" style="display: none;" hidden>
+                    <br />
+                    <label class="text-black"><strong><b>Loan No</b></strong></label>
+                    <input name="LoanNo" type="text" id="loanNo" required readonly class="form-control" />
+
+                </div>
+                <div class="col-md-3" style="display: none;" id="loancodeid" hidden>
+                    <br />
+                    <label class="text-black"><strong><b>Loan Code</b></strong></label>
+                    <input name="Loancode" id="loancode" readonly class="form-control" />
+
+                </div>
+                <div class="col-md-3" style="display: none;" id="repayid" hidden>
+                    <br />
+                    <label class="text-black"><strong><b>Repay Period</b></strong></label>
+                    <input name="RepayPeriod" id="repayPeriod" readonly class="form-control" />
+
+                </div>
+                <div class="col-md-3" style="display: none;" id="repaymethodid" hidden>
+                    <br />
+                    <label class="text-black"><strong><b>Repay Method</b></strong></label>
+                    <input name="RepayMethod" id="repayMethod" readonly class="form-control" />
+
+                </div>
+                <div class="col-md-3" style="display: none;" id="interestid" hidden>
+                    <br />
+                    <label class="text-black"><strong><b>Interest Rate</b></strong></label>
+                    <input name="InterestRate" id="interestRate" readonly class="form-control" />
+
+                </div>
+                <div class="col-md-3">
+                    <br />
+                    <label asp-for="TransDate" class="text-black"><strong>Transaction Date</strong></label>
+                    <input name="ContrDate" type="date" id="date" class="form-control" max="" required onchange="updateMaxDate()" />
+                    <span asp-validation-for="TransDate" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+                    <br /><br />
+                    <div class="padding-top">
+                        <ejs-dropdownlist id="strBankName" name="DRaccno" filterBarPlaceholder="Search" allowFiltering="true" filtering="strBankName" placeholder="Select Bank Name" popupHeight="300px" dataSource="@ViewBag.strBankName">
+                            <e-dropdownlist-fields text="strBankName" value="strBankAccno"></e-dropdownlist-fields>
+                        </ejs-dropdownlist>
+
+                    </div>
+            </div>
+                <div class="col-md-3">
+                    <br />
+                    <div class="padding-top">
+                        <select name="Transactioncode" asp-items="@ViewBag.sharecode" required class="form-control" id="sharecodeid" onchange="getDescription()">
+                            <option>Select Share Type</option>
+                        </select>
+                       
+
+                    </div>
+                   
+                </div>
+               
+  
+                <div class="col-md-3">
+                    <label class="text-black"><strong>Amount</strong></label>
+                    <input asp-for="Amount" id="amount" class="form-control" />
+                    <span asp-validation-for="Amount" class="text-danger"></span>
+                </div>
+           
+                <div class="col-md-3">
+                    <label asp-for="Documentnumber" class="text-black"><strong>Receipt No</strong></label>
+                    <input asp-for="Documentnumber" readonly value="@ViewBag.Code" id="receiptno" class="form-control" />
+                    <span asp-validation-for="Documentnumber" class="text-danger"></span>
+                </div>
+        
+              
+                <div class="col-md-3">
+                    <label class="text-black"><strong>Remarks</strong></label>
+                    <textarea asp-for="Transdescription" id="remarks"  class="form-control"></textarea>
+
+                    <span asp-validation-for="Transdescription" class="text-danger"></span>
+                </div>
+            </div>
+        
+          
+                <div class="col-md-3 offset-9" id="addlistbutton">
+                    <br />
+                <button id="addToList" onclick="validateDate()" class=" btn-primary" value="Add To List" style="width:200px;">Add To List</button>
+                </div>
+                <div style="margin:8px;padding:8px;background-color:white;display: none" id="loanlist" >
+                <table class="table  table-bordered  table-sm" style="color:black;">
+                    <thead style="background-color:#0f1230;color:white">
+
+
+                       <tr>
+                            <th style="border:2px solid black">
+                            Due Date
+                        </th>
+                            <th style="border:2px solid black">
+                            Principal
+                        </th>
+                            <th style="border:2px solid black">
+                            Interest
+                        </th>
+                            <th style="border:2px solid black">
+                            Total Repayment
+                        </th style="border:2px solid black">
+
+                        <th style="border:2px solid black">
+                            Remaining Balance
+                        </th>
+                          <th style="border:2px solid black">
+                            Member No
+                        </th>
+
+
+                    </tr>
+                </thead>
+                <tbody id="intakes1">
+                </tbody>
+
+            </table>
+
+        </div>
+            
+  
+        </form>
+    
+    
+   <br />
+    <table id="detailsTable" class="table table-striped table-bordered table-responsive-sm  table-sm" style="color:black">
+        <thead style="background-color:#0f1230;color:white">
+            <tr>
+
+                <th hidden style="width:30%">Date</th>
+                <th  style="width:25%">Receipt No</th>
+                <th style="width:20%">Member No</th>
+                <th style="width:20%">Name</th>
+                <th style="width:20%">Bank Name</th>
+                <th style="width:20%"> Transaction Type</th>
+                <th  style="width:25%">Amount</th>
+                <th hidden style="width:25%">Remarks</th>
+                <th style="width:30%">Action</th>
+
+            </tr>
+        </thead>
+        <tbody></tbody>
+
+    </table>
+   
+    <input id="saveOrder" type="submit" value="Post" onclick="saveOrders()" class="btn btn-primary" style="background-color:#0670ba;width:10%">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+        <script>
+            //Show Modal.
+            function addNewOrder() {
+                $("#newOrderModal").modal();
+            }
+            //Add Multiple Order.
+            $("#addToList").click(function (e) {
+                e.preventDefault();
+
+            if ($.trim($("#date").val()) == "" ||
+                $.trim($("#memberno1").val()) == "" ||
+                $.trim($("#strBankName").val()) == "" ||
+                $.trim($("#sharecodeid").val()) == "" ||
+                $.trim($("#amount").val()) == ""||
+                $.trim($("#remarks").val()) == "")
+                {
+                toastr.error('Please all the fields are requird!!!', { timeOut: 5000 })
+               // alert("Please all the fields are requird!!!");
+                return;
+            }
+
+
+            let TransDate = document.getElementById("date").value;
+            let Documentnumber = document.getElementById("receiptno").value;
+            let Memberno = document.getElementById("memberno1").value;
+            let MemberName = document.getElementById("name").value;
+            let DRaccno = document.getElementById("strBankName").value;
+            let Transactioncode = document.getElementById("sharecodeid").value;
+            let Amount = document.getElementById("amount").value;
+            let Transdescription = document.getElementById("remarks").value;
+              
+            detailsTableBody = $("#detailsTable tbody");
+
+            var productItem = '<tr><td hidden>' + TransDate + '</td><td>' + Documentnumber + '</td><td>' + Memberno + '</td><td>' + MemberName + '</td><td>' + DRaccno + '</td><td >' + Transactioncode + '</td><td >' + Amount + '</td><td hidden>' + Transdescription + '</td><td><a data-itemId="0" href="#" class="deleteItem">Remove</a></td></tr>';
+                detailsTableBody.append(productItem);
+                clearItem();
+            });
+            function clearItem()
+            {
+            document.getElementById("amount").value = "";
+            document.getElementById("remarks").value = "";
+            document.getElementById("sharecodeid").value = "";
+         
+        }
+         function clearItems()
+            {
+            document.getElementById("amount").value = "";
+            document.getElementById("remarks").value = "";
+            document.getElementById("sharecodeid").value = "";
+            document.getElementById("memberno1").value = "";
+            document.getElementById("name").value = "";
+            document.getElementById("date").value = "";
+            document.getElementById("receiptno").value = "";
+            document.getElementById("strBankName").value = "";
+         
+        }
+           
+            // After Add A New Order In The List, If You Want, You Can Remove It.
+            $(document).on('click', 'a.deleteItem', function (e) {
+                e.preventDefault();
+                var $self = $(this);
+                if ($(this).attr('data-itemId') == "0") {
+                    $(this).parents('tr').css("background-color", "#ff6347").fadeOut(800, function () {
+                        $(this).remove();
+                    });
+                }
+            });
+            // Function to send data to controller for saving
+            function saveOrder(data) {
+
+
+                $.ajax({
+                    type: 'POST',
+                    url: "/ShareTransactions/SaveOrder2",
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(data),
+                    success: function (result) {
+                        if (result != null) 
+                         {
+                            toastr.success('Success! Record Saved Successfully', { timeOut: 5000 });
+                            console.log(result); // Log the response from the controller
+                            clearItems();
+                             $("#detailsTable tbody tr").remove();
+                        }
+                        // You can perform additional actions based on the response if needed
+                    },
+                    error: function () {
+                        toastr.error('Error! No Records Found', { timeOut: 5000 });
+                    }
+                });
+            }
+
+            // Click event handler for saving order
+            $("#saveOrder").click(function (e) {
+                e.preventDefault();
+
+
+                var detailsArr = [];
+                detailsArr.length = 0;
+
+                // Iterate through table rows to collect data
+                $.each($("#detailsTable tbody tr"), function () {
+                    var detail = {
+                        TransDate: $(this).find('td:eq(0)').html(),
+                        Documentnumber: $(this).find('td:eq(1)').html(),
+                        Memberno: $(this).find('td:eq(2)').html(),
+                        MemberName: $(this).find('td:eq(3)').html(),
+                        DRaccno: $(this).find('td:eq(4)').html(),
+                        Transactioncode: $(this).find('td:eq(5)').html(),
+                        Amount: $(this).find('td:eq(6)').html(),
+                        Transdescription: $(this).find('td:eq(7)').html(),
+                    };
+                    detailsArr.push(detail);
+                });
+                var sharecode = $("#sharecodeid").val();
+                // Prepare data to send to controller
+                debugger
+   var data = {
+    customerBalances: detailsArr,
+    memberNo: $("#memberno1").val(),
+    loancode: $("#loancode").val(),
+    repaymentPeriod: $("#repayPeriod").val(),
+    repaymentMethod: $("#repayMethod").val(),
+    interestRate: Math.trunc($("#interestRate").val().replace(",", "")),    
+    amount: Math.trunc($("#amount").val().replace(",", "")),
+    receiptNo: $("#receiptno").val(),
+    remarks: $("#remarks").val(),
+    dateReceived: $("#date").val(),
+    transactioncode: $("#sharecodeid").val(),
+};
+                if (!data.memberNo) {
+                    toastr.error('Member No Cannot be empty!', { timeOut: 5000 });
+                    return;
+                } 
+                else {
+
+                      // Show overlay, loader, and message
+        showOverlay();
+        showLoader();
+        showMessage("Please wait while we are processing your request...");
+
+        // Simulate an asynchronous request (replace with actual request)
+        setTimeout(function () {
+            // Hide overlay, loader, and message when the processing is completed
+            hideOverlay();
+            hideLoader();
+            hideMessage();
+        }, 5000); // Change 5000 to the actual time it takes to complete your request
+
+
+                }
+    
+if (data.transactioncode ==="L001")
+{
+    // Check if memberNo is null, if null, override with a value
+    if (!data.memberNo) {
+        toastr.error('Member No Cannot be empty!', { timeOut: 5000 });
+        return;
+    }
+
+    // Check if loancode is null, if null, override with a value
+    if (!data.loancode) {
+        toastr.error('please select the repayment!', { timeOut: 5000 });
+        return;
+    }
+
+    // Check if repaymentPeriod is null, if null, override with a value
+    if (!data.repaymentPeriod) {
+        toastr.error('please select the repayment!', { timeOut: 5000 });
+        return;
+    }
+
+    // Check if repaymentMethod is null, if null, override with a value
+    if (!data.repaymentMethod) {
+        toastr.error('please select the repayment!', { timeOut: 5000 });
+        return;
+    }
+
+    // Check if interestRate is null, if null, override with a value
+    if (!data.interestRate) {
+        toastr.error('please select the repayment!', { timeOut: 5000 });
+        return; // Assuming default interest rate is 0
+    }
+
+    // // Check if amount is null, if null, override with a value
+    // if (!data.amount) {
+    //     data.amount = 0; // Assuming default amount is 0
+    // }
+
+    // Check if amount is less than zero and return error message
+    if (!data.amount) {
+        toastr.error('Amount cannot be less than zero,please select the repayment!', { timeOut: 5000 });
+        return;
+    }
+
+    // Check if receiptNo is null, if null, override with a value
+    if (!data.receiptNo) {
+        toastr.error('receiptNo cannot be empty!', { timeOut: 5000 });
+        return;
+    }
+
+    // Check if remarks is null, if null, override with a value
+    if (!data.remarks) {
+        toastr.error('remarks cannot be empty!', { timeOut: 5000 });
+        return;
+    }
+
+    // Check if dateReceived is null, if null, override with a value
+    if (!data.dateReceived) {
+        toastr.error('please select date!', { timeOut: 5000 });
+        return;
+    }
+}
+else
+{
+// Check if memberNo is null, if null, override with a value
+    if (!data.memberNo) {
+        data.memberNo ="";
+    }
+
+    // Check if loancode is null, if null, override with a value
+    if (!data.loancode) {
+        data.loancode = "xx";
+       
+    }
+
+    // Check if repaymentPeriod is null, if null, override with a value
+    if (!data.repaymentPeriod) {
+        data.repaymentPeriod = 0;
+    }
+
+    // Check if repaymentMethod is null, if null, override with a value
+    if (!data.repaymentMethod) {
+        data.repaymentMethod = "xx";
+    }
+
+    // Check if interestRate is null, if null, override with a value
+    if (!data.interestRate) {
+        data.interestRate = 0;
+    }
+
+    // // Check if amount is null, if null, override with a value
+    // if (!data.amount) {
+    //     data.amount = 0; // Assuming default amount is 0
+    // }
+
+    // Check if amount is less than zero and return error message
+    if (!data.amount) {
+        data.amount = 0;
+    }
+
+    // Check if receiptNo is null, if null, override with a value
+    if (!data.receiptNo) {
+        data.receiptNo = "xx";
+    }
+
+    // Check if remarks is null, if null, override with a value
+    if (!data.remarks) {
+        data.remarks = "xx";
+    }
+
+    // Check if dateReceived is null, if null, override with a value
+    if (!data.dateReceived) {
+        data.dateReceived="2024/04/22"
+    }
+}
+
+
+                // Call the saveOrder function to send data to controller
+                saveOrder(data);
+            });
+
+        </script>
+    
+ 
+        </div>
+    
+<br />
+<br />
+<br />
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+        <script type="text/javascript">
+            $(function () {
+                getSelectedDateIntakes();
+                $('#condition').click(function () {
+                    getSelectedDateIntakes();
+                });
+                $('#filter').on('keyup', function ()
+                {
+                    getSelectedDateIntakes();
+                });
+                 $('#memberno1').on('keyup', function ()
+                {
+                    getSelectedDateIntakes();
+                });
+                
+                function getSelectedDateIntakes() {
+                    var filter = $("#filter").val();
+                    var condition = $("#condition").val();
+                    var memberno1 = $("#memberno1").val();
+                    
+                    $.ajax({
+                        type: 'POST',
+                      url: "getmembers?filter=" + filter + "&condition=" + condition+"&memberno1="+memberno1,
+                        contentType: 'application/json',
+                        success: function (response) {
+                            var names = response.names;
+                             $("#name").val(names);
+
+                            populateIntake(response.members);
+                        },
+                        failure: function (response) {
+                        }
+                    }).then(function () {
+                        // ...
+                    });
+                    //}
+                }
+                function populateIntake(intakes) {
+                    var filter = $("#filter").val();
+                    var condition = $("#condition").val();
+                    let itemTableRows = new Array();
+                    intakes.forEach(i => {
+
+                    
+                    var edit = `<button class="btn-success text-white select-button" data-id="${i.strId}">Select</button>`;
+                    
+                        itemTableRows.push(`<tr>
+                                             
+                                             <td>${i.strOtherName} ${i.strSurName} </td>
+                                            <td>${i.strMemberNo}</td> 
+                                             <td>${i.strPhoneNo}</td>
+                                            <td>${i.strActiveStatus}</td>
+                                             
+                                             <td>${i.strIdNo}</td>
+                                            
+                                             <td>${edit}</td>
+                                        </tr>`)
+                    });
+
+                    $('#intakes').html(itemTableRows);
+
+
+                // Add click event listener to select button
+                $('.select-button').click(function () {
+                    var memberId = $(this).data('id');
+                    // Make AJAX call
+                    $.ajax({
+                        type: 'POST',
+                        url: "/ShareTransactions/getmembers?memberId=" + memberId,
+                        contentType: 'application/json',
+
+                        success: function (response) {
+
+                            var membernos = response.memberno;
+                            var namess = response.names;
+
+
+                            $("#memberno1").val(membernos);
+                            $("#name").val(namess);
+                            
+                        },
+                        error: function (xhr, status, error) {
+                            // Handle error
+                            console.error(xhr.responseText);
+                        }
+                    });
+                });
+                }
+
+
+            });
+
+        function getDescription() {
+
+            var Sharecode = $("#sharecodeid").val();
+
+            $.ajax({
+                url: "/ShareTransactions/populateDescription?Sharecode=" + Sharecode,
+                type: "Post",
+                dataType: 'text',
+                success: function (data) {
+                    console.log(data);
+                    var interestrate = JSON.parse(data);
+
+                    var esult = JSON.parse(data);
+
+                    var splitted = esult.split(",");
+                    var remarks = splitted[0];
+
+                    $("#remarks").val(remarks);
+
+
+
+                },
+
+                error: function (data) {
+                    toastr.error('Amount cannot be less than zero,please select the repayment!', { timeOut: 5000 });
+                     return;
+                }
+            });
+
+
+        }
+        </script>
+    }
+   
+   
+<script type="text/javascript">
+
+        $(document).ready(function () {
+            
+            $('#sharecodeid').change(function () {
+                 getLoanlist();
+
+                if ($(this).val() === 'L001')
+                {
+                      if ($.trim($("#memberno1").val()) == "")
+                          {
+                     toastr.error('Member No cannot be empty!!!', { timeOut: 5000 })
+               
+                    return;
+                   }
+
+
+                    $('#addlistbutton').hide();
+                    $('#loanlist').show();
+                    $('#interestid').show();
+                    $('#repaymethodid').show();
+                    $('#repayid input').show();
+                    $('#loancodeid').show();
+                    $('#loannoid').show();
+                } 
+                else {
+                    $('#addlistbutton').show();
+                    $('#loanlist').hide();
+                    $('#interestid').hide();
+                    $('#repaymethodid').hide();
+                    $('#repayid').hide();
+                    $('#loancodeid').hide();
+                    $('#loannoid').hide();
+                }
+               
+
+            });
+
+            function getLoanlist() {
+                var filter = $("#memberno1").val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: "getActiveloans?filter=" + filter,
+                    contentType: 'application/json',
+                    success: function (response) {
+                       
+                        populateIntake(response);
+                    },
+                    failure: function (response) {
+               
+                    }
+                }).then(function () {
+                    // ...
+                });
+                //}
+            }
+            function populateIntake(intake) {
+    var filter = $("#memberno1").val();
+    debugger
+    let itemTableRows = new Array();
+    intake.forEach(i => {
+        var edit = `<button class="btn-success text-white select-button" data-id="${i.memberno}">Select</button>`;
+        debugger
+        itemTableRows.push(`<tr>
+                             <td>${i.dueDate}</td>
+                             <td>${i.principal.toFixed(2)}</td>
+                             <td>${i.interest.toFixed(2)}</td>
+                             <td>${i.totalPayment.toFixed(2)}</td>
+                             <td>${i.remainingBalance.toFixed(2)}</td>
+                             <td>${edit}</td>
+                           </tr>`)
+    });
+
+    $('#intakes1').html(itemTableRows);
+
+    // Add click event listener using event delegation
+    $('#intakes1').off('click', '.select-button').on('click', '.select-button', function () {
+        event.preventDefault();
+        var memberno = $(this).data('id');
+        // Make AJAX call
+        $.ajax({
+            type: 'POST',
+            url: "/ShareTransactions/populateloan?memberno=" + memberno,
+            contentType: 'application/json',
+
+            success: function (response) {
+                var loanno1 = response.loannos;
+                var loanscode1 = response.loancodes;
+                var repaymethods1 = response.repaymethods;
+                var interestrates1 = response.interestrates;
+                var repayperiod1 = response.repayperiods;
+                var totalrepay = Math.trunc(response.totalPayment);
+
+                $("#loanNo").val(loanno1);
+                $("#loancode").val(loanscode1);
+                $("#repayMethod").val(repaymethods1);
+                $("#interestRate").val(interestrates1);
+                $("#repayPeriod").val(repayperiod1);
+                $("#amount").val(totalrepay);
+
+            },
+            error: function (xhr, status, error) {
+                // Handle error
+                console.error(xhr.responseText);
+            }
+        });
+    });
+}
+
+           
+        });
+
+
+    document.getElementById("toggleVisibilityButton").addEventListener("click", function (button) {
+        if (document.getElementById("displaytable").style.display === "none") document.getElementById("displaytable").style.display = "block";
+        else document.getElementById("displaytable").style.display = "none";
+    });
+
+    function strShareType(e) {
+        var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strShareType', 'startswith', e.text, true) : query;
+        e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strShareType)), query);
+    }
+    function strBankName(e) {
+        var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strBankName', 'startswith', e.text, true) : query;
+        e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strBankName)), query);
+    }
+    function strMemberNo(e) {
+        var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('MemberName', 'contains', e.text, true) : query;
+        e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.member)), query);
+    }
+    function getInterestRate() {
+
+        var Name = $("#name").val();
+      
+        $.ajax({
+            url: "../ShareTransactions/populateNames?Name=" + Name,
+            type: "Post",
+            dataType: 'text',
+            success: function (data) {
+                console.log(data);
+                var interestrate = JSON.parse(data);
+
+                var esult = JSON.parse(data);
+
+                var splitted = esult.split(",");
+                var names = splitted[0];
+                var membernos = splitted[1];
+                
+
+                $("#name").val(names);
+                $("#membernoid").val(membernos);
+                
+
+
+
+            },
+
+            error: function (data) {
+                alert(data);
+            }
+        });
+
+
+    }
+
+ function showLoader() {
+        document.getElementById("loader").style.display = "block";
+    }
+
+    function hideLoader() {
+        document.getElementById("loader").style.display = "none";
+    }
+
+    function showMessage(message) {
+        var messageElement = document.getElementById("message");
+        messageElement.innerText = message;
+        messageElement.style.display = "block";
+    }
+
+    function hideMessage() {
+        document.getElementById("message").style.display = "none";
+    }
+
+    function showOverlay() {
+        document.getElementById("overlay").style.display = "block";
+    }
+
+    function hideOverlay() {
+        document.getElementById("overlay").style.display = "none";
+    }
+
+
+
+
+    function validateDate() {
+
+       
+        // Get the selected date from the date picker input
+        var selectedDate = new Date(document.getElementById('date').value);
+        // Get the current date
+        var currentDate = new Date();
+
+        // Check if the selected date is before the current date
+        if (selectedDate > currentDate) {
+            // If the selected date is in the past, show an alert
+            toastr.error('The Selected Date exceed the current date.', { timeOut: 5000 });
+
+            // Clear the date picker input
+            document.getElementById('date').value = '';
+        }
+    }
+
+    function updateMaxDate() {
+        // Set the max attribute of the date input to the current date
+        var currentDate = new Date().toISOString().split('T')[0];
+        document.getElementById('date').setAttribute('max', currentDate);
+    }
+
+    // Set the default value of the date picker to the current date
+    document.getElementById('date').valueAsDate = new Date();
+
+
+ function saveOrders()
+ {
+
+    
+
+     if (!data.amount) {
+         $('#loanlist').show();
+   
+
+
+     } 
+     else {
+ $('#loanlist').hide();
+     }
+     
+ }
+
+</script>
+
+<ejs-scripts></ejs-scripts>
+

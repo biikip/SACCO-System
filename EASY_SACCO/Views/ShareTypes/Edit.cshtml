@@ -1,0 +1,161 @@
+﻿@model EASY_SACCO.Models.ShareType
+@using Syncfusion.EJ2
+@using Newtonsoft.Json
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+    var CompanyCode = HttpContextAccessor.HttpContext.Session.GetString("CompanyCode");
+    var CompanyName = HttpContextAccessor.HttpContext.Session.GetString("CompanyName");
+}
+
+<div class="row" style="background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+    <div class="col-8">
+
+        <div style="margin:8px;padding:8px;text-align:left">
+            <div style="color:black;font-size:xx-large;" class="text-capitalize">Update Share Type Details </div>
+            <div style="color:gray;font-size:small;" class="text-capitalize">Update ShareType  Information</div>
+        </div>
+
+    </div>
+    <div class="col-4">
+        <div style="margin:8px;padding:8px;text-align:end">
+            <a asp-action="Index" asp-controller="ShareTypes" style="background:#0670ba;padding:4px;border-radius:8px;color:white"><i class="fa fa-plus" aria-hidden="true"></i>  View  Share Types</a>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+
+    <div style="padding:8px;margin:8px;border-radius:16px;background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+
+        <form asp-action="Edit">
+            <input type="hidden" asp-for="strId" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <div class="col-md-4">
+
+                    <br />
+                    <label><strong style="color:black">Share Type</strong></label>
+
+                    <input asp-for="strShareType" placeholder="Share Type" class="form-control" />
+                    <span asp-validation-for="strShareType" class="text-danger"></span>
+
+
+                    <br />
+
+
+                    <label><strong style="color:black">Share Code</strong></label>
+
+                    <input asp-for="strSharecode" placeholder="Share Code" class="form-control" />
+                    <span asp-validation-for="strSharecode" class="text-danger"></span>
+                    <br />
+
+                    <div class="padding-top">
+                        <label><strong style="color:black">Sacco Name</strong></label>
+
+                        <input value="@CompanyName" readonly class="form-control" />
+                        <input asp-for="strCompany" value="@CompanyCode" hidden class="form-control" />
+                        <span asp-validation-for="strCompany" class="text-danger"></span>
+
+                    </div>
+
+                    <br />
+
+                    <div class="padding-top">
+                        <label><strong style="color:black">GL Account No</strong></label>
+
+                        <ejs-dropdownlist id="glid" ejs-for="GLaccno" value="@Model.GLaccno"
+                                          dataSource="@ViewBag.glaccno">
+                            <e-dropdownlist-fields text="strAccountName" value="strAccountNo"></e-dropdownlist-fields>
+                        </ejs-dropdownlist>
+
+
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <br />
+                    <label><strong style="color:black">Minimum Shares</strong></label>
+                    <input asp-for="strMinimum" placeholder="Minimum Shares" class="form-control" />
+                    <span asp-validation-for="strMinimum" class="text-danger"></span>
+                    <br />
+                    <label><strong style="color:black">Loans To Share Ratio</strong></label>
+                    <input asp-for="strloanstoshareratio" placeholder="Loans To Share Ratio" class="form-control" />
+                    <span asp-validation-for="strloanstoshareratio" class="text-danger"></span>
+
+
+
+                    <br />
+
+                </div>
+                <br />
+                <div class="col-md-4">
+
+                    <br />
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="strismainshares" /> <strong style="color:black">@Html.DisplayNameFor(model => model.strismainshares)</strong>
+                        </label>
+                    </div>
+
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="strwithrawable" /><strong style="color:black">@Html.DisplayNameFor(model => model.strwithrawable)</strong>
+                        </label>
+                    </div>
+
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="strCanB_OffletLoan" /> <strong style="color:black">@Html.DisplayNameFor(model => model.strCanB_OffletLoan)</strong>
+                        </label>
+                    </div>
+
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="strCanB_Garantee" /> <strong style="color:black">@Html.DisplayNameFor(model => model.strCanB_Garantee)</strong>
+                        </label>
+                    </div>
+                    <br />
+
+
+                    <input type="submit" value="Save Details" class="btn btn-primary" style="background-color:#0670ba;width:100%" />
+                </div>
+
+            </div>
+
+
+
+
+        </form>
+    </div>
+
+
+
+
+</div>
+
+<script type="text/javascript">
+    function strCompany(e) {
+            var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strCompanyName', 'startswith', e.text, true) : query;
+            e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strCompany)), query);
+    }
+    debugger
+
+    function glid(e) {
+        var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strAccountName', 'startswith', e.text, true) : query;
+        e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.glaccno)), query);
+    }
+    function relationships(e) {
+        var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strRelationShip', 'startswith', e.text, true) : query;
+        e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strRelationship)), query);
+    }
+
+</script>
+<ejs-scripts></ejs-scripts>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

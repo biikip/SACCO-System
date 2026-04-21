@@ -1,0 +1,94 @@
+﻿@model Project
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using Syncfusion.EJ2
+@using Newtonsoft.Json
+
+@{
+    ViewData["Title"] = "Create Project";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+<head>
+    <link href="~/Syncfussion/styles/material.css" rel="stylesheet" />
+    <script src="~/Syncfussion/scripts/ej2.min.js"></script>
+    <style>
+        .header-space {
+            margin-top: 0;
+            padding-top: 0;
+        }
+
+        .e-ddl.e-input-group input.e-input::placeholder {
+            font-size: 16px; /* Increase or decrease as needed */
+            color: darkgrey; /* Set to a more visible color */
+            opacity: 1; /* Ensure full opacity for better visibility */
+        }
+
+        .container {
+            margin-top: 3px; /* or adjust to your preferred spacing */
+        }
+    </style>
+</head>
+
+<div class="row bg-white shadow-sm p-0 mb-4">
+    <div class="col-md-8">
+        <div style="color:black;font-size:x-large;" class="text-capitalize">Create Projects</div>
+        @* <div style="color:black;">Add new members to the system</div> *@
+    </div>
+    @*     <div class="col-4">
+        <div style="margin:8px;padding:8px;text-align:end">
+        <a asp-action="Index" asp-controller="MembersRegistrations" style="background:#0670ba;padding:4px;border-radius:8px;color:white"><i class="fa fa-eye" aria-hidden="true"></i> View Members</a>
+    </div>
+    </div> *@
+</div>
+
+<div class="container-fluid">
+    <div style="padding:8px;margin:8px;border-radius:16px;background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+        <form asp-action="Create" asp-controller="Investment" method="post">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Project Code</label>
+                        <input asp-for="ProjectCode" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Project Name</label>
+                        <input asp-for="ProjectName" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea asp-for="Description" class="form-control" required></textarea>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Total Cost</label>
+                        <input asp-for="TotalCost" type="number" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Expected ROI (%)</label>
+                        <input asp-for="ExpectedROI" type="number" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Duration (Months)</label>
+                        <input asp-for="DurationMonths" type="number" class="form-control" required />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Subscription Model (Daily Contribution)</label>
+                        <input asp-for="DailyContributionAmount" type="number" class="form-control" required />
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-3">
+                <button type="submit" class="btn btn-success">Create Project</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,151 @@
+﻿@model IncomeStatementViewModel
+@{
+    ViewData["Title"] = "Balance Sheet";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+<div class="container mt-4 statement-container">
+
+<div class="button-group text-end mb-3">
+    <div class="col-auto">
+        <button type="button" class=" btn-primary btn-sm" onClick="printCertificate()">Print  <span class="fa fa-print"></span></button>
+        <button type="button" class="btn-primary btn-sm" onclick="exportTableToExcel('statement-table')">
+            <i class="fa fa-file-excel"></i> Export Excel
+        </button>
+        <a asp-action="BooksOfAccounts" asp-controller="Accounting" class=" btn-info btn-sm">Go Back</a>
+    </div>
+</div>
+<div id="statement-table">
+    <div class="report-header text-center">
+        <h4>@Model.CompanyName</h4>
+        <h5>Balance Sheet</h5>
+        <p>As of: @Model.EndDate.ToString("yyyy-MM-dd")</p>
+        <p>Generated On: @Model.GeneratedDate.ToString("yyyy-MM-dd HH:mm:ss")</p>
+    </div>
+<table class="table table-sm table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Account Name</th>
+            <th>Type</th>
+            <th>Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.IncomeStatementItems)
+        {
+            <tr>
+                <td>@item.AccountName</td>
+                <td>@item.Type</td>
+                <td>@item.Amount.ToString("N2")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h4>Total Revenue: @Model.TotalRevenue.ToString("N2")</h4>
+<h4>Total Expenses: @Model.TotalExpenses.ToString("N2")</h4>
+<h3>Net Income: @Model.NetIncome.ToString("N2")</h3>
+</div>
+</div>
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: Arial, sans-serif;
+        font-size: 13px;
+    }
+
+    .container {
+        width: 96%;
+        background: #fff;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .table {
+        font-size: 12px;
+    }
+
+        .table th, .table td {
+            padding: 6px;
+            border: 1px solid #333; /* Darker border for clarity */
+            text-align: right;
+            color: #000; /* Black text for better visibility */
+        }
+
+        .table th {
+            background: #0056b3; /* Darker blue header */
+            color: #fff;
+            text-align: left;
+        }
+
+    .table-primary {
+        background: #b3d7ff !important;
+    }
+    /* Lighter Blue */
+    .table-warning {
+        background: #ffeb99 !important;
+    }
+    /* Light Yellow */
+    .table-success {
+        background: #b3e6b3 !important;
+    }
+    /* Light Green */
+    .table-secondary {
+        background: #d6d6d6 !important;
+    }
+    /* Gray */
+    .total-row {
+        font-weight: bold;
+        background: #cfcfcf !important;
+    }
+    /* Bolder row */
+
+
+    .total-row {
+        font-weight: bold;
+        background: #e9ecef;
+    }
+
+    @@media print {
+        body {
+            background: #fff;
+            font-size: 11px;
+        }
+
+        .container {
+            width: 100%;
+            padding: 8px;
+            box-shadow: none;
+        }
+
+        .no-print {
+            display: none !important;
+        }
+
+        @@page {
+            margin: 1cm;
+        }
+    }
+</style>
+
+@section Scripts {
+    <script>
+        function exportTableToExcel(tableId) {
+            var table = document.getElementById(tableId);
+            var html = table.outerHTML;
+            var url = 'data:application/vnd.ms-excel,' + encodeURIComponent(html);
+            var link = document.createElement("a");
+            link.href = url;
+            link.download = 'BalanceSheet.xls';
+            link.click();
+        }
+
+        function printCertificate() {
+            const printContents = document.getElementById('statement-table').innerHTML;
+            const originalContents = document.body.innerHTML;
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+        }
+    </script>
+}

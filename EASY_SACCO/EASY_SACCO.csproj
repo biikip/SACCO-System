@@ -1,0 +1,63 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>Disable</Nullable>
+    <ImplicitUsings>Disable</ImplicitUsings>
+    <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\reports\LoansIssued.frx" />
+    <Content Remove="wwwroot\reports\MemberList.frx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Reports\LoansIssued.frx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Reports\LoansIssued.frx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AspNetCoreHero.ToastNotification" Version="1.1.0" />
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="ClosedXML" Version="0.102.2" />
+    <PackageReference Include="DinkToPdf" Version="1.0.8" />
+    <PackageReference Include="EPPlus" Version="7.1.2" />
+    <PackageReference Include="FastReport.Data.MsSql" Version="2025.2.0" />
+    <PackageReference Include="FastReport.OpenSource" Version="2025.2.0" />
+    <PackageReference Include="FastReport.OpenSource.Web" Version="2025.2.0" />
+    <PackageReference Include="itext7" Version="7.0.3" />
+    <PackageReference Include="itext7.bouncy-castle-adapter" Version="7.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="7.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Office.Interop.Excel" Version="14.0.0.1" />
+    <PackageReference Include="Microsoft.ReportingServices.ReportViewerControl.WebForms" Version="150.1652.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration" Version="7.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="NToastNotify" Version="7.0.1" />
+    <PackageReference Include="PdfRpt.Core" Version="1.5.12" />
+    <PackageReference Include="Syncfusion.EJ2.AspNet.Core" Version="29.1.38" />
+    <PackageReference Include="Syncfusion.EJ2.PdfViewer.AspNet.Core" Version="29.1.38" />
+    <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="25.1.39" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Uploads\IDNO\" />
+    <Folder Include="wwwroot\Images\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="wwwroot\reports\LoansIssued.frx" />
+    <None Include="wwwroot\reports\MemberList.frx" />
+  </ItemGroup>
+  
+
+</Project>

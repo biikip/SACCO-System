@@ -1,0 +1,141 @@
+﻿@model EASY_SACCO.Models.Agents
+
+@using Syncfusion.EJ2
+@using Newtonsoft.Json
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+<head>
+    <link href="~/Syncfussion/styles/material.css" rel="stylesheet" />
+    <script src="~/Syncfussion/scripts/ej2.min.js"></script>
+</head>
+<div class="row" style="background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+    <div class="col-8">
+
+        <div style="margin:8px;padding:8px;text-align:left">
+            <div style="color:black;font-size:xx-large;" class="text-capitalize">Update Agent Information </div>
+            <div style="color:gray;font-size:small;" class="text-capitalize">Update/Edit Agent  details</div>
+        </div>
+
+    </div>
+    <div class="col-4">
+        <div style="margin:8px;padding:8px;text-align:end">
+            <a asp-action="Index" asp-controller="Agents" style="background:#0670ba;padding:4px;border-radius:8px;color:white"><i class="fa fa-plus" aria-hidden="true"></i>  View  Agents</a>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+
+    <div style="padding:8px;margin:8px;border-radius:16px;background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+
+        <form asp-action="Edit" style="padding:30px">
+            <input type="hidden" asp-for="strId" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div style="  background-color: #f3f3f3;color:#8b8b8b;margin-bottom: 8px;padding:8px;margin-top:8px;">
+                        PERSONAL INFO
+                    </div>
+                    <br />
+
+                    <input asp-for="strFullName" placeholder="Full Name" class="form-control" />
+                    <span asp-validation-for="strFullName" class="text-danger"></span>
+
+                    <br />
+
+
+
+                    <div class="padding-top">
+                        <ejs-dropdownlist id="strGender" ejs-for="strGender" filterBarPlaceholder="Search" allowFiltering="true" filtering="strGender" placeholder="Select Gender" popupHeight="300px" dataSource="@ViewBag.strGender">
+                            <e-dropdownlist-fields text="strGender" value="strGender"></e-dropdownlist-fields>
+                        </ejs-dropdownlist>
+
+                    </div>
+                    <br />
+
+                    <input asp-for="strIDNO" placeholder="ID NO" class="form-control" />
+                    <span asp-validation-for="strIDNO" class="text-danger"></span>
+                    <br />
+                    <input asp-for="strstaffNo" placeholder="Staff No" class="form-control" />
+                    <span asp-validation-for="strstaffNo" class="text-danger"></span>
+                    <br />
+                </div>
+
+
+                <div class="col-md-4">
+                    <div style="  background-color: #f3f3f3;color:#8b8b8b;margin-bottom: 8px;padding:8px;margin-top:8px;">
+                        CONTACT INFO
+                    </div>
+                    <br />
+
+                    <input asp-for="strLandLineNo" placeholder="Land Line No" class="form-control" />
+                    <span asp-validation-for="strLandLineNo" class="text-danger"></span>
+
+                    <br />
+
+                    <input asp-for="strAddress" placeholder="Address" class="form-control" />
+                    <span asp-validation-for="strAddress" class="text-danger"></span>
+                    <br />
+
+                    <input asp-for="strMobileno" placeholder="Staff No" class="form-control" />
+                    <span asp-validation-for="strMobileno" class="text-danger"></span>
+                    <br />
+
+                </div>
+
+
+                <div class="col-md-4">
+                    <div style="  background-color: #f3f3f3;color:#8b8b8b;margin-bottom: 8px;padding:8px;margin-top:8px;">
+                        OTHER DETAILS
+                    </div>
+                    <br />
+
+
+
+                    <input asp-for="strOccupation" placeholder="Occupation" class="form-control" />
+                    <span asp-validation-for="strOccupation" class="text-danger"></span>
+                    <br />
+
+
+
+
+                    <div class="padding-top">
+                        <ejs-dropdownlist id="strStation" ejs-for="strStation" filterBarPlaceholder="Search" allowFiltering="true" filtering="strStation" placeholder="Select Station" popupHeight="300px" dataSource="@ViewBag.strStation">
+                            <e-dropdownlist-fields text="strStationName" value="strId"></e-dropdownlist-fields>
+                        </ejs-dropdownlist>
+
+                    </div>
+                    <br />
+
+                    <input asp-for="strTown" placeholder="Town" class="form-control" />
+                    <span asp-validation-for="strTown" class="text-danger"></span>
+                    <br />
+
+                    <input type="submit" value="Update Details" class="btn btn-primary" style="background-color:#0670ba;width:100%" />
+
+                </div>
+
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function strGender(e) {
+            var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strGender', 'startswith', e.text, true) : query;
+            e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strGender)), query);
+    }
+
+     function strStation(e) {
+            var query = new ej.data.Query();
+         query = (e.text !== '') ? query.where('strStationName', 'startswith', e.text, true) : query;
+            e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strStation)), query);
+    }
+</script>
+<ejs-scripts></ejs-scripts>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

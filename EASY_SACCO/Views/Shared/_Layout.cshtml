@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        document.oncontextmenu = function () {
+            return false;
+        }
+    </script>
+    <link href="~/themes/Colours.css" rel="stylesheet" />
+
+    <link href="~/Syncfussion/styles/material.css" rel="stylesheet" />
+    <script src="~/Syncfussion/scripts/ej2.min.js"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]Sacco</title>
+    @* <link rel="shortcut icon" type="image/x-icon" href="~/Icons/AMTEC LOGO231132026.jpg" /> *@
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
+              crossorigin="anonymous"
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" />
+    </environment>
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link href="~/css1/site.css" rel="stylesheet" />
+</head>
+
+<body>
+    <header>
+       @*  <nav class="navbar navbar-expand-sm navbar-toggleable-sm    mb-0 " style="background-color:white ">
+            <a asp-action="HomeMaster" style="color:white" asp-controller="Home">
+                @* <img src="~/Icons/AMTEC LOGO.jpg" onerror="this.src='/Icons/AMTEC LOGO.jpg'" asp-append-version="true" style="height:70px; width:auto;" class="img-responsive img_bottom" />
+                <strong style="color:#0670ba;margin-left:8px;font-size:xx-large">SACCO</strong>
+            </a>
+            <button style="border-color:white" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+
+                <ul class="navbar-nav mr-auto">
+
+                    <li class="nav-item active">
+                    </li>
+                </ul>
+                <ul class="navbar-nav" style="font-size:large">
+
+                    <a href="#">
+                        <li class="nav-item" style="margin-right:24px;color:#0ecbf5">
+                            <strong style="padding:8px">Home</strong>
+                        </li>
+                    </a>
+                    <hr />
+                    <a href="#" style="color:black">
+                        <li class="nav-item">
+                            <strong style="padding:8px">We do</strong>
+                        </li>
+                    </a>
+                    <hr />
+                    <a href="#" style="color:black">
+                        <li class="nav-item">
+                            <strong style="padding:8px">Contact</strong>
+
+                        </li>
+                    </a>
+                  
+
+
+                    <li class="nav-item" style="color:#175af3">
+                        <a asp-action="Index" asp-controller="Home" class="btn-link"><strong style="padding:8px;color:black">login</strong></a>
+                    </li>
+                </ul>
+            </div>
+        </nav> *@
+    </header>
+    <div class="">
+        <main role="main"  style="background-color:#ecfcfb">
+            <script src="~/lib/jquery/dist/jquery.min.js"></script>
+            <partial name="_Notification" />
+            @RenderBody()
+            @RenderSection("scripts", required: false)
+        </main>
+    </div>
+    
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=">
+        </script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                crossorigin="anonymous"
+                integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o">
+        </script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    </environment>
+    <script src="https://cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <ejs-scripts></ejs-scripts>
+
+    @await Component.InvokeAsync("Notyf")
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
+<script>
+    let sessionTimeoutMinutes = 15; // match your server session timeout
+    let warningTime = (sessionTimeoutMinutes - 1) * 60 * 1000;
+
+    let timeoutHandle;
+
+    function resetTimer() {
+        clearTimeout(timeoutHandle);
+        timeoutHandle = setTimeout(() => {
+            window.location.href = '/Account/Login?timeout=true'; // Redirect to login with a query param
+        }, warningTime);
+    }
+
+    window.onload = resetTimer;
+    document.onmousemove = resetTimer;
+    document.onkeypress = resetTimer;
+</script>

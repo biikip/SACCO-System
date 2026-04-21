@@ -1,0 +1,77 @@
+﻿@model EASY_SACCO.Models.LoanAplication
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+
+<h1>Edit</h1>
+
+<h4>LoanAplication</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        @* <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="strId" />
+            <div class="form-group">
+                <label asp-for="strLoanTypeId" class="control-label"></label>
+                <input asp-for="strLoanTypeId" class="form-control" />
+                <span asp-validation-for="strLoanTypeId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="strMemberId" class="control-label"></label>
+                <input asp-for="strMemberId" class="form-control" />
+                <span asp-validation-for="strMemberId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="strLoanNo" class="control-label"></label>
+                <input asp-for="strLoanNo" class="form-control" />
+                <span asp-validation-for="strLoanNo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="strAmount" class="control-label"></label>
+                <input asp-for="strAmount" class="form-control" />
+                <span asp-validation-for="strAmount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="strApplicationDate" class="control-label"></label>
+                <input asp-for="strApplicationDate" class="form-control" />
+                <span asp-validation-for="strApplicationDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="strRepaymentPeriod" class="control-label"></label>
+                <input asp-for="strRepaymentPeriod" class="form-control" />
+                <span asp-validation-for="strRepaymentPeriod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="strInterestRate" class="control-label"></label>
+                <input asp-for="strInterestRate" class="form-control" />
+                <span asp-validation-for="strInterestRate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="strRepaymentMethod" class="control-label"></label>
+                <input asp-for="strRepaymentMethod" class="form-control" />
+                <span asp-validation-for="strRepaymentMethod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="strEndoresmentDate" class="control-label"></label>
+                <input asp-for="strEndoresmentDate" class="form-control" />
+                <span asp-validation-for="strEndoresmentDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="strEndorsementStatus" class="control-label"></label>
+                <input asp-for="strEndorsementStatus" class="form-control" />
+                <span asp-validation-for="strEndorsementStatus" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form> *@
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

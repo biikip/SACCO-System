@@ -1,0 +1,135 @@
+﻿@using EASY_SACCO.ViewModels
+@model MemberStatementVM
+@{
+    ViewData["Title"] = "Statement";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+<div class="container mt-5" style="background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 style="color: #212529; font-weight: 600;">Statement for @Model.MemberName (@Model.MemberNo)</h2>
+        <div>
+            <button type="button" class=" btn-primary btn-sm" onClick="printCertificate()">Print  <span class="fa fa-print"></span></button>
+
+            <button type="button" class="btn-primary btn-sm" onclick="exportTableToExcel('statement-table')">
+                <i class="fa fa-file-excel"></i> Export Excel
+            </button>
+            <a asp-action="Index" asp-controller="MembersRegistrations" style="background:#0670ba;padding:4px;border-radius:8px;color:white;text-align:end"><i class="fa fa-eye" aria-hidden="true"></i>Back to Members</a>
+        </div>
+    </div>
+
+    <div id="statement-table">
+        @foreach (var codeGroup in Model.Contributions.GroupBy(c => c.Transactioncode))
+        {
+            @foreach (var descGroup in codeGroup.GroupBy(d => d.Transdescription))
+            {
+                <h5 class="mt-3" style="color: #198754; font-weight: 600;">
+                    @descGroup.Key
+                </h5>
+
+                var orderedAsc = descGroup.OrderBy(t => t.TransDate).ToList();
+                decimal runningBalance = 0;
+                foreach (var t in orderedAsc)
+                {
+                    runningBalance += t.Amount;
+                }
+
+
+                <table class="table table-bordered table-sm">
+                    <thead class="table-secondary">
+                        <tr>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Running Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var trans in descGroup.OrderByDescending(t => t.TransDate))
+                        {
+                            <tr>
+                                <td>@trans.TransDate.ToString("dd-MM-yyyy")</td>
+                                <td>@trans.Amount.ToString("N2")</td>
+                                <td>@runningBalance.ToString("N2")</td>
+                            </tr>
+                            runningBalance -= trans.Amount;
+                        }
+                    </tbody>
+                </table>
+            }
+        }
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #f1f3f5;
+    }
+
+    .table th, .table td {
+        color: #212529;
+        font-size: 1rem;
+    }
+
+    .table thead th {
+        font-size: 1.05rem;
+        font-weight: bold;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .no-print {
+        display: block;
+    }
+
+    @@media print {
+        body {
+            background: #fff !important;
+        }
+
+        .print-container {
+            margin: 0 !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+            width: 100% !important;
+        }
+
+        .no-print {
+            display: none !important;
+        }
+
+        .print-title {
+            display: block !important;
+        }
+
+        .table {
+            width: 100% !important;
+        }
+
+        @@page {
+            margin: 1cm;
+        }
+    }
+</style>
+
+@section Scripts {
+    <script>
+        function exportTableToExcel(tableId) {
+            var table = document.getElementById(tableId);
+            var html = table.outerHTML;
+            var url = 'data:application/vnd.ms-excel,' + encodeURIComponent(html);
+            var link = document.createElement("a");
+            link.href = url;
+            link.download = 'statement.xls';
+            link.click();
+        }
+                function printCertificate() {
+            const printContents = document.getElementById('statement-table').innerHTML;
+            const originalContents = document.body.innerHTML;
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+        }
+    </script>
+}

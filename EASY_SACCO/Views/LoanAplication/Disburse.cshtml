@@ -1,0 +1,223 @@
+﻿@{
+    ViewData["Title"] = "Disburse";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+
+}
+<div class="row" style="background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+    <div class="col-8">
+
+        <div style="margin:8px;padding:8px;text-align:left">
+            <div style="color:black;font-size:xx-large;" class="text-capitalize">Loan Disbursement </div>
+            <div style="color:gray;font-size:small;" class="text-capitalize">Disbursement</div>
+        </div>
+
+    </div>
+   <div class="col-4">
+    <div style="margin:8px;padding:8px;text-align:end">
+            <a asp-action="EndorsementList" asp-controller="LoanAplications" style="background:#0670ba;padding:4px;border-radius:8px;color:white">Back To List</a>
+    </div>
+    </div>
+</div>
+<div class="container-fluid">
+
+    <div style="padding:8px;margin:8px;border-radius:16px;background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+    <form asp-action="Disburse" method="post" asp-controller="LoanAplications">
+
+                <div class="row">
+                <input type="hidden" name="Id" value="@ViewBag.id" />
+                    <div class="col-md-3">
+                        <lebel class="text-black"><strong>Member No</strong> </lebel>
+                        <br />
+                    <input name="MemberNo" value="@ViewBag.memberno" readonly placeholder="Member No" id="memberno" onchange="getMemberRecords()" class="form-control" />
+
+                    </div>
+                    <div class="col-md-3">
+                        <lebel class="text-black"><strong> Name</strong> </lebel>
+                        <br />
+                    <input name="Name" value="@ViewBag.name" readonly placeholder="Member No" id="memberno" onchange="getMemberRecords()" class="form-control" />
+
+                    </div>
+                    <div class="col-md-3">
+                        <lebel class="text-black"><strong> Document Number</strong> </lebel>
+                        <br />
+                    <input name="Docno" value="@ViewBag.docno" readonly placeholder="Member No" id="memberno" onchange="getMemberRecords()" class="form-control" />
+
+                    </div>
+                    <div class="col-md-3">
+                        <lebel class="text-black"><strong>Approved Loan Amount </strong></lebel>
+
+                    <input name="ApprovedAmount" value="@Math.Round(ViewBag.approvedamount,2)" readonly id="amount" oninput="ApprovedAmount()" required class="form-control" />
+
+                    </div>
+                    <div class="col-md-3">
+                        <lebel class="text-black"><strong> Total Charges  </strong> </lebel>
+                        <br />
+                    <input name="TotalCharges" value="@Math.Round(ViewBag.totalcharges,2)" readonly class="form-control" />
+
+                    </div>
+                    <div class="col-md-3">
+                        <lebel class="text-black"><strong> Net Payment </strong> </lebel>
+                        <br />
+                    <input name="NetPay" value="@Math.Round(ViewBag.netpay,2)" id="netpay" readonly class="form-control" />
+
+                    </div>
+                    <div class="col-md-3">
+                        <lebel class="text-black"><strong>  Payment Amount</strong> </lebel>
+                        <br />
+                        <input name="DisburseAmount" type="number" id="AmountI" required class="form-control" />
+
+                    </div>
+                    <div class="col-md-3">
+                        <lebel class="text-black"><strong>  Bank Account</strong> </lebel>
+                        <br />
+                        <select name="BankAccount" asp-items="@ViewBag.Banks" class="form-control"></select>
+                    </div>
+                <div class="col-md-3">
+                    <label for="repaymentMethod"><strong style="color:black">Payment Mode</strong></label>
+                    <select class="form-control" name="PaymentMode" id="repaymentMethod">
+                        <option id="cash" value="Cash">Cash</option>
+                        <option value="Cheques">Cheques</option>
+                        <option value="M-Pesa">M-Pesa</option>
+                        <option value="B2C">B2C</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3" id="docrfno" style="display: none;">
+                    <label class="text-black"><strong>Reference Number</strong></label>
+                    <br />
+                    <input name="ReferenceNumber" type="text" class="form-control"  />
+                </div>
+
+                <script>
+                    $(document).ready(function () {
+                        $('#repaymentMethod').change(function () {
+                            if ($(this).val() ==='Cash') {
+                                $('#docrfno').hide();
+                                $('#docrfno input').prop('required', false);
+                            } 
+                            else
+                            {
+                                $('#docrfno').show();
+                                $('#docrfno input').prop('required', true);
+                            }
+                        });
+                    });
+                </script>
+
+
+                    <div class="col-md-3">
+
+                        <lebel class="text-black"><strong>Disburse Date </strong></lebel>
+
+                    <input name="DisburseDate" type="date" id="dates" required class="form-control" max="" onchange="updateMaxDate()" />
+
+
+                    </div>
+
+             
+            </div>
+            <hr style="color:black" />
+
+       
+            <div style="background-color: #f3f3f3;color:#8b8b8b;margin-bottom: 8px;padding:8px;margin-top:8px;text-align:center">
+                <strong style="color:black">Charges </strong>
+            </div>
+            <div style="margin:8px;padding:8px;background-color:white">
+                <table class="table   table-striped table-bordered  table-sm" style="color:black " id="customers">
+                    <thead style="background-color:#0f1230;color:white">
+                    <th style="border:2px solid black">Code</th>
+                    <th style="border:2px solid black">Name</th>
+                    <th style="border:2px solid black">Amount </th>
+                    <th style="border:2px solid black">GL Account </th>
+                    
+                    </thead>
+                    <tbody>
+                        @foreach (var items in ViewBag.listcharges)
+                        {
+                            
+                            
+                            
+                            @* <input value="@items.strId" name="strId" type="hidden" /> *@
+                            <tr style="border:2px solid black">
+                                <td style="border:2px solid black">@items.ChargeCode
+                                    <input value="@items.ChargeCode" name="charges[@ViewBag.listcharges.IndexOf(items)].ChargeCode" type="hidden" />
+
+                                </td>
+                                
+                                <td style="border:2px solid black">@items.ProductCode
+                                    <input value="@items.ProductCode" name="charges[@ViewBag.listcharges.IndexOf(items)].ProductCode" type="hidden" />
+                                   
+                                </td>
+                                
+                                <td style="border:2px solid black">@Math.Round(items.Amount, 2)
+                                    <input value="@Math.Round(items.Amount, 2)" name="charges[@ViewBag.listcharges.IndexOf(items)].Amount" type="hidden" />
+                                   
+                                </td>
+                                <td style="border:2px solid black">
+                                    @items.GLAccount
+                                    <input value="@items.GLAccount" name="charges[@ViewBag.listcharges.IndexOf(items)].GLAccount" type="hidden" />
+
+                                </td>
+                               
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+
+                <input type="submit" value="Disburse" onclick="validateDate()" class="btn btn-primary" />
+
+            </div>
+            @* <div class="row">
+                <div class="col-md-3">
+                    
+                    <input type="submit"  value="Disburse" class="btn-Primary" />
+
+                </div>
+            </div> *@
+            </form>
+ </div>
+ </div>
+<script>
+    $(document).on('keyup', '#AmountI', function () {
+        var Maxloan = document.getElementById("netpay").value
+        var Maxloanwithnocoma = parseFloat(Maxloan.replaceAll(",", ""));
+
+        var $field = $(this);
+
+        var amountI = parseInt($field.val());
+
+        if (amountI > Maxloanwithnocoma) {
+            toastr.error('Payment Amount exeeds the Net Pay', { timeOut: 5000 });
+            $field.val("");
+        }
+    });
+
+    function validateDate() {
+        // Get the selected date from the date picker input
+        var selectedDate = new Date(document.getElementById('dates').value);
+        // Get the current date
+        var currentDate = new Date();
+
+        // Check if the selected date is before the current date
+        if (selectedDate > currentDate) {
+            // If the selected date is in the past, show an alert
+            toastr.error('Endorsement date can not exceed the current date.', { timeOut: 5000 });
+
+            // Clear the date picker input
+            document.getElementById('dates').value = '';
+        }
+    }
+
+    function updateMaxDate() {
+        // Set the max attribute of the date input to the current date
+        var currentDate = new Date().toISOString().split('T')[0];
+        document.getElementById('dates').setAttribute('max', currentDate);
+    }
+
+    // Set the default value of the date picker to the current date
+    document.getElementById('dates').valueAsDate = new Date();
+
+</script>

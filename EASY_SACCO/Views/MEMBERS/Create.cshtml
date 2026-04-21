@@ -1,0 +1,177 @@
+﻿@model EASY_SACCO.Models.MEMBERS
+
+@using Syncfusion.EJ2
+@using Newtonsoft.Json
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+<head>
+    <link href="~/Syncfussion/styles/material.css" rel="stylesheet" />
+    <script src="~/Syncfussion/scripts/ej2.min.js"></script>
+</head>
+<div class="row" style="background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+    <div class="col-8">
+
+        <div style="margin:8px;padding:8px;text-align:left">
+            <div style="color:black;font-size:xx-large;" class="text-capitalize">Registration </div>
+            <div style="color:gray;font-size:small;" class="text-capitalize">Add Members to the System</div>
+        </div>
+
+    </div>
+    <div class="col-4">
+        <div style="margin:8px;padding:8px;text-align:end">
+            <a asp-action="Index" asp-controller="MEMBERS" style="background:#0670ba;padding:4px;border-radius:8px;color:white"><i class="fa fa-plus" aria-hidden="true"></i>View  Members</a>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div style="padding:8px;margin:8px;border-radius:16px;background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger"><strong>Error!</strong> @TempData["ErrorMessage"]</div>
+        }
+
+        <form asp-action="Create" asp-controller="MEMBERS" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <!-- Section Title -->
+            <div style="background-color: #f3f3f3;color:#8b8b8b;margin-bottom: 8px;padding:8px;margin-top:8px;">
+                <strong style="color:black;font-size:large;">Personal Information</strong>
+            </div>
+
+            <!-- Personal Info -->
+            <div class="row g-4">
+                <!-- Member Type -->
+                @*                 <div class="col-md-3">
+                    <label class="control-label">Member Type</label>
+                    <select asp-for="MemberType" class="form-control"
+                            dataSource="@ViewBag.strCIGGroupId">
+                        <option value="" class="form-control">Select Member Type</option>
+                        <option value="Individual">Individual</option>
+                        <option value="Group/Corporate">Group / Corporate</option>
+                    </select>
+                    <span asp-validation-for="MemberType" class="text-danger" />
+                </div> *@
+
+                <!-- Group Name -->
+                @*                 <div class="col-md-6 group-name-section" style="display: none;">
+                    <label class="form-label">Group Name</label>
+                    <input asp-for="GroupName" class="form-control form-control-sm" />
+                    <span asp-validation-for="GroupName" class="text-danger small"></span>
+                </div> *@
+
+                <!-- Surname -->
+                <div class="col-md-3 surname-section">
+                    <label class="form-label">Surname</label>
+                    <input asp-for="SurName" class="form-control form-control-sm" required />
+                    <span asp-validation-for="SurName" class="text-danger small"></span>
+                </div>
+
+                <!-- Other Name -->
+                <div class="col-md-3 othername-section">
+                    <label class="form-label">Other Name</label>
+                    <input asp-for="OtherNames" class="form-control form-control-sm" required />
+                    <span asp-validation-for="OtherNames" class="text-danger small"></span>
+                </div>
+                <!-- ID No -->
+                <div class="col-md-3">
+                    <label class="form-label">ID No / Cert No</label>
+                    <input asp-for="IDNO" class="form-control form-control-sm" required />
+                    <span asp-validation-for="IDNO" class="text-danger small"></span>
+                </div>
+
+                <!-- Phone -->
+                <div class="col-md-3">
+                    <label class="form-label">Phone Number</label>
+                    <input asp-for="PhoneNo" class="form-control form-control-sm" required />
+                    <span asp-validation-for="PhoneNo" class="text-danger small"></span>
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="Email" class="form-label">Recipient Email</label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+            <div id="individualMessage" class="alert alert-info" style="display: none;">
+                <strong>Individual Registration:</strong> Requires a fee of Ksh 1,500, a passport photo, KRA PIN, and National ID.
+            </div>
+
+            <!-- Group Section -->
+            <div class="group-section mt-4" style="display: none;">
+                <div class="alert alert-info">
+                    <strong>Group Registration Fee:</strong> Ksh 2,500 is required. Please upload a valid group certificate and fill in the officials' details below.
+                </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="d-flex justify-content-left mt-2">
+                <input type="submit" value="Send Registration Link" class="btn btn-primary" style="background-color:#0670ba;width:20%">
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+        $(document).ready(function () {
+            $('#MemberType').change(function () {
+                var memberType = $(this).val();
+                if (memberType === 'Group / Corporate') {
+                    $('.group-section').show();
+                    $('.group-name-section').show();
+                    $('.surname-section, .othername-section, .dob-section, .gender-section').hide();
+                    $('#individualMessage').hide(); // Hide individual message
+                } else if (memberType === 'Individual') {
+                    $('.group-section').hide();
+                    $('.group-name-section').hide();
+                    $('.surname-section, .othername-section, .dob-section, .gender-section').show();
+                    $('#individualMessage').show(); // Show individual message
+                } else {
+                    $('.group-section').hide();
+                    $('.group-name-section').hide();
+                    $('.surname-section, .othername-section, .dob-section, .gender-section').show();
+                    $('#individualMessage').hide(); // Hide individual message
+                }
+            });
+        });
+        $('input[name="PhoneNo"]').blur(function () {
+            var phone = $(this).val();
+            checkUnique('Phone', phone, $(this));
+        });
+
+        $('input[name="IDNO"]').blur(function () {
+            var id = $(this).val();
+            checkUnique('ID', id, $(this));
+        });
+
+        $('input[name="Email"]').blur(function () {
+            var email = $(this).val();
+            checkUnique('Email', email, $(this));
+        });
+
+        function checkUnique(field, value, element) {
+            if (value.trim() === '') return;
+
+            $.get('/MembersRegistrations/CheckUnique', { field: field, value: value }, function (isValid) {
+                if (!isValid) {
+                    $(element).addClass('is-invalid');
+                    if (field === 'Phone') {
+                        $(element).next('.text-danger').text('Phone Number already exists.');
+                    } else if (field === 'ID') {
+                        $(element).next('.text-danger').text('ID Number already exists.');
+                    } else if (field === 'Email') {
+                        $(element).next('.text-danger').text('Email already exists.');
+                    }
+                } else {
+                    $(element).removeClass('is-invalid');
+                    $(element).next('.text-danger').text('');
+                }
+            });
+        }
+</script>
+<ejs-scripts></ejs-scripts>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

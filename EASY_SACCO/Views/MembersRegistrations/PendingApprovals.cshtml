@@ -1,0 +1,374 @@
+﻿@model General
+
+@{
+    ViewData["Title"] = "PendingApprovals";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+
+<head>
+    <style>
+        .excel-button {
+            background-color: #217346;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+            .excel-button:hover {
+                background-color: #1E5A34;
+            }
+
+        .custom-table {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+            .custom-table th {
+                background-color: #0f1230;
+                color: white;
+                text-align: center;
+                padding: 12px;
+            }
+
+            .custom-table td {
+                padding: 12px;
+                font-size: 16px;
+                color: #333; /* Darker text for better readability */
+                font-weight: 500;
+            }
+
+        .edit-link {
+            background-color: #007bff;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            transition: 0.3s;
+        }
+
+            .edit-link:hover {
+                background-color: #0056b3;
+            }
+    </style>
+</head>
+
+<div class="row bg-white shadow-sm p-0 mb-4">
+    <div class="col-8">
+        <div style="color:black;font-size:x-large;" class="text-capitalize">
+            Members Pending Approval
+        </div>
+        <div style="color:black;">
+            List of Members Pending Approval
+        </div>
+    </div>
+    <div class="col-4">
+        <div style="margin:8px;padding:8px;text-align:end">
+            <a asp-action="Create" asp-controller="MembersRegistrations" style="background:#0670ba;padding:4px;border-radius:8px;color:white">
+                <i class="fa fa-eye" aria-hidden="true"></i> Add New Member
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="p-4 bg-white shadow-sm rounded">
+        <table class="table table-striped table-bordered table-sm" style="color: black" id="myTable">
+            <thead style="background-color: #0f1230; color: white">
+                <tr>
+                    <th>Full Name / Group Name</th>
+                    <th>Member No</th>
+                    <th>Phone No</th>
+                    <th>Group</th>
+                    <th>ID No</th>
+                    <th>Email</th>
+                    <th>Approval Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.membersRegistrations.Count() != 0)
+                {
+                    @foreach (var item in Model.membersRegistrations)
+                    {
+                        var groupname = "n/a";
+                        var group = Model.CIG_Croups.FirstOrDefault(k => k.Id.ToString() == item.strCIGGroupId);
+                        if (group != null)
+                        {
+                            groupname = group.strName;
+                        }
+                        <tr>
+                            <td><strong>@(item.MemberType == "Individual" ? $"{item.strOtherName} {item.strSurName}" : item.GroupName)</strong></td>
+                            <td>@item.strMemberNo</td>
+                            <td>@item.strPhoneNo</td>
+                            <td>@groupname</td>
+                            <td>@item.strIdNo</td>
+                            <td>@item.strEmail</td>
+                            <td>
+                                @if (item.IsApproved)
+                                {
+                                    <span class="badge badge-success">Approved</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-warning">Pending</span>
+                                }
+                            </td>
+                            <td>
+                                @if (!item.IsApproved)
+                                {
+                                    <div class="d-flex gap-2">
+                                        <input type="button" value="Approve" class="btn btn-success btn-sm" onclick="showApproveModal(event, '@item.strId')" />
+                                        <input type="button" value="Reject" class="btn btn-danger btn-sm" onclick="showRejectModal(event, '@item.strId')" />
+                                        <a asp-action="Edit" asp-controller="MembersRegistrations" asp-route-id="@item.strId" class="edit-link btn-sm">
+                                            <i class="fa fa-pencil"></i> Edit
+                                        </a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <a asp-action="Edit" asp-controller="MembersRegistrations" asp-route-id="@(Convert.ToInt32(item.strId))" class="edit-link btn-sm">
+                                        <i class="fa fa-pencil"></i> Edit
+                                    </a>
+                                }
+
+                            </td>
+                        </tr>
+                    }
+                }               
+            </tbody>
+        </table>
+        <!-- Approve Modal -->
+        <div class="modal fade" id="approveModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title">Confirm Approval</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to approve this user?
+                    </div>
+                    <div class="modal-footer">
+                        <form id="approveForm" method="post">
+                            <input type="submit" class="btn btn-success" value="Yes, Approve" />
+                        </form>
+                        <input type="button" class="btn btn-secondary" value="Cancel" data-bs-dismiss="modal" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reject Modal -->
+        <div class="modal fade" id="rejectModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title">Confirm Rejection</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to reject this user?
+                    </div>
+                    <div class="modal-footer">
+                        <form id="rejectForm" method="post">
+                            <input type="submit" class="btn btn-danger" value="Yes, Reject" />
+                        </form>
+                        <input type="button" class="btn btn-secondary" data-bs-dismiss="modal" value="Cancel" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+
+
+    <script src="~/DataTable/js/JavaScript.js" asp-append-version="true"></script>
+    <script src="~/DataTable/js/JavaScript1.js"></script>
+    <script src="~/DataTable/js/JavaScript2.js"></script>
+    <script src="~/DataTable/js/JavaScript3.js"></script>
+    <script src="~/DataTable/js/JavaScript4.js"></script>
+    <script src="~/DataTable/js/JavaScript5.js"></script>
+    <script src="~/DataTable/js/JavaScript6.js"></script>
+    <script src="~/DataTable/js/JavaScript7.js"></script>
+    <style>
+        .dataTables_wrapper .dataTables_filter lebal[type="text"] {
+            font-weight: bold;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript">
+        function showApproveModal(event, id) {
+            event.preventDefault();
+            var form = document.getElementById('approveForm');
+            form.action = '/MembersRegistrations/ApproveMember/' + id;
+            var modal = new bootstrap.Modal(document.getElementById('approveModal'));
+            modal.show();
+        }
+
+        function showRejectModal(event, id) {
+            event.preventDefault();
+            var form = document.getElementById('rejectForm');
+            form.action = '/MembersRegistrations/RejectMember/' + id;
+            var modal = new bootstrap.Modal(document.getElementById('rejectModal'));
+            modal.show();
+        }
+
+         $(document).ready(function () {
+             // Initialize DataTable with buttons
+             var table = $('#myTable').DataTable({
+                 dom: 'Bf<"toolbar">tip',
+                 buttons: [
+                     {
+                         extend: 'excel',
+                         text: '<strong style="color:black">Excel</strong>',
+                         exportOptions: {
+                             columns: ':not(.exclude)'
+                         }
+                     },
+                     {
+                         extend: 'pdf',
+                         text: '<strong style="color:black">PDF</strong>',
+                         exportOptions: {
+                             columns: ':not(.exclude)'
+                         }
+                     }
+                 ],
+                 columnDefs: [
+                     {
+                         targets: [7], // Assuming action column is the 9th column (index 8)
+                         visible: true,
+                         className: 'exclude'
+                     }
+                 ]
+             });
+         });
+    </script>
+}
+
+@* <script type="text/javascript">
+$(document).ready(function () {
+    $('#exportBtn').click(function () {
+        debugger;
+        var tableData = [];
+
+        // Define indexes of columns to exclude
+        var excludeColumns = [7, 8, 9, 10]; // Example: Exclude the first and third columns (0-indexed)
+
+        // Add headers
+        var headerData = [];
+        $('#myTable thead tr').each(function () {
+            $(this).find('th').each(function (index) {
+                if (!excludeColumns.includes(index)) {
+                    headerData.push($(this).text()); // Only add header if it's not in the exclude list
+                }
+            });
+        });
+        if (headerData.length > 0) {
+            tableData.push(headerData);
+        }
+
+        // Add rows
+        $('#myTable tbody tr').each(function () {
+            var rowData = [];
+            $(this).find('td').each(function (index) {
+                if (!excludeColumns.includes(index)) {
+                    rowData.push($(this).text()); // Only add cell data if it's not in the exclude list
+                }
+            });
+            tableData.push(rowData);
+        });
+
+        // Make the AJAX call
+        $.ajax({
+            url: '/MembersRegistrations/ExportToExcel', // Adjust according to your routes
+            type: "POST",
+            data: JSON.stringify(tableData), // Send the tableData directly as JSON
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                window.location = response.fileUrl; // Assuming the server sends back a URL to download the file
+            },
+            error: function (xhr, status, error) {
+                console.error('Export error:', error);
+            }
+        });
+    });
+});
+$(document).ready(function () {
+    // Function to extract table data and send it to the server
+    function generatePDF() {
+        // Create an object to store table headers and body data
+        var pdfData = {
+            headers: [], // Array to store table headers
+            body: []     // Array to store table body data
+        };
+
+        // Specify the indices of columns to exclude
+        var excludedColumns = [7,8,9,10]; // Columns at index 2 and 4 (zero-based index) will be excluded
+
+        // Extract headers from the table headers
+        $('#myTable thead tr th').each(function (index) {
+            // Only add headers if the column is not excluded
+            if (!excludedColumns.includes(index)) {
+                pdfData.headers.push($(this).text().trim());
+            }
+        });
+
+        // Loop through each row in the table body
+        $('#myTable tbody tr').each(function () {
+            // Create an array to store data for each row
+            var rowData = [];
+
+            // Loop through each cell in the row
+            $(this).find('td').each(function (index) {
+                // Only add cell data if the column is not excluded
+                if (!excludedColumns.includes(index)) {
+                    // Get the text content of the cell and push it to the rowData array
+                    rowData.push($(this).text().trim());
+                }
+            });
+
+            // Push the rowData array to the body data array
+            pdfData.body.push(rowData);
+        });
+
+        // Make an AJAX POST request to the server
+        $.ajax({
+            url: '/MembersRegistrations/GeneratePDF', // Adjust the URL according to your application's routing
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(pdfData), // Convert pdfData object to JSON string
+            success: function (response) {
+                // Optionally, you can download the PDF or display it in the browser
+                    window.open(response.fileUrl, '_blank'); // Assuming the server sends back a URL to download the file
+
+                },
+            error: function (xhr, status, error) {
+                // Handle error
+                console.error('Error generating PDF:', error);
+            }
+        });
+    }
+
+    // Attach click event listener to the export button
+    $('#exportPdf').click(function () {
+        // Call the generatePDF function when the button is clicked
+        generatePDF();
+    });
+});
+
+    </script> *@
+
+
+
+

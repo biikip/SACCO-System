@@ -1,0 +1,154 @@
+﻿@model EASY_SACCO.Models.System_Users
+
+@using Syncfusion.EJ2
+@using Newtonsoft.Json
+
+@{
+    ViewData["Title"] = "Member Login Account Register";
+    Layout = "~/Views/Shared/_PublicLayout.cshtml";
+}
+
+<head>
+    <link href="~/Syncfussion/styles/material.css" rel="stylesheet" />
+    <script src="~/Syncfussion/scripts/ej2.min.js"></script>
+</head>
+
+<div class="row" style="background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+    <div class="col-8">
+        <div style="margin:8px;padding:8px;text-align:left">
+            <div class="text-capitalize" style="color:black;font-size:xx-large;">Register Member</div>
+            <div class="text-capitalize" style="color:gray;font-size:small;">Create a new SACCO Member account</div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="p-4 m-3 rounded-3 shadow-sm bg-white">
+        <form asp-action="Register">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- Section: Personal Information -->
+            <div class="p-2 bg-light border rounded mb-3">
+                <strong style="color:black">PERSONAL INFO</strong>
+            </div>
+            <div class="row">
+
+                <!-- Member Number -->
+                <div class="col-md-3">
+                    <label><strong style="color:black">Member No</strong></label>
+                    <input asp-for="MemberNo" class="form-control" id="memberNoInput" onblur="fetchMemberDetails()" required />
+                    <span asp-validation-for="MemberNo" class="text-danger"></span>
+                </div>
+                <!-- First Name -->
+                <div class="col-md-3">
+                    <label><strong style="color:black">First Name</strong></label>
+                    <input asp-for="strFirstName" class="form-control" readonly id="strFirstName" required />
+                    <span asp-validation-for="strFirstName" class="text-danger"></span>
+                </div>
+
+                <!-- Last Name -->
+                <div class="col-md-3">
+                    <label><strong style="color:black">Last Name</strong></label>
+                    <input asp-for="strLastName" class="form-control" readonly id="strLastName" required />
+                    <span asp-validation-for="strLastName" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+
+                    <label><strong style="color:black">User Name</strong></label>
+                    <input asp-for="strUserName" class="form-control" readonly id="strUserName" required />
+                    <span asp-validation-for="strUserName" class="text-danger"></span>
+                </div>
+
+                <!-- Phone Number -->
+                <div class="col-md-3">
+                    <label><strong style="color:black">Phone Number</strong></label>
+                    <input asp-for="strPhoneNo" class="form-control" readonly id="strPhoneNo" required />
+                    <span asp-validation-for="strPhoneNo" class="text-danger"></span>
+                </div>
+
+                <!-- Email -->
+                <div class="col-md-3">
+                    <label><strong style="color:black">Email</strong></label>
+                    <input asp-for="strEmail" class="form-control" readonly id="strEmail" required />
+                    <span asp-validation-for="strEmail" class="text-danger"></span>
+                </div>
+                <!-- Password -->
+                <div class="col-md-3">
+                    <label><strong style="color:black">Password</strong></label>
+                    <input asp-for="strPassword" type="password" class="form-control" required />
+                    <span asp-validation-for="strPassword" class="text-danger"></span>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="col-md-3">
+                    <label><strong style="color:black">Confirm Password</strong></label>
+                    <input asp-for="ConfirmPassword" type="password" class="form-control" required />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+                <!-- User Type -->
+                <div class="col-md-3">
+                    <br />
+                    <input type="hidden" asp-for="strUserType" value="MEMBER" />
+                </div>
+
+                <!-- SACCO Name -->
+                <div class="col-md-3">
+                    <br />
+                    <input type="hidden" asp-for="strCompanyId" value="@ViewBag.DefaultSaccoId" />
+                </div>
+
+               
+
+            </div>
+
+            <!-- Submit Button -->
+            <div class="row">
+                <div class="col-md-3">
+                    <br />
+                    <input type="submit" value="Register Member" class="btn btn-success w-100" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function onUserTypeFilter(e) {
+           var query = new ej.data.Query();
+           query = (e.text !== '') ? query.where('strGroupName', 'contains', e.text, true) : query;
+           e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.UserTypes)), query);
+       }
+
+       function onSaccoFilter(e) {
+           var query = new ej.data.Query();
+           query = (e.text !== '') ? query.where('strCompanyName', 'contains', e.text, true) : query;
+           e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.SaccoList)), query);
+       }
+
+     function fetchMemberDetails() {
+        var memberNo = document.getElementById('memberNoInput').value;
+
+        if (memberNo.trim() !== '') {
+            fetch('/System_Users/GetMemberDetails?memberNo=' + memberNo)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Populate fields
+                        document.getElementById('strFirstName').value = data.firstName;
+                        document.getElementById('strLastName').value = data.lastName;
+                        document.getElementById('strPhoneNo').value = data.phoneNo;
+                        document.getElementById('strEmail').value = data.email;
+                        document.getElementById('strUserName').value = memberNo; // Username = MemberNo
+                    } else {
+                        alert(data.message || "Member not found!");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching member details:', error);
+                });
+        }
+    }
+
+
+</script>

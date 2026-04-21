@@ -1,0 +1,294 @@
+﻿@{
+    ViewData["Title"] = "Endorsement";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+
+<div class="row" style="background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+    <div class="col-8">
+
+        <div style="margin:8px;padding:8px;text-align:left">
+            <div style="color:black;font-size:xx-large;" class="text-capitalize">Loan Endorsement </div>
+            <div style="color:gray;font-size:small;" class="text-capitalize">Endorsement</div>
+        </div>
+
+    </div>
+    <div class="col-4">
+        <div style="margin:8px;padding:8px;text-align:end">
+            <a asp-action="EndorsementList" asp-controller="LoanAplications" style="background:#0670ba;padding:4px;border-radius:8px;color:white">Back To List</a>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+
+    <div style="padding:8px;margin:8px;border-radius:16px;background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+   <form asp-action="Endorsement" method="post" asp-controller="LoanAplications">
+    <div class="modal-body">
+        <div class="row">
+                    <input type="hidden" name="Id" value="@ViewBag.id" />
+            <div class="col-md-3">
+                <lebel class="text-black"><strong>Member No</strong> </lebel>
+                <br />
+                        <input name="MemberNo" value="@ViewBag.memberno" readonly placeholder="Member No" id="memberno" onchange="getMemberRecords()" class="form-control" />
+
+            </div>
+
+            <div class="col-md-3">
+                <lebel class="text-black"><strong>Deposit</strong></lebel>
+                <br />
+                        <input name="Deposit" value="@Math.Round(ViewBag.deposit,2)" id="Deposit" readonly class="form-control" />
+
+            </div>
+            <div class="col-md-3">
+                <lebel class="text-black"><strong>Share Capital</strong></lebel>
+                <br />
+                <input name="ShareCapital" value="@ViewBag.sharecapital" id="Capital" readonly class="form-control" />
+
+            </div>
+
+            <div class="col-md-3">
+
+                <lebel class="text-black"><strong>Outstanding Loans</strong></lebel>
+                <br />
+                   <input name="OutstandingLoan" value="@ViewBag.outstandingloan" id="Outstandingloans" readonly placeholder="Outstanding Loans" class="form-control" />
+
+            </div>
+            <div class="col-md-3">
+
+                <lebel class="text-black"><strong>Loan Balance</strong></lebel>
+                <br />
+                        <input name="LoanBalance" value="@ViewBag.loanbal" readonly id="loanbal" placeholder="Loan Balance" class="form-control" />
+
+            </div>
+            <div class="col-md-3">
+
+                <lebel class="text-black"><strong>Loan Code</strong></lebel>
+                   <input name="LoanCode" placeholder="Loan Code" value="@ViewBag.loancode" readonly required class="form-control" />
+
+
+                <br />
+            </div>
+
+
+            <div class="col-md-3">
+
+                <lebel class="text-black"><strong>Loan No</strong></lebel>
+
+                        <input name="LoanNo" value="@ViewBag.loanno" placeholder="Loan No" id="Loannoid" readonly required class="form-control" />
+
+
+                <br />
+
+            </div>
+            <div class="col-md-3">
+
+                <lebel class="text-black"><strong>Loan Amount</strong></lebel>
+
+
+
+                        <input name="AppliedAmount" value="@Math.Round(ViewBag.appliedamount,2)" readonly placeholder="Loan Amount" id="AmountI" required class="form-control" />
+
+
+
+            </div>
+            <div class="col-md-3">
+
+                <lebel class="text-black"><strong>Application Date </strong></lebel>
+
+                        <input name="ApplicationDate" value="@ViewBag.applicationdate.ToShortDateString()" readonly placeholder="Application Date" id="applicationdate" required class="form-control" />
+
+
+            </div>
+            <div class="col-md-3">
+
+                <lebel class="text-black"><strong>Repay Period</strong></lebel>
+
+                <input name="RepaymentPeriod" value="@ViewBag.repayperiod" readonly placeholder="Repay Period" id="repayperiod" autocomplete="off" required class="form-control" />
+
+
+            </div>
+
+            <div class="col-md-3">
+                <lebel class="text-black"><strong>Interest Rate</strong></lebel>
+
+             <input name="InterestRate" value="@Math.Round(ViewBag.interest,2)" placeholder="Interest Rate" readonly id="interestrateid" required class="form-control" />
+
+
+            </div>
+            <div class="col-md-3">
+                <lebel class="text-black"><strong>Repay Method </strong></lebel>
+
+                        <input name="RepaymentMethod" value="@ViewBag.repaymethod" placeholder="Repay Method " id="repaymethod" readonly required class="form-control" />
+
+
+
+            </div>
+
+            <div class="col-md-3">
+                <lebel class="text-black"><strong>Guaranteed Amount </strong></lebel>
+
+                        <input name="AmountGuarantee" value="@Math.Round(ViewBag.guaranteeloan,2)" readonly placeholder="Guaranteed Amount" required class="form-control" />
+
+
+            </div>
+
+            <div class="col-md-3">
+                <lebel class="text-black"><strong>Recommended Amount </strong></lebel>
+
+                        @if (ViewBag.guaranteeloan > ViewBag.appliedamount)
+                {
+                            <input name="RecommendedAmount" value="@Math.Round(ViewBag.appliedamount,2)" readonly placeholder="Recommended Amount" required class="form-control" />
+                }
+                else
+                {
+                            <input name="RecommendedAmount" value="@Math.Round(ViewBag.guaranteeloan,2)" readonly placeholder="Recommended Amount" required class="form-control" />
+                }
+
+            </div>
+
+            <div class="col-md-3">
+                <lebel class="text-black"><strong>Approved Amount </strong></lebel>
+
+                <input name="ApprovedAmount" placeholder="Approved Amount" id="amount" oninput="ApprovedAmount()" required class="form-control" />
+
+
+
+            </div>
+
+            <div class="col-md-3">
+                <lebel class="text-black"><strong>Principal Repayment </strong></lebel>
+
+                <input name="PrincipalRepayment" placeholder="Principal Repayment" id="principal" readonly required class="form-control" />
+
+
+
+            </div>
+            <div class="col-md-3">
+                <lebel class="text-black"><strong>Interest Repayment </strong></lebel>
+
+                <input name="InterestRepayment" placeholder="Interest Repayment" id="interest" readonly required class="form-control" />
+
+
+
+            </div>
+            <div class="col-md-3">
+                <lebel class="text-black"><strong>Repayment </strong></lebel>
+
+                <input name="TotalAmount" placeholder="Repayment Amount" id="repayment" readonly required class="form-control" />
+
+
+
+            </div>
+
+            <div class="col-md-3">
+                <lebel class="text-black"><strong> Endorsement Date</strong></lebel>
+
+                        <input name="DateApproved" type="date" id="dates" required class="form-control" max=""  onchange="updateMaxDate()" />
+
+
+
+            </div>
+            <div class="col-md-3">
+                <br /><br />
+                <input type="checkbox" name="Reject" />
+                <lebel class="text-black"><strong> Rejected</strong></lebel>
+
+
+            </div>
+            <div class="col-md-3">
+                <lebel class="text-black"><strong>Reason </strong></lebel>
+                <textarea name="Reason" class="form-control"></textarea>
+
+
+
+            </div>
+            <div class="col-md-3">
+                <lebel class="text-black"><strong>Minute Number </strong></lebel>
+                <textarea name="MinuteNumber" class="form-control" required></textarea>
+
+
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal-footer">
+
+                <input type="submit" value="Save" onclick="validateDate()" class="btn btn-primary" />
+
+    </div>
+</form>
+</div>
+</div>
+<link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+@section scripts {
+    <script type="text/javascript">
+
+        $(document).on('keyup', '#amount', function () {
+            var amount = document.getElementById('amount').value;
+            var Rperiod = document.getElementById('repayperiod').value;
+
+            var interestid = document.getElementById('interestrateid').value;
+
+
+            var PrincipalAmount = (amount / Rperiod);
+            var roundedPrincipalAmount = PrincipalAmount.toFixed(2);
+
+            var interestamount = ((amount * interestid) / 100);
+            var roundedinterestamount = interestamount.toFixed(2);
+
+            var totalrepayment = (PrincipalAmount + interestamount);
+            var roundedtotalrepaymentt = totalrepayment.toFixed(2);
+
+
+
+            document.getElementById('principal').value = roundedPrincipalAmount;
+            document.getElementById('interest').value = roundedinterestamount;
+            document.getElementById('repayment').value = roundedtotalrepaymentt;
+
+        });
+        function validateDate() {
+            // Get the selected date from the date picker input
+            var selectedDate = new Date(document.getElementById('dates').value);
+            // Get the current date
+            var currentDate = new Date();
+
+            // Check if the selected date is before the current date
+            if (selectedDate > currentDate) {
+                // If the selected date is in the past, show an alert
+                toastr.error('Endorsement date can not exceed the current date.', { timeOut: 5000 });
+
+                // Clear the date picker input
+                document.getElementById('dates').value = '';
+            }
+        }
+
+        function updateMaxDate() {
+            // Set the max attribute of the date input to the current date
+            var currentDate = new Date().toISOString().split('T')[0];
+            document.getElementById('dates').setAttribute('max', currentDate);
+        }
+
+        // Set the default value of the date picker to the current date
+        document.getElementById('dates').valueAsDate = new Date();
+       
+
+        $(document).on('keyup', '#amount', function () {
+            var Maxloan1 = document.getElementById("AmountI").value
+            //var Maxloanwithnocoma1 = parseFloat(Maxloan1.replaceAll(",", ""));
+
+            var $field = $(this);
+
+            var amountIs = parseInt($field.val());
+
+            if (amountIs > Maxloan1) {
+                toastr.error('Approve Amount exeeds loan Applied', { timeOut: 5000 });
+                $field.val("");
+            }
+        });
+
+    </script>
+
+}

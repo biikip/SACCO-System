@@ -1,0 +1,145 @@
+﻿@model General
+@using Syncfusion.EJ2
+@using Newtonsoft.Json
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+<head>
+    <link href="~/Syncfussion/styles/material.css" rel="stylesheet" />
+    <script src="~/Syncfussion/scripts/ej2.min.js"></script>
+</head>
+<div class="row" style="background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+    <div class="col-8">
+
+        <div style="margin:8px;padding:8px;text-align:left">
+            <div style="color:black;font-size:xx-large;" class="text-capitalize"> Members  Per Saccos</div>
+            <div style="color:gray;font-size:small;" class="text-capitalize">List of  Members  per Saccos</div>
+        </div>
+
+    </div>
+    <div class="col-4">
+        @*  <div style="margin:8px;padding:8px;text-align:end">
+        <a asp-action="Create" asp-controller="MembersRegistrations" style="background:#0670ba;padding:4px;border-radius:8px;color:white"><i class="fa fa-plus" aria-hidden="true"></i> Add New Members </a>
+        </div>*@
+    </div>
+</div>
+<div class="container-fluid">
+ 
+  <div style="text-align:end;padding-top:8px">
+      <input type="submit" class="btn btn-sm btn-primary" value="Download/Print" />
+  </div>
+        @foreach(var item1 in Model.co_Operatives)
+        {
+            <div class="m-2 p-2">
+            <div style="margin:8px;padding:8px;background-color:white">
+                @item1.strCompanyName (Members: @Model.membersRegistrations.Where(k=>k.strCompanyCode==item1.strId.ToString()).Count())
+                <div style="margin-Top:8px">
+                    <table class="table   table-striped table-bordered  table-sm" style="color:black">
+                        <thead style="background-color:#0f1230;color:white">
+                            <tr>
+                                <th>
+                                    Full Name
+                                </th>
+                             
+                                <th>
+                                    Member No
+                                </th>
+                             
+                                <th>
+                                    Phone No
+                                </th>
+
+
+                                <th>
+                                    County
+                                </th>
+
+                                <th>
+                                    Group
+                                </th>
+
+
+                                <th>
+                                    ID No
+                                </th>
+                               
+
+                            </tr>
+                        </thead>
+                        <tbody id="myUL">
+                            @if (Model.membersRegistrations.Where(k=>k.strCompanyCode==item1.strId.ToString()).Count() != 0)
+                            {
+                                @foreach (var item in Model.membersRegistrations.Where(k => k.strCompanyCode == item1.strId.ToString()))
+                                {
+                                    var saccoo = "n/a";
+                                    var county = "n/a";
+                                    
+                                    var groupname = "n/a";
+                                    var coop = Model.co_Operatives.FirstOrDefault(k => k.strId.ToString() == item.strCompanyCode);
+                                    if (coop != null)
+                                    {
+                                        saccoo = coop.strCompanyName;
+                                    }
+                                   
+                                    var group = Model.CIG_Croups.FirstOrDefault(k => k.Id.ToString() == item.strCIGGroupId);
+                                    if (group != null)
+                                    {
+                                        groupname = group.strName;
+                                    }
+                                    var countyyy = Model.locations.FirstOrDefault(k => k.strCountyId == item.strCountyId);
+                                    if (countyyy != null)
+                                    {
+                                        county = countyyy.strCounty;
+                                    }
+                                    <tr>
+                                        <td>@item.strOtherName @item.strSurName </td>
+                                       
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.strMemberNo)
+                                        </td>
+                                      
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.strPhoneNo)
+                                        </td>
+
+
+                                        <td>
+                                            @county
+                                        </td>
+
+                                        <td>
+                                            @groupname
+                                        </td>
+
+
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.strIdNo)
+                                        </td>
+                                        
+
+
+                                    </tr>
+
+                                }
+
+
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="14" style="text-align:center;color:red">No Members  Found </td>
+
+                                </tr>
+                            }
+
+                    </table>
+                </div>
+            </div></div>
+        }
+      
+    </div>
+
+
+
+<ejs-scripts></ejs-scripts>

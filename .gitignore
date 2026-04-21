@@ -1,0 +1,12 @@
+# Build outputs
+bin/
+obj/
+
+# User/VS files
+.vs/
+*.user
+*.suo
+
+# Archives
+*.rar
+*.zip

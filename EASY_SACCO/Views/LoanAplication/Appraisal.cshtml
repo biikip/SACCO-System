@@ -1,0 +1,163 @@
+﻿@{
+    ViewData["Title"] = "Appraisal";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+
+}
+
+<div class="row" style="background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+    <div class="col-8">
+
+        <div style="margin:8px;padding:8px;text-align:left">
+            <div style="color:black;font-size:xx-large;" class="text-capitalize">Loan Appraisal </div>
+            <div style="color:gray;font-size:small;" class="text-capitalize">Appraisal</div>
+        </div>
+
+    </div>
+    <div class="col-4">
+        <div style="margin:8px;padding:8px;text-align:end">
+            <a asp-action="Index" asp-controller="LoanAplications" style="background:#0670ba;padding:4px;border-radius:8px;color:white">Back To List</a>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+<div style="padding:8px;margin:8px;border-radius:16px;background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+        <form asp-action="Appraisal" asp-controller="LoanAplications">
+
+            <div class="row">
+                <input type="hidden" name="Id" value="@ViewBag.id" />
+                <div class="col-md-3">
+                    <lebel class="text-black"><strong>Member No</strong> </lebel>
+                    <br />
+                    <input name="MemberNo" value="@ViewBag.memberno" readonly placeholder="Member No" id="memberno" onchange="getMemberRecords()" class="form-control" />
+
+                </div>
+
+                <div class="col-md-3">
+                    <lebel class="text-black"><strong>Deposit</strong></lebel>
+                    <br />
+                    <input name="Deposit" value="@Math.Round(ViewBag.deposit,2)" id="Deposit" readonly class="form-control" />
+
+                </div>
+                <div class="col-md-3">
+                    <lebel class="text-black"><strong>Share Capital</strong></lebel>
+                    <br />
+                    <input name="ShareCapital" value="@Math.Round(ViewBag.sharecapital,2)" id="Capital" readonly class="form-control" />
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <lebel class="text-black"><strong>Outstanding Loans</strong></lebel>
+                    <br />
+                    <input name="OutstandingLoan" value="@ViewBag.outstandingloan" id="Outstandingloans" readonly placeholder="Outstanding Loans" class="form-control" />
+
+                </div>
+                <div class="col-md-3">
+
+                    <lebel class="text-black"><strong>Loan Balance</strong></lebel>
+                    <br />
+                    <input name="LoanBalance" value="@ViewBag.loanbal" readonly id="loanbal" placeholder="Loan Balance" class="form-control" />
+
+                </div>
+                <div class="col-md-3">
+
+                    <lebel class="text-black"><strong>Loan Code</strong></lebel>
+                    <input name="LoanCode" placeholder="Loan Code" value="@ViewBag.loancode" readonly required class="form-control" />
+
+
+                    <br />
+                </div>
+
+
+                <div class="col-md-3">
+
+                    <lebel class="text-black"><strong>Loan No</strong></lebel>
+
+                    <input name="LoanNo" value="@ViewBag.loanNo" placeholder="Loan No" id="Loannoid" readonly required class="form-control" />
+
+
+                    <br />
+
+                </div>
+                <div class="col-md-3">
+
+                    <lebel class="text-black"><strong>Loan Amount</strong></lebel>
+
+
+
+                    <input name="AppliedAmount" value="@Math.Round(ViewBag.loanamount,2)" readonly placeholder="Loan Amount" id="AmountI" required class="form-control" />
+
+
+
+                </div>
+                <div class="col-md-3">
+
+                    <lebel class="text-black"><strong>Application Date </strong></lebel>
+
+                    <input name="ApplicationDate" value="@ViewBag.applicationdate" readonly placeholder="Application Date" id="applicationdate" required class="form-control" />
+
+
+                </div>
+                <div class="col-md-3">
+
+                    <lebel class="text-black"><strong>Repay Period</strong></lebel>
+
+                    <input name="RepaymentPeriod" value="@ViewBag.repayperiod" readonly placeholder="Repay Period" id="repayperiod" autocomplete="off" required class="form-control" />
+
+
+                </div>
+
+                <div class="col-md-3">
+                    <lebel class="text-black"><strong>Interest Rate</strong></lebel>
+
+                    <input name="InterestRate" value="@Math.Round(ViewBag.interestrate,2)" placeholder="Interest Rate" readonly id="interestrateid" required class="form-control" />
+
+
+                </div>
+                <div class="col-md-3">
+                    <lebel class="text-black"><strong>Repay Method </strong></lebel>
+
+                    <input name="RepaymentMethod" value="@ViewBag.repaymethod" placeholder="Repay Method " id="repaymethod" readonly required class="form-control" />
+
+
+
+                </div>
+
+                <div class="col-md-3">
+                    <lebel class="text-black"><strong>Guaranteed Amount </strong></lebel>
+
+                    <input name="AmountGuarantee" value="@Math.Round(ViewBag.amountguarantee,2)" readonly placeholder="Guaranteed Amount" required class="form-control" />
+
+
+                </div>
+
+                <div class="col-md-3">
+                    <lebel class="text-black"><strong>Recommended Amount </strong></lebel>
+                    @if (ViewBag.amountguarantee > ViewBag.loanamount)
+                    {
+                        <input name="RecommendedAmount" value="@Math.Round(ViewBag.loanamount,2)" readonly placeholder="Recommended Amount" required class="form-control" />
+                    }
+                    else
+                    {
+                        <input name="RecommendedAmount" value="@Math.Round(ViewBag.amountguarantee,2)" readonly placeholder="Recommended Amount" required class="form-control" />
+                    }
+
+                </div>
+
+
+                <div class="col-md-3">
+                    <lebel class="text-black"><strong> Appraisal Date</strong></lebel>
+
+                    <input name="DateApproved" type="date" id="dates" required class="form-control" />
+
+
+
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class=" btn-success btn-sm" data-dismiss="modal">Cancel</div>
+                <input type="submit" id="completebutton" value="Save" class=" btn-Primary btn-sm" />
+        </form>
+</div>
+</div>

@@ -1,0 +1,78 @@
+﻿@model EASY_SACCO.Models.Agents
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Agents</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strFullName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strFullName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strGender)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strGender)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strOccupation)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strOccupation)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strLandLineNo)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strLandLineNo)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strAddress)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strAddress)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strstaffNo)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strstaffNo)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strIDNO)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strIDNO)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strStation)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strStation)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strMobileno)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strMobileno)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strTown)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strTown)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.strId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

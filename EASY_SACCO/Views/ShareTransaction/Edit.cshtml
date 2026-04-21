@@ -1,0 +1,159 @@
+﻿@model EASY_SACCO.Models.ShareTransaction
+
+@using Syncfusion.EJ2
+@using Newtonsoft.Json
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+<head>
+    <link href="~/Syncfussion/styles/material.css" rel="stylesheet" />
+    <script src="~/Syncfussion/scripts/ej2.min.js"></script>
+</head>
+<div class="row" style="background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+    <div class="col-8">
+
+        <div style="margin:8px;padding:8px;text-align:left">
+            <div style="color:black;font-size:xx-large;" class="text-capitalize">Update Share Transactions Details</div>
+            <div style="color:gray;font-size:small;" class="text-capitalize">Update/Edit Share Transactionsance Details</div>
+        </div>
+
+    </div>
+    <div class="col-4">
+        <div style="margin:8px;padding:8px;text-align:end">
+            <a asp-action="Index" asp-controller="ShareTransactions" style="background:#0670ba;padding:4px;border-radius:8px;color:white"><i class="fa fa-plus" aria-hidden="true"></i>  View ShareTransactions</a>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+
+    <div style="padding:8px;margin:8px;border-radius:16px;background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input  asp-for="strId" type="hidden"/>
+            <div class="row">
+                      <div class="col-md-3" hidden>
+                <label asp-for="strAuditId" class="control-label"></label>
+                <input  asp-for="strAuditId"  class="form-control" />
+                <span asp-validation-for="strAuditId" class="text-danger"></span>
+                </div>
+                <div class="col-md-3" hidden>
+                <label asp-for="strDate" class="control-label"></label>
+                <input asp-for="strDate"  class="form-control" />
+                <span asp-validation-for="strDate" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="strDocnumber" class="control-label"></label>
+                    <input asp-for="strDocnumber" readonly  class="form-control" />
+                    <span asp-validation-for="strDocnumber" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+                    <br />
+                    <div class="padding-top">
+                        <ejs-dropdownlist id="strMemberNo" ejs-for="strMemberNo" filterBarPlaceholder="Search" allowFiltering="true" filtering="strMemberNo" placeholder="Select Member No" popupHeight="300px" dataSource="@ViewBag.strMemberNo">
+                            <e-dropdownlist-fields text="strMemberNo" value="strId"></e-dropdownlist-fields>
+                        </ejs-dropdownlist>
+
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <br />
+                    <div class="padding-top">
+                        <ejs-dropdownlist id="strBankName" ejs-for="strBankAc" filterBarPlaceholder="Search" allowFiltering="true" filtering="strBankName" placeholder="Select Bank Name" popupHeight="300px" dataSource="@ViewBag.strBankName">
+                            <e-dropdownlist-fields text="strBankName" value="strId"></e-dropdownlist-fields>
+                        </ejs-dropdownlist>
+
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <br />
+                    <div class="padding-top">
+                        <ejs-dropdownlist id="strSharecode" ejs-for="strShareCode" filterBarPlaceholder="Search" allowFiltering="true" filtering="strSharecode" placeholder="Select of Share Code" popupHeight="300px" dataSource="@ViewBag.strSharecode">
+                            <e-dropdownlist-fields text="strSharecode" value="strId"></e-dropdownlist-fields>
+                        </ejs-dropdownlist>
+
+                    </div>
+                </div>
+
+                @*         </div>
+                <div class="col-md-3">
+                <label asp-for="strPaymentMode" class="control-label"></label>
+                <input asp-for="strPaymentMode" class="form-control" />
+                <span asp-validation-for="strPaymentMode" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-3">
+                <label asp-for="strDateDeposited" class="control-label"></label>
+                <input asp-for="strDateDeposited" type="date" class="form-control" />
+                <span asp-validation-for="strDateDeposited" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+                <label asp-for="strDateContribution" class="control-label"></label>
+                <input asp-for="strDateContribution" type="date" class="form-control" />
+                <span asp-validation-for="strDateContribution" class="text-danger"></span>
+                </div>*@
+                <div class="col-md-3">
+                    <label asp-for="strAmount" class="control-label"></label>
+                    <input asp-for="strAmount" class="form-control" />
+                    <span asp-validation-for="strAmount" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+
+                    <label asp-for="strBalance" class="control-label"></label>
+                    <input asp-for="strBalance" class="form-control" />
+                    <span asp-validation-for="strBalance" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-3">
+
+                    <label asp-for="strCredit" class="control-label"></label>
+                    <input asp-for="strCredit" class="form-control" />
+                    <span asp-validation-for="strCredit" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+
+                    <label asp-for="strDebit" class="control-label"></label>
+                    <input asp-for="strDebit" class="form-control" />
+                    <span asp-validation-for="strDebit" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-3">
+                    <label asp-for="strDescription" class="control-label"></label>
+                    <textarea asp-for="strDescription" class="form-control"></textarea>
+
+                    <span asp-validation-for="strDescription" class="text-danger"></span>
+                </div>
+            </div>
+
+
+            <div class="col-md-3 offset-9">
+                <br />
+                <input type="submit" value="Update Details" class="btn btn-primary " style="background-color:#0670ba;width:100%" />
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function strSharecode(e) {
+        var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strSharecode', 'startswith', e.text, true) : query;
+        e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strShareType)), query);
+    }
+    function strBankName(e) {
+        var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strBankName', 'startswith', e.text, true) : query;
+        e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strBankName)), query);
+    }
+    function strMemberNo(e) {
+        var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strMemberNo', 'startswith', e.text, true) : query;
+        e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strMemberNo)), query);
+    }
+
+</script>
+
+<ejs-scripts></ejs-scripts>
+

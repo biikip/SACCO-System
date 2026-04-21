@@ -1,0 +1,186 @@
+﻿@model EASY_SACCO.Models.AccountSetupGL
+@using Syncfusion.EJ2
+@using Newtonsoft.Json
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+<head>
+    <link href="~/Syncfussion/styles/material.css" rel="stylesheet" />
+    <script src="~/Syncfussion/scripts/ej2.min.js"></script>
+</head>
+<div class="row" style="background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+    <div class="col-8">
+
+        <div style="margin:8px;padding:8px;text-align:left">
+            <div style="color:black;font-size:xx-large;" class="text-capitalize">Update AccountSetUpGLs </div>
+            <div style="color:gray;font-size:small;" class="text-capitalize">Update/Edit AccountSetUpGls Details</div>
+        </div>
+
+    </div>
+    <div class="col-4">
+        <div style="margin:8px;padding:8px;text-align:end">
+            <a asp-action="Index" asp-controller="AccountSetupGLs" style="background:#0670ba;padding:4px;border-radius:8px;color:white"><i class="fa fa-plus" aria-hidden="true"></i>  View  Accounts</a>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+
+    <div style="padding:8px;margin:8px;border-radius:16px;background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <input type="hidden" asp-for="strId" />
+                <div class="col-md-3">
+                    <label><strong style="color:black">Account No</strong></label>
+                    <input asp-for="strAccountNo" class="form-control" />
+                    <span asp-validation-for="strAccountNo" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-3">
+                    <label><strong style="color:black">Account Name</strong></label>
+                    <input asp-for="strAccountName" class="form-control" />
+                    <span asp-validation-for="strAccountName" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+                    <br />
+                    <div class="padding-top">
+                        <ejs-dropdownlist id="strAccountType" ejs-for="strAccountType" filterBarPlaceholder="Search" allowFiltering="true" filtering="strAccountType" placeholder="Select Account Type" popupHeight="300px" dataSource="@ViewBag.strAccountType">
+                            <e-dropdownlist-fields text="strAccountType" value="strAccountType"></e-dropdownlist-fields>
+                        </ejs-dropdownlist>
+
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <br />
+                    <div class="padding-top">
+                        <ejs-dropdownlist id="strAccoutGroup" ejs-for="strAccountGroup"
+                                          placeholder="Select Account Group"
+                                          popupHeight="300px"
+                                          dataSource="@ViewBag.strAccoutGroup"
+                                          allowFiltering="true">
+                            <e-dropdownlist-fields text="strAccoutGroup" value="strId"></e-dropdownlist-fields>
+                        </ejs-dropdownlist>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <br />
+                    <div class="padding-top">
+                        <ejs-dropdownlist id="strCurrency" ejs-for="strCurrency" filterBarPlaceholder="Search" allowFiltering="true" filtering="strCurrency" placeholder="Select Currency" popupHeight="300px" dataSource="@ViewBag.strCurrency">
+                            <e-dropdownlist-fields text="strCurrency" value="strId"></e-dropdownlist-fields>
+                        </ejs-dropdownlist>
+
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <br />
+                    <div class="padding-top">
+                        <ejs-dropdownlist id="strAcCategory" ejs-for="strAccountCategory" filterBarPlaceholder="Search" allowFiltering="true" filtering="strAcCategory" placeholder="Select Account Category" popupHeight="300px" dataSource="@ViewBag.strAcCategory">
+                            <e-dropdownlist-fields text="strAcCategory" value="strId"></e-dropdownlist-fields>
+                        </ejs-dropdownlist>
+
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <br />
+                    <div class="padding-top">
+                        <ejs-dropdownlist id="strNormalBal" ejs-for="strNormalBal" filterBarPlaceholder="Search" allowFiltering="true" filtering="strNormalBal" placeholder="Select  Normal Balance" popupHeight="300px" dataSource="@ViewBag.strNormalBal">
+                            <e-dropdownlist-fields text="strNormalBal" value="strId"></e-dropdownlist-fields>
+                        </ejs-dropdownlist>
+
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <label><strong style="color:black">Date</strong></label>
+                    <input asp-for="strBalance" type="date" class="form-control" />
+                    <span asp-validation-for="strBalance" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+                    @* <label><strong style="color:black">Opening Balance</strong></label>
+                    <input asp-for="strOpeningBal" class="form-control" />
+                    <span asp-validation-for="strOpeningBal" class="text-danger"></span> *@
+                </div>
+            </div>
+            <br />
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="strIssuspenseAccount" /> @Html.DisplayNameFor(model => model.strIssuspenseAccount)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="strIsRetainedEarningAccount" /> @Html.DisplayNameFor(model => model.strIsRetainedEarningAccount)
+                </label>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <input type="submit" value="Update Details" class="btn btn-primary" style="background-color:#0670ba;width:100%" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    function filterDropDownData(e, data, field) {
+        var query = new ej.data.Query();
+        if (e.text !== '') {
+            query = query.where(field, 'startswith', e.text, true);
+        }
+        if (data && data.length > 0) {
+            e.updateData(data, query);
+        }
+    }
+
+    function strAccountType(e) {
+        var data = @Html.Raw(JsonConvert.SerializeObject(ViewBag.strAccountType ?? new List<object>()));
+        filterDropDownData(e, data, 'strAccountType');
+    }
+
+    function strAccoutGroup(e) {
+        var data = @Html.Raw(JsonConvert.SerializeObject(ViewBag.strAccoutGroup ?? new List<object>()));
+        filterDropDownData(e, data, 'strAccoutGroup');
+    }
+
+    function strAccountSubGroup(e) {
+        var data = @Html.Raw(JsonConvert.SerializeObject(ViewBag.strAccountSubGroup ?? new List<object>()));
+        filterDropDownData(e, data, 'strAccountSubGroup');
+    }
+
+    function strCurrency(e) {
+        var data = @Html.Raw(JsonConvert.SerializeObject(ViewBag.strCurrency ?? new List<object>()));
+        filterDropDownData(e, data, 'strCurrency');
+    }
+
+    function strAcCategory(e) {
+        var data = @Html.Raw(JsonConvert.SerializeObject(ViewBag.strAcCategory ?? new List<object>()));
+        filterDropDownData(e, data, 'strAcCategory');
+    }
+
+    function strAccSubCategory(e) {
+        var data = @Html.Raw(JsonConvert.SerializeObject(ViewBag.strAccSubCategory ?? new List<object>()));
+        filterDropDownData(e, data, 'strAccSubCategory');
+    }
+
+    function strAccountType1(e) {
+        var data = @Html.Raw(JsonConvert.SerializeObject(ViewBag.strAccountType1 ?? new List<object>()));
+        filterDropDownData(e, data, 'strAccountType1');
+    }
+
+    function strCompanyName(e) {
+        var data = @Html.Raw(JsonConvert.SerializeObject(ViewBag.strCompanyName ?? new List<object>()));
+        filterDropDownData(e, data, 'strCompanyName');
+    }
+
+    function strNormalBal(e) {
+        var data = @Html.Raw(JsonConvert.SerializeObject(ViewBag.strNormalBal ?? new List<object>()));
+        filterDropDownData(e, data, 'strNormalBal');
+    }
+</script>
+
+<ejs-scripts></ejs-scripts>

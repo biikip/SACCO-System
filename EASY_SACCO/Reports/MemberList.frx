@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="04/15/2025 21:27:42" ReportInfo.Modified="04/16/2025 00:34:48" ReportInfo.CreatorVersion="2025.2.0.0">
+  <Styles Name="Blue">
+    <Style Name="Title" Font="Arial, 12pt, style=Bold"/>
+    <Style Name="Header" Fill.Color="LightSkyBlue" Font="Arial, 10pt, style=Bold"/>
+    <Style Name="Group" Font="Arial, 10pt, style=Bold"/>
+    <Style Name="Data" Font="Arial, 10pt"/>
+    <Style Name="Footer" Fill.Color="LightSkyBlue" Font="Arial, 10pt"/>
+    <Style Name="EvenRows" Fill.Color="AliceBlue" Font="Arial, 10pt"/>
+  </Styles>
+  <Dictionary>
+    <MsSqlDataConnection Name="Connection" ConnectionString="rijcmlqM7gJFg/iaLrqMhRfGy5lGgQ/FHCzWhISbWD0UaeVUHGHvT8Xrh+a7Zy/TZ8QIuLqbulu6anRTNojiU6VI3UVhRX9OT3BALcK8S4nPJOh+AY3QgR6d6KVhwsywKaHQxSzyctRqOxe5SIsqPVe4BZQLv7W6NEBvXTrNce4hkLvoTTguY4UAHloIcIqYm+dt62s">
+      <TableDataSource Name="MembersRegistrations" DataType="System.Int32" Enabled="true" TableName="MembersRegistrations">
+        <Column Name="strId" DataType="System.Int32"/>
+        <Column Name="strCompanyCode" DataType="System.String"/>
+        <Column Name="strMemberNo" DataType="System.String"/>
+        <Column Name="strPhoneNo" DataType="System.String"/>
+        <Column Name="strMaritalstatus" DataType="System.String"/>
+        <Column Name="strRegDate" DataType="System.DateTime"/>
+        <Column Name="strSurName" DataType="System.String"/>
+        <Column Name="strOtherName" DataType="System.String"/>
+        <Column Name="GroupName" DataType="System.String"/>
+        <Column Name="strGender" DataType="System.String"/>
+        <Column Name="strIdNo" DataType="System.String"/>
+        <Column Name="strDOB" DataType="System.DateTime"/>
+        <Column Name="strEmail" DataType="System.String"/>
+        <Column Name="strActiveStatus" DataType="System.Int32"/>
+        <Column Name="strAddress" DataType="System.String"/>
+        <Column Name="strCIGGroupId" DataType="System.String"/>
+        <Column Name="strCounty" DataType="System.String"/>
+        <Column Name="strCountyId" DataType="System.String"/>
+        <Column Name="strSubCountId" DataType="System.String"/>
+        <Column Name="strWardId" DataType="System.String"/>
+        <Column Name="strVillageId" DataType="System.String"/>
+        <Column Name="KraPin" DataType="System.String"/>
+        <Column Name="RegistrationToken" DataType="System.String"/>
+        <Column Name="ScannedIdPath" DataType="System.String"/>
+        <Column Name="GroupCertPath" DataType="System.String"/>
+        <Column Name="PassportPhotoPath" DataType="System.String"/>
+        <Column Name="MemberType" DataType="System.String"/>
+        <Column Name="ChairmanName" DataType="System.String"/>
+        <Column Name="TreasurerName" DataType="System.String"/>
+        <Column Name="SecretaryName" DataType="System.String"/>
+        <Column Name="ChairmanIDNO" DataType="System.String"/>
+        <Column Name="TreasurerIDNO" DataType="System.String"/>
+        <Column Name="SecretaryIDNO" DataType="System.String"/>
+        <Column Name="ChairmanPhoneNo" DataType="System.String"/>
+        <Column Name="TreasurerPhoneNo" DataType="System.String"/>
+        <Column Name="SecretaryPhoneNo" DataType="System.String"/>
+        <Column Name="AgentsstrId" DataType="System.String"/>
+        <Column Name="IsApproved" DataType="System.Boolean" BindableControl="CheckBox"/>
+        <Column Name="ApprovedBy" DataType="System.String"/>
+        <Column Name="ApprovalDate" DataType="System.DateTime"/>
+        <Column Name="RejectionReason" DataType="System.String"/>
+        <Column Name="HasPaidRegFee" DataType="System.Boolean" BindableControl="CheckBox"/>
+        <Column Name="strFullName" DataType="System.String"/>
+        <Column Name="photo" DataType="System.String"/>
+        <Column Name="AuditId" DataType="System.String"/>
+        <Column Name="AuditTime" DataType="System.DateTime"/>
+      </TableDataSource>
+    </MsSqlDataConnection>
+  </Dictionary>
+  <ReportPage Name="Page1" Landscape="true" PaperWidth="297" PaperHeight="210" RawPaperSize="9" Watermark.Font="Arial, 60pt">
+    <ReportTitleBand Name="ReportTitle1" Width="1047.06" Height="66.15">
+      <TextObject Name="Text1" Width="1047.06" Height="66.15" Dock="Fill" Border.Lines="All" Border.Color="LightSkyBlue" Text="MembersRegistrations" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold"/>
+    </ReportTitleBand>
+    <PageHeaderBand Name="PageHeader1" Top="70.15" Width="1047.06" Height="28.35" Fill.Color="AliceBlue" Style="EvenRows" Guides="18.9">
+      <TextObject Name="Text3" Width="94.5" Height="18.9" Border.Lines="All" Fill.Color="LightSkyBlue" Text="MemberNo" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text5" Left="94.5" Width="94.5" Height="18.9" Border.Lines="All" Fill.Color="LightSkyBlue" Text="PhoneNo" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text7" Left="189" Width="94.5" Height="18.9" Border.Lines="All" Fill.Color="LightSkyBlue" Text="RegDate" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text9" Left="283.5" Width="94.5" Height="18.9" Border.Lines="All" Fill.Color="LightSkyBlue" Text="SurName" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text11" Left="378" Width="94.5" Height="18.9" Border.Lines="All" Fill.Color="LightSkyBlue" Text="OtherName" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text13" Left="472.5" Width="94.5" Height="18.9" Border.Lines="All" Fill.Color="LightSkyBlue" Text="Gender" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text15" Left="567" Width="94.5" Height="18.9" Border.Lines="All" Fill.Color="LightSkyBlue" Text="IdNo" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text17" Left="661.5" Width="94.5" Height="18.9" Border.Lines="All" Fill.Color="LightSkyBlue" Text="DOB" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text19" Left="756" Width="94.5" Height="18.9" Border.Lines="All" Fill.Color="LightSkyBlue" Text="Email" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text21" Left="850.5" Width="94.5" Height="18.9" Border.Lines="All" Fill.Color="LightSkyBlue" Text="KraPin" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text23" Left="945" Width="94.5" Height="18.9" Border.Lines="All" Fill.Color="LightSkyBlue" Text="IsApproved" Font="Arial, 10pt, style=Bold"/>
+    </PageHeaderBand>
+    <DataBand Name="Data1" Top="102.5" Width="1047.06" Height="18.9" EvenStyle="EvenRows" DataSource="MembersRegistrations">
+      <TextObject Name="Text2" Width="94.5" Height="18.9" Border.Lines="All" Border.Color="LightSkyBlue" Text="[MembersRegistrations.strMemberNo]" Font="Arial, 10pt"/>
+      <TextObject Name="Text4" Left="94.5" Width="94.5" Height="18.9" Border.Lines="All" Border.Color="LightSkyBlue" Text="[MembersRegistrations.strPhoneNo]" Font="Arial, 10pt"/>
+      <TextObject Name="Text6" Left="189" Width="94.5" Height="18.9" Border.Lines="All" Border.Color="LightSkyBlue" Text="[MembersRegistrations.strRegDate]" Font="Arial, 10pt"/>
+      <TextObject Name="Text8" Left="283.5" Width="94.5" Height="18.9" Border.Lines="All" Border.Color="LightSkyBlue" Text="[MembersRegistrations.strSurName]" Font="Arial, 10pt"/>
+      <TextObject Name="Text10" Left="378" Width="94.5" Height="18.9" Border.Lines="All" Border.Color="LightSkyBlue" Text="[MembersRegistrations.strOtherName]" Font="Arial, 10pt"/>
+      <TextObject Name="Text12" Left="472.5" Width="94.5" Height="18.9" Border.Lines="All" Border.Color="LightSkyBlue" Text="[MembersRegistrations.strGender]" Font="Arial, 10pt"/>
+      <TextObject Name="Text14" Left="567" Width="94.5" Height="18.9" Border.Lines="All" Border.Color="LightSkyBlue" Text="[MembersRegistrations.strIdNo]" Font="Arial, 10pt"/>
+      <TextObject Name="Text16" Left="661.5" Width="94.5" Height="18.9" Border.Lines="All" Border.Color="LightSkyBlue" Text="[MembersRegistrations.strDOB]" Font="Arial, 10pt"/>
+      <TextObject Name="Text18" Left="756" Width="94.5" Height="18.9" Border.Lines="All" Border.Color="LightSkyBlue" Text="[MembersRegistrations.strEmail]" Font="Arial, 10pt"/>
+      <TextObject Name="Text20" Left="850.5" Width="94.5" Height="18.9" Border.Lines="All" Border.Color="LightSkyBlue" Text="[MembersRegistrations.KraPin]" Font="Arial, 10pt"/>
+      <TextObject Name="Text22" Left="945" Width="94.5" Height="18.9" Border.Lines="All" Border.Color="LightSkyBlue" Text="[MembersRegistrations.IsApproved]" Font="Arial, 10pt"/>
+    </DataBand>
+    <PageFooterBand Name="PageFooter1" Top="125.4" Width="1047.06" Height="18.9">
+      <TextObject Name="Text24" Width="1047.06" Height="18.9" Dock="Fill" Fill.Color="LightSkyBlue" Text="[PageN]" HorzAlign="Right" Font="Arial, 10pt" Style="Footer"/>
+    </PageFooterBand>
+  </ReportPage>
+</Report>

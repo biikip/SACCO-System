@@ -1,0 +1,160 @@
+﻿@model EASY_SACCO.Models.GL_Transaction
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using Syncfusion.EJ2
+@using Newtonsoft.Json
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+
+<head>
+    <link href="~/Syncfussion/styles/material.css" rel="stylesheet" />
+    <script src="~/Syncfussion/scripts/ej2.min.js"></script>
+</head>
+
+<div class="row" style="background-color:white;box-shadow:0 4px 8px 0 rgba(0,0,0,0.2)">
+    <div class="col-8">
+        <div style="margin:8px;padding:8px;text-align:left">
+            <div style="color:gray;font-size:small;" class="text-capitalize">Journal Posting</div>
+        </div>
+    </div>
+    <div class="col-4">
+        @* <div style="margin:8px;padding:8px;text-align:end">
+            <a asp-action="Index" asp-controller="Accounting" style="background:#0670ba;padding:4px;border-radius:8px;color:white">
+                <i class="fa fa-plus" aria-hidden="true"></i> 
+            </a>
+        </div> *@
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div style="padding:8px;margin:8px;border-radius:16px;background-color:white;box-shadow:0 4px 8px 0 rgba(0,0,0,0.2)">
+        <form asp-action="Create" asp-controller="Accounting" style="padding:30px">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <label><strong style="color:black">Document No</strong></label>
+                    <label asp-for="strDocnumber" class="text-black"><strong>Receipt No</strong></label>
+                    <input asp-for="strDocnumber" readonly value="@ViewBag.Code" id="receiptno" class="form-control" />
+                    <span asp-validation-for="strDocnumber" class="text-danger"></span>
+                </div>
+                <div class="col-md-4">
+                    <label><strong style="color:black">Transaction Date</strong></label><br />
+                    <input id="transDate" type="date" asp-for="TransactionDate" class="form-control" />
+                    <span asp-validation-for="TransactionDate" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <label><strong style="color:black">Expense Account</strong></label><br />
+                    <ejs-dropdownlist id="expenseAcc"
+                                      dataSource="@ViewBag.expenseAccounts"
+                                      :filtering="expenseAccFiltering"
+                                      placeholder="Select Expense Account"
+                                      popupHeight="300px"
+                                      allowFiltering="true">
+                        <e-dropdownlist-fields text="strAccountName" value="strAccountNo"></e-dropdownlist-fields>
+                    </ejs-dropdownlist>
+                </div>
+
+                <div class="col-md-4">
+                    <label><strong style="color:black">Amount</strong></label><br />
+                    <input id="amount" type="number" step="0.01" class="form-control" />
+                </div>
+
+                <div class="col-md-8">
+                    <label><strong style="color:black">Transaction Details</strong></label><br />
+                    <input id="transDescript" asp-for="Remarks" placeholder="Enter details..." class="form-control" required />
+                </div>
+
+                <div class="col-md-12" style="margin-top:20px">
+
+                    <input id="postExpense" class="btn btn-success" value="Post Expense"/>
+                </div>
+
+@*                 <div class="col-md-12 text-center" style="margin-top:30px">
+                    <a id="save" class="btn btn-lg btn-primary">Save Journal Entry</a>
+                </div> *@
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        var glAccounts = @Html.Raw(JsonConvert.SerializeObject(ViewBag.glAccounts));
+        var expenseAccounts = @Html.Raw(JsonConvert.SerializeObject(ViewBag.expenseAccounts));
+        var bankAccount = "@ViewBag.bankAccount";
+
+        $(function () {
+            // Set today's date by default
+            var today = new Date().toISOString().split('T')[0];
+            $("#transDate").val(today);
+
+            // Post expense button click
+            $("#postExpense").click(function () {
+                var expenseAcc = $("#expenseAcc").val();
+                var amount = parseFloat($("#amount").val());
+                var transDescript = $("#transDescript").val();
+                var date = $("#transDate").val();
+                var documentno = $("#receiptno").val();
+
+                if (!expenseAcc || !amount || !transDescript) {
+                    alert("Please fill all fields correctly.");
+                    return;
+                }
+
+                var transaction = {
+                    DrAccNo: expenseAcc,
+                    Amount: amount,
+                    Remarks: transDescript,
+                    TransactionDate: date,
+                    MemberNo: "0",
+                    strDocnumber: documentno
+                };
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/Accounting/JournalPostingExpenses',
+                    contentType: 'application/json',
+                    data: JSON.stringify(transaction),
+                    success: function (response) {
+                        if (response.success) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: 'Expense posted successfully.',
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire('Error', response.message, 'error');
+                        }
+                    },
+                    error: function () {
+                        Swal.fire('Error', 'An error occurred while posting.', 'error');
+                    }
+                });
+            });
+
+            // Expense account filtering
+            function expenseAccFiltering(e) {
+                var query = new ej.data.Query();
+                if (e.text !== '') {
+                    query = query.where('strAccountName', 'contains', e.text, true);
+                }
+                e.updateData(expenseAccounts, query);
+            }
+        });
+    </script>
+
+    <!-- SweetAlert for nicer alerts -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+}

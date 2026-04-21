@@ -1,0 +1,339 @@
+﻿@model EASY_SACCO.Models.GL_Transaction
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@using Syncfusion.EJ2
+@using Newtonsoft.Json
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+<head>
+    <link href="~/Syncfussion/styles/material.css" rel="stylesheet" />
+    <script src="~/Syncfussion/scripts/ej2.min.js"></script>
+</head>
+<div class="row" style="background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+    <div class="col-8">
+        <div style="margin:8px;padding:8px;text-align:left">
+            <div style="color:gray;font-size:small;" class="text-capitalize">Journal Posting</div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div style="margin:8px;padding:8px;text-align:end">
+            <a asp-action="Index" asp-controller="MembersRegistrations" style="background:#0670ba;padding:4px;border-radius:8px;color:white"><i class="fa fa-plus" aria-hidden="true"></i>  View  Members</a>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div style="padding:8px;margin:8px;border-radius:16px;background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+
+        <form asp-action="Create" asp-controller="MembersRegistrations" style="padding:30px">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <br />
+                    <label><strong style="color:black">Transaction Date</strong></label>
+                    <input id="transDate" type="date" asp-for="TransactionDate" class="form-control" />
+                    <span asp-validation-for="TransactionDate" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+                    <br />
+                    <label><strong style="color:black">Transaction Details</strong></label>
+                    <input id="transDescript" asp-for="Remarks" placeholder="Remarks" required class="form-control" />
+                    <span asp-validation-for="Remarks" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <br />
+                </div>
+                <div class="col-md-4">
+                    <br />
+                    <label><strong style="color:black">Document No</strong></label>
+                    <input id="documentNo" class="form-control"  />
+                </div>
+                <div class="col-md-4">
+                    <br />
+                    <label><strong style="color:black">Account No</strong></label>
+                    <div class="padding-top">
+
+                        <ejs-dropdownlist id="glAcc" ejs-for="TransactionNo"
+                                          allowFiltering="true"
+                                          :filtering="glAcc"
+                                          filterBarPlaceholder="Search Account"
+                                          placeholder="Select Account"
+                                          popupHeight="300px"
+                                          dataSource="@ViewBag.glAccounts">
+                            <e-dropdownlist-fields text="strAccountName" value="strAccountNo"></e-dropdownlist-fields>
+                        </ejs-dropdownlist>                     
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <br />
+                    <label><strong style="color:black">Total Dr</strong></label>
+                    <input id="totalDrAmt" class="form-control" readonly />
+                </div>
+                <div class="col-md-4">
+                    <br />
+                    <label><strong style="color:black">Dr</strong></label>
+                    <input id="drAmt" class="form-control" />
+                </div>
+                <div class="col-md-4">
+                    <br />
+                    <label><strong style="color:black">Cr</strong></label>
+                    <input id="crAmt" class="form-control" />
+                </div>
+                <div class="col-md-4">
+                    <br />
+                    <label><strong style="color:black">Total Cr</strong></label>
+                    <input id="totalCrAmt" class="form-control" readonly />
+                </div>
+                <div class="col-md-12">
+                    <div class="bsc-tbl-hvr table-border-style pt-3" style="color:black">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                <tr style="background-color:#0f1230;color:white">
+                                        <th>Account No.</th>
+                                        <th>DR</th>
+                                        <th>CR</th>
+                                        <th>Date</th>
+                                    <th><a id="clearAll" class="btn-danger btn-lg">CLEAR</a></th>
+                                    </tr>
+                                <tbody id="details" style="color:black">
+                                    </tbody>
+                                </table>
+                            </div>
+                    </div>
+                </div>
+
+                <br />
+
+            </div>
+            <br />
+            <div class="col-md-3">
+                <div class="row">
+                    <br />
+                    <a id="save" class="btn-success btn-lg">Save</a>
+                   
+                </div>
+
+
+            </div>
+
+        </form>
+    </div>
+    <br />
+</div>
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+
+        <script type="text/javascript">
+            function glAcc(e) {
+                var query = new ej.data.Query();
+                query = (e.text !== '') ? query.where('strAccountName', 'startswith', e.text, true) : query;
+                e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.glAccounts)), query);
+            }
+            $(function () {
+                var today = new Date().toISOString().split('T')[0];
+                $("#transDate").val(today);
+                $("#drAmt").val(0);
+                $("#crAmt").val(0);
+
+                let journalDetails = new Array();
+                $('#drAmt').on('blur', function () {
+                    let drAmt = parseFloat($("#drAmt").val());
+                    if (drAmt) {
+                        buildJournalDetails();
+                    }
+                });
+
+                $('#crAmt').on('blur', function () {
+                    let crAmt = parseFloat($("#crAmt").val());
+                    if (crAmt) {
+                        buildJournalDetails();
+                    }
+                });
+
+                $('#transDate').on('blur', function () {
+                    let date = $("#transDate").val();
+                    if (date) {
+                        buildJournalDetails();
+                    }
+                });
+
+                $('#transDescript').on('blur', function () {
+                    let transDescript = $("#transDescript").val();
+                    if (transDescript) {
+                        buildJournalDetails();
+                    }
+                });
+
+                $('#clearAll').on('click', function () {
+                    $("#totalDrAmt").val(0);
+                    $("#totalCrAmt").val(0);
+                    journalDetails = new Array();
+                    populateDetailsTable();
+                });
+
+                $('#save').on('click', function () {
+                    let totalDrAmt = parseFloat($("#totalDrAmt").val());
+                    let totalCrAmt = parseFloat($("#totalCrAmt").val());
+                    debugger
+                    if (totalDrAmt != totalCrAmt) {
+                        alert("Sorry, Debit amount must be equal to credit amount")
+                        return
+                    }
+                    if (totalDrAmt < 0.01) {
+                        alert("Sorry, No item debited")
+                        return
+                    }
+
+                    let crAccounts = journalDetails.filter(j => !j.isdebit);
+                    let drAccounts = journalDetails.filter(j => j.isdebit);
+                    let docNo = $("#documentNo").val();
+                    docNo = docNo ? docNo : "";
+                    let transDescript = $("#transDescript").val();
+                    let date = $("#transDate").val();
+                    transDescript = transDescript ? transDescript : "";
+                    let transactions = new Array();
+                    if (drAccounts.length > 1) {
+                        drAccounts.forEach(d => {
+                            transactions.push({
+                                amount: d.amount,
+                                drAccNo: d.glAcc,
+                                crAccNo: crAccounts[0].glAcc,
+                                strDocnumber: docNo,
+                                chequeNo: docNo,
+                                Remarks: transDescript,
+                                TransactionDate: date
+                            });
+                        });
+                    }
+                    else {
+                        crAccounts.forEach(d => {
+                            transactions.push({
+                                amount: d.amount,
+                                drAccNo: drAccounts[0].glAcc,
+                                crAccNo: d.glAcc,
+                                strDocnumber: docNo,
+                                ChequeNo: docNo,
+                                Remarks: transDescript,
+                                TransactionDate: date
+                            });
+                        });
+                    }
+
+                    $.ajax({
+                        type: 'POST',
+                        url: "journalPosting",
+                        contentType: 'application/json',
+                        data: JSON.stringify(transactions),
+                        success: function (response) {
+                            $("#transDescript").val('');
+                            $("#documentNo").val('');
+                            $("#totalDrAmt").val(0);
+                            $("#totalCrAmt").val(0);
+                            journalDetails = new Array();
+                            populateDetailsTable();
+                        },
+                        failure: function (response) {
+                        }
+                    }).then(function () {
+                        // ...
+                    });
+                });
+
+                function buildJournalDetails() {
+                    let glAcc = $("#glAcc").val();
+                    let drAmt = parseFloat($("#drAmt").val());
+                    let crAmt = parseFloat($("#crAmt").val());
+                    let date = $("#transDate").val()
+                    let transDescript = $("#transDescript").val();
+                    if (drAmt < 0.01 && crAmt < 0.01) {
+                        return
+                    }
+
+                    if (!glAcc && transDescript && (drAmt || crAmt)) {
+                        $("#drAmt").val(0);
+                        $("#crAmt").val(0);
+                        alert("Kindly provide GL Account")
+                        return
+                    }
+
+                    if (!transDescript && glAcc && (drAmt || crAmt)) {
+                        alert("Kindly provide transaction description")
+                        return
+                    }
+
+                    let isdebit = drAmt > 0;
+                    let amount = isdebit ? drAmt : crAmt;
+                    let drAccounts = journalDetails.filter(j => j.isdebit);
+                    let crAccounts = journalDetails.filter(j => !j.isdebit);
+                    let blockDrAcc = crAccounts.length > 1 && drAccounts.length > 0 && drAmt;
+                    let blockCRAcc = drAccounts.length > 1 && crAccounts.length > 0 && crAmt;
+                    if (blockDrAcc || blockCRAcc) {
+                        alert("Sorry, A journal must have a single entry in at least on side")
+                        return
+                    }
+
+                    let creditAmount = 0;
+                    crAccounts.forEach(c => {
+                        creditAmount += c.amount;
+                    });
+                    creditAmount = isdebit ? creditAmount : creditAmount + amount;
+                    let debitAmount = 0;
+                    drAccounts.forEach(c => {
+                        debitAmount += c.amount;
+                    });
+                    debitAmount = isdebit ? debitAmount + amount : debitAmount;
+                    $("#totalDrAmt").val(debitAmount);
+                    $("#totalCrAmt").val(creditAmount);
+
+                    journalDetails.push({
+                        glAcc: glAcc,
+                        amount: amount,
+                        isdebit: isdebit,
+                        transDate: date
+                    });
+
+                    $("#glAcc").val("");
+                    $("#drAmt").val(0);
+                    $("#crAmt").val(0);
+
+                    populateDetailsTable();
+                }
+
+                function populateDetailsTable() {
+                    let itemTableRows = new Array();
+                    journalDetails.forEach(j => {
+                        drAmt = j.isdebit ? j.amount : 0;
+                        crAmt = j.isdebit ? 0 : j.amount;
+                        itemTableRows.push(`<tr>
+                                                <td>${j.glAcc}</td>
+                                                <td>${drAmt}</td>
+                                                <td>${crAmt}</td>
+                                                <td>${j.transDate}</td>
+                                            </tr>`);
+                    });
+
+                    $('#details').html(itemTableRows);
+                }
+            });
+        </script>
+    <script>
+        var glAccounts = @Html.Raw(JsonConvert.SerializeObject(ViewBag.glAccounts));
+
+        function glAcc(e) {
+            debugger
+            console.log('Searching:', e.text); // debug
+            var query = new ej.data.Query();
+            if (e.text !== '') {
+                query = query.where('strAccountName', 'contains', e.text, true);
+            }
+            e.updateData(glAccounts, query);
+        }
+    </script>
+    }

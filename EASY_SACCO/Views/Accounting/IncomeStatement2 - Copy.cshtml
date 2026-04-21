@@ -1,0 +1,1261 @@
+﻿<style>
+    #customers {
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+        #customers td, #customers th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #customers tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #customers tr:hover {
+            background-color: #00ff21;
+        }
+
+        #customers th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #dec3eb;
+            color: white;
+        }
+
+    .divScroll {
+        width: auto;
+        height: 380px;
+        overflow: auto;
+    }
+</style>
+<section class="section">
+    <div class="row">
+        <div class="card">
+            <div class="tabs-info-area">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12 col-xs-12">
+                            <div class="widget-tabs-int mt-2 mb-3">
+                                <div class="tab-hd">
+                                    <h3>Income Statement</h3>
+                                </div>
+                                <div class="widget-tabs-list">
+                                    <div class="row">
+                                        <div class="col-sm-2 col-xs-12">
+                                            <div class="form-group">
+                                                <label class="control-label">From Date</label>
+                                                <input type="date" id="fromDate" class="form-control" />
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2 col-xs-12">
+                                            <div class="form-group">
+                                                <label class="control-label">To Date</label>
+                                                <input type="date" id="toDate" class="form-control" />
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2 col-xs-12">
+                                            @*<a id="endOfDay" class="btn btn-success">Intake End Of Day</a>*@
+                                        </div>
+                                        <div class="col-sm-2 col-xs-12">
+                                            
+                                        </div>
+                                    </div>
+                                    @if (ViewBag.slopes)
+                                    {
+                                        <ul class="nav nav-tabs mt-2">
+                                            <!-- Default Tabs -->
+                                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                                <li class="nav-item" role="presentation">
+                                                    <button class="nav-link " id="generalStatement-tab" data-bs-toggle="tab" data-bs-target="#generalStatement" type="button" role="tab" aria-controls="generalStatement" aria-selected="true">
+                                                        General
+                                                    </button>
+                                                </li>
+                                                <li class="nav-item" role="presentation">
+                                                    <button class="nav-link" id="storeStatement-tab" data-bs-toggle="tab" data-bs-target="#storeStatement" type="button" role="tab" aria-controls="storeStatement" aria-selected="false">
+                                                        Store
+                                                    </button>
+                                                </li>
+                                                <li class="nav-item" role="presentation">
+                                                    <button class="nav-link" id="yoghurtStatement-tab" data-bs-toggle="tab" data-bs-target="#yoghurtStatement" type="button" role="tab" aria-controls="yoghurtStatement" aria-selected="false">
+                                                        Yoghurt
+                                                    </button>
+                                                </li>
+                                                <li class="nav-item" role="presentation">
+                                                    <button class="nav-link" id="tankerStatement-tab" data-bs-toggle="tab" data-bs-target="#tankerStatement" type="button" role="tab" aria-controls="tankerStatement" aria-selected="false">
+                                                        Tanker
+                                                    </button>
+                                                </li>
+                                                <li class="nav-item" role="presentation">
+                                                    <button class="nav-link" id="aiStatement-tab" data-bs-toggle="tab" data-bs-target="#aiStatement" type="button" role="tab" aria-controls="aiStatement" aria-selected="false">
+                                                        A.I
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </ul>
+                                    }
+                                    
+
+                                    <ul class="nav nav-tabs tab-pane fade show">
+                                        <div id="title1">
+                                             <ul class="nav nav-tabs tab-pane fade" id="generalStatement" role="tablist">
+                                                @if (ViewBag.slopes)
+                                                {
+                                                    <li>
+                                                        <a class="nav-link" id="generalStatSummary-tab" data-bs-toggle="tab" data-bs-target="#generalStatSummary" role="tabpanel" aria-controls="generalStatSummary" aria-selected="false">
+                                                            Summary
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="nav-link" id="generalStatDetailed-tab" data-bs-toggle="tab" data-bs-target="#generalStatDetailed" role="tabpanel" aria-controls="generalStatDetailed" aria-selected="false">
+                                                            Detailed
+                                                        </a>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
+                                        @if (!ViewBag.slopes)
+                                        {
+                                            <li>
+                                                <a class="nav-link show" id="generalStatDetailed-tab" data-bs-toggle="tab" data-bs-target="#generalStatDetailed" role="tabpanel" aria-controls="generalStatDetailed" aria-selected="false">
+                                                    Detailed
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                    
+                                    <div id="title2">
+                                        <div class="tab-content pt-2 " id="myTabContent">
+                                            <div class="tab-pane fade " id="generalStatSummary" role="tabpanel" aria-selected="false" aria-labelledby="generalStatSummary-tab">
+                                                <div class="row mb-2">
+                                                    <div class="col-sm-4 col-xs-12">
+                                                        <a id="btn_gen_stat_summary" class="btn btn-warning">
+                                                            Show
+                                                            <img id="general_summary_loading" src="~/Images/Loading.gif" alt="Loading" width="50" height="30">
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-sm-4 col-xs-12">
+                                                        <a id="excel_rep_gen_summary" class="btn btn-success">Export Excel</a>
+                                                    </div>
+                                                    <div class="col-sm-2 col-xs-12">
+                                                        <a id="print_report" class="btn btn-success">Print Report</a>
+                                                    </div>
+                                                </div>
+
+                                                <div class="bsc-tbl-hvr table-border-style">
+                                                    <div id="gen_summary_Collection"></div>
+                                                    <div class="divScroll">
+                                                        <div class="table-responsive">
+                                                            <div class="divScroll">
+                                                                <table class="table table-hover" border="1" id="tbl_rep_gen_summary">
+                                                                    <thead>
+                                                                        <tr id="com"><th colspan="4" id="company"></th></tr>
+                                                                        <tr id="htitl"> <th colspan="4"> <strong>MILK CALCULATION FOR THE MONTH</strong></th></tr>
+                                                                        <tr id="hstartd"><th colspan="4" id="sema"></th>  </tr>
+                                                                        <tr id="her"><th colspan="7"><hr /></th></tr>
+                                                                        <tr>
+                                                                            <th>
+                                                                                Name
+                                                                            </th>
+                                                                            <th>
+                                                                                Quantity
+                                                                            </th>
+                                                                            <th>
+                                                                                Price
+                                                                            </th>
+                                                                            <th>
+                                                                                Amount
+                                                                            </th>
+                                                                            <th>
+                                                                                Total
+                                                                            </th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody id="gen_rep_summary">
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+                                            
+                                            </div>
+                                            <div class="tab-pane fade mb-2" id="generalStatDetailed" role="tabpanel" aria-selected="false" aria-labelledby="generalStatDetailed-tab">
+                                                <div class="row">
+                                                    <div class="col-sm-4 col-xs-12">
+                                                        <a id="btn_general_detailed" class="btn btn-warning">
+                                                            Show
+                                                            <img id="general_detailed_loading" src="~/Images/Loading.gif" alt="Loading" width="50" height="30">
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-sm-4 col-xs-12">
+                                                        <a id="excel_general_detailed" class="btn btn-success">Export Excel</a>
+                                                    </div>
+                                                </div>
+
+                                                <div class="bsc-tbl-hvr table-border-style">
+                                                    <div id="gen_detailed_Collection"></div>
+                                                    <div class="divScroll">
+                                                        <div class="table-responsive">
+                                                            <table class="table table-hover" id="tbl_general_detailed">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>
+                                                                            Date
+                                                                        </th>
+                                                                        <th>
+                                                                            Gl Acc
+                                                                        </th>
+                                                                        <th>
+                                                                            Acc Name
+                                                                        </th>
+                                                                        <th>
+                                                                            Description
+                                                                        </th>
+                                                                        <th>
+                                                                            Dr
+                                                                        </th>
+                                                                        <th>
+                                                                            Cr
+                                                                        </th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="general_detailed">
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    
+
+                                                    <div class="row">
+                                                        <div class="col-sm-4 col-xs-12">
+                                                        </div>
+                                                        <div class="col-sm-4 col-xs-12">
+                                                            <label class="control-label">Total SPrice</label>
+                                                            <input value="0" id="Tselling" class="form-control" readonly />
+                                                        </div>
+                                                        <div class="col-sm-4 col-xs-12">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                       
+                                    </div><!-- End Default Tabs -->
+                                    <div id="title3">
+                                        <div class="tab-content pt-2" id="myTabContent1">
+                                            <div class="tab-pane fade mb-2" id="storeStatement" role="tabpanel" aria-selected="false" aria-labelledby="storeStatement-tab">
+                                                <div class="row">
+                                                    <div class="col-sm-4 col-xs-12">
+                                                        <a id="showSummery" class="btn btn-warning"> Show
+                                                            <img id="general_detailed_loading1" src="~/Images/Loading.gif" alt="Loading" width="50" height="30">
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-sm-4 col-xs-12">
+                                                        <a id="excel_summery" class="btn btn-success">Export Excel</a>
+                                                    </div>
+                                                </div>
+
+                                                <div class="bsc-tbl-hvr table-border-style">
+                                                    <div class="table-responsive">
+                                                        <div class="divScroll">
+                                                            <table class="table table-hover" id="tbl_summary">
+
+                                                                <tr>
+                                                                    <th>
+                                                                        Date
+                                                                    </th>
+                                                                    <th>
+                                                                        Gl Acc
+                                                                    </th>
+                                                                    <th>
+                                                                        Acc Name
+                                                                    </th>
+                                                                    <th>
+                                                                        Description
+                                                                    </th>
+                                                                    <th>
+                                                                        Dr
+                                                                    </th>
+                                                                    <th>
+                                                                        Cr
+                                                                    </th>
+                                                                </tr>
+                                                                <tbody id="tbl_sum_details">
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-sm-4 col-xs-12">
+                                                        </div>
+                                                        <div class="col-sm-4 col-xs-12">
+                                                            <label class="control-label">Total SPrice</label>
+                                                            <input value="0" id="Tselling" class="form-control" readonly />
+                                                        </div>
+                                                        <div class="col-sm-4 col-xs-12">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade mb-2" id="yoghurtStatement" role="tabpanel" aria-selected="false" aria-labelledby="yoghurtStatement-tab">
+                                                <div class="row">
+                                                    <div class="col-sm-4 col-xs-12">
+                                                        <a id="yogoshowSummery" class="btn btn-warning">Show
+                                                            <img id="general_detailed_loading2" src="~/Images/Loading.gif" alt="Loading" width="50" height="30">
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-sm-4 col-xs-12">
+                                                        <a id="excel_summery" class="btn btn-success">Export Excel</a>
+                                                    </div>
+                                                </div>
+
+                                                <div class="bsc-tbl-hvr table-border-style">
+                                                    <div class="table-responsive">
+                                                        <div class="divScroll">
+                                                            <table class="table table-hover" id="tbl_summary">
+                                                                <tr>
+                                                                    <th>
+                                                                        Production
+                                                                    </th>
+                                                                    <th>
+                                                                       Units
+                                                                    </th>
+                                                                    <th>
+                                                                        Price
+                                                                    </th>
+                                                                    <th>
+                                                                        Amount
+                                                                    </th>
+                                                                    <th>
+                                                                        LTS
+                                                                    </th>
+                                                                    <th>
+                                                                        
+                                                                    </th>
+                                                                </tr>
+                                                                <tbody id="tbl_sum_yogodetails">
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-sm-4 col-xs-12">
+                                                        </div>
+                                                        <div class="col-sm-4 col-xs-12">
+                                                            <label class="control-label">Total SPrice</label>
+                                                            <input value="0" id="Tselling" class="form-control" readonly />
+                                                        </div>
+                                                        <div class="col-sm-4 col-xs-12">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade mb-2" id="tankerStatement" role="tabpanel" aria-selected="false" aria-labelledby="tankerStatement-tab">
+                                                <div class="row">
+                                                    <div class="col-sm-4 col-xs-12">
+                                                        <a id="tankershowSummery" class="btn btn-warning">Show
+                                                            <img id="general_detailed_loading3" src="~/Images/Loading.gif" alt="Loading" width="50" height="30">
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-sm-4 col-xs-12">
+                                                        <a id="excel_summery" class="btn btn-success">Export Excel</a>
+                                                    </div>
+                                                </div>
+
+                                                <div class="bsc-tbl-hvr table-border-style">
+                                                    <div class="table-responsive">
+                                                        <div class="divScroll">
+                                                            <table class="table table-hover" id="tbl_summary">
+                                                                <tr>
+                                                                    <th>
+                                                                        Date
+                                                                    </th>
+                                                                    <th>
+                                                                        Gl Acc
+                                                                    </th>
+                                                                    <th>
+                                                                        Acc Name
+                                                                    </th>
+                                                                    <th>
+                                                                        Description
+                                                                    </th>
+                                                                    <th>
+                                                                        Dr
+                                                                    </th>
+                                                                    <th>
+                                                                        Cr
+                                                                    </th>
+                                                                </tr>
+                                                                <tbody id="tbl_sum_tankerdetails">
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-sm-4 col-xs-12">
+                                                        </div>
+                                                        <div class="col-sm-4 col-xs-12">
+                                                            <label class="control-label">Total SPrice</label>
+                                                            <input value="0" id="Tselling" class="form-control" readonly />
+                                                        </div>
+                                                        <div class="col-sm-4 col-xs-12">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade mb-2" id="aiStatement" role="tabpanel" aria-selected="false" aria-labelledby="aiStatement-tab">
+                                                <div class="row">
+                                                    <div class="col-sm-4 col-xs-12">
+                                                        <a id="aishowSummery" class="btn btn-warning">Show
+                                                            <img id="general_detailed_loading4" src="~/Images/Loading.gif" alt="Loading" width="50" height="30">
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-sm-4 col-xs-12">
+                                                        <a id="excel_summery" class="btn btn-success">Export Excel</a>
+                                                    </div>
+                                                </div>
+
+                                                <div class="bsc-tbl-hvr table-border-style">
+                                                    <div class="table-responsive">
+                                                        <div class="divScroll">
+                                                            <table class="table table-hover" id="tbl_summary">
+                                                                <tr>
+                                                                    <th>
+                                                                        Date
+                                                                    </th>
+                                                                    <th>
+                                                                        Gl Acc
+                                                                    </th>
+                                                                    <th>
+                                                                        Acc Name
+                                                                    </th>
+                                                                    <th>
+                                                                        Description
+                                                                    </th>
+                                                                    <th>
+                                                                        Dr
+                                                                    </th>
+                                                                    <th>
+                                                                        Cr
+                                                                    </th>
+                                                                </tr>
+                                                                <tbody id="tbl_sum_aidetails">
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row mb-2">
+                                                        <div class="col-sm-4 col-xs-12">
+                                                        </div>
+                                                        <div class="col-sm-4 col-xs-12">
+                                                            <label class="control-label">Total SPrice</label>
+                                                            <input value="0" id="Tselling" class="form-control" readonly />
+                                                        </div>
+                                                        <div class="col-sm-4 col-xs-12">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div><!-- End Default Tabs -->  
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</section>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script type="text/javascript">
+        $(function () {
+            $(".chzn-select").chosen();
+            let incomes = new Array();
+            let sales = new Array();
+            let purchases = new Array();
+            let otherIncomes = new Array();
+            let expenses = new Array();
+            let getprice = 0;
+            let openingstock = 0;
+            let totalKgs = 0;
+            let getKgs = 0;
+            let mpesapayments = 0;
+            let checkoffsales = 0;
+            let openingStockamount = 0;
+            let salesBuyingPrices = 0;
+            let purchasesprices = 0;
+            let closingStockamount = 0;
+            var condition = 0;
+            var getMonthName = 0;
+            let isGeneral = false;
+            let isYoghurt = false;
+            let isAI = false;
+            let isStore = false;
+            let isTanker = false;
+            let isSlopes = '@ViewBag.slopes' === 'True';
+            if (!isSlopes) {
+                $("#generalStatDetailed-tab").show();
+            }
+            $("#com").hide();
+            $("#htitl").hide();
+            $("#hstartd").hide();
+            $("#her").hide();
+
+            $('#general_summary_loading').hide();
+            $('#general_detailed_loading').hide();
+            $('#general_detailed_loading1').hide();
+            $('#general_detailed_loading2').hide();
+            $('#general_detailed_loading3').hide();
+            $('#general_detailed_loading4').hide();
+            var today = new Date().toISOString().split('T')[0];
+            $("#fromDate").val(today);
+            $("#toDate").val(today);
+            $('#btn_general_detailed').on('click', function () {
+                $('#general_detailed_loading').show();
+                isGeneral = true;
+                condition = "";
+                buildGeneralDetailedStat();
+            });
+            $('#showSummery').on('click', function () {
+                $('#general_detailed_loading1').show();
+                debugger
+                isStore = true;
+                condition = "Store";
+                buildGeneralDetailedStat();
+            });
+            $('#yogoshowSummery').on('click', function () {
+                $('#general_detailed_loading2').show();
+                isYoghurt = true;
+                condition = "Yoghurt";
+                buildGeneralDetailedYoghurt();
+            });
+            $('#tankershowSummery').on('click', function () {
+                $('#general_detailed_loading3').show();
+                isTanker = true;
+                condition = "Tanker";
+                buildGeneralDetailedStat();
+            });
+            $('#aishowSummery').on('click', function () {
+                $('#general_detailed_loading4').show();
+                isAI = true;
+                condition = "AI";
+                buildGeneralDetailedStat();
+            });
+            $('#btn_gen_stat_summary').on('click', function () {
+                $('#general_summary_loading').show();
+                buildGeneralSummaryStat();
+            });
+
+            $('#excel_rep_gen_summary').on('click', function () {
+                let date = new Date().toLocaleDateString('en-GB');
+                let fileName = `Statement Summary ${date}`;
+                heading();
+                $('#tbl_rep_gen_summary').table2excel({
+                    filename: fileName, 
+                    fileext: ".xls",
+                    name: "Statement Summary",
+                });
+            });
+
+            $('#excel_general_detailed').on('click', function () {
+                let date = new Date().toLocaleDateString('en-GB');
+                let fileName = `Statement Detailed ${date}`;
+                $('#tbl_general_detailed').table2excel({
+                    filename: fileName, 
+                    fileext: ".xls",
+                    name: "Statement Detailed",
+                });
+            });
+            function heading() {
+                var company = @Html.Raw(Json.Serialize(ViewBag.Sacco));
+                var user = @Html.Raw(Json.Serialize(ViewBag.User));
+                var date1 = today;
+                var date10 = new Date(date1).toLocaleDateString();
+                var date2 = $("#toDate").val();
+                var date20 = new Date(date2).toLocaleDateString();
+                var sm = " OF :" + date2 + " AS AT " + date10;
+                //var com = ;
+                //$("#sema").val(sm);
+                let itemTableRows1 = new Array();
+                let itemTableRow = new Array();
+                let itemTableRows2 = new Array();
+                itemTableRow.push(`${company}`);
+                $('#company').html(itemTableRow);
+                itemTableRows1.push(`${sm}`);
+                $('#sema').html(itemTableRows1);
+            }
+            $('#print_report').on('click', function () {
+                $("#com").show();
+                $("#htitl").show();
+                $("#hstartd").show();
+                $("#her").show();
+                $("#companyname").show();
+                heading();
+                var divToPrint = document.getElementById("tbl_rep_gen_summary");
+                newWin = window.open("");
+                newWin.document.write(divToPrint.outerHTML);
+                newWin.print();
+                newWin.close();
+                $("#com").hide();
+                $("#htitl").hide();
+                $("#hstartd").hide();
+                $("#her").hide();
+                $("#companyname").hide();
+            });
+            $('#storeStatement-tab').on('click', function () {
+                $("#title1").hide(); 
+                $("#title2").hide(); 
+            });
+            $('#yoghurtStatement-tab').on('click', function () {
+                $("#title1").hide(); 
+                $("#title2").hide(); 
+            });
+            $('#tankerStatement-tab').on('click', function () {
+                $("#title1").hide();
+                $("#title2").hide();
+            });
+            $('#aiStatement-tab').on('click', function () {
+                $("#title1").hide();
+                $("#title2").hide();
+            });
+
+            $('#generalStatement-tab').on('click', function () {
+                $("#title1").show(); 
+                $("#title2").show(); 
+            });
+
+            //$('#toDate').on('change', function () {   ,,
+            //    buildIncomeStatement();
+            //});
+            function buildGeneralDetailedYoghurt() {
+                var fromDate = $("#fromDate").val();
+                var toDate = $("#toDate").val();
+                var filter = {
+                    fromDate: fromDate,
+                    toDate: toDate,
+                    condition: condition,
+                };
+
+                if (fromDate && toDate) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "incomeStatementyoghurt",
+                        contentType: 'application/json',
+                        data: JSON.stringify(filter),
+                        success: function (response) {
+                            sales = response.sales ? response.sales : new Array();
+                            purchases = response.purchases ? response.purchases : new Array();
+                            otherIncomes = response.otherIncomes ? response.otherIncomes : new Array();
+                            expenses = response.expenses ? response.expenses : new Array();
+                            openingstock = response.openingstock ? response.openingstock : 0;
+                            getprice = response.getprice ? response.getprice : 0;
+                            getKgs = response.getKgs ? response.getKgs : 0;
+                            totalKgs = response.totalKgs ? response.totalKgs : 0;
+                            getMonthName = response.getMonthName ? response.getMonthName : 0;
+                            populateGeneralDetailsTable();
+                        },
+                        failure: function (response) {
+                            $('#general_detailed_loading').hide();
+                            $('#general_detailed_loading1').hide();
+                            $('#general_detailed_loading2').hide();
+                            $('#general_detailed_loading3').hide();
+                            $('#general_detailed_loading4').hide();
+                        }
+                    }).then(function () {
+                        // ...
+                    });
+                }
+            }
+            function buildGeneralDetailedStat() {
+                var fromDate = $("#fromDate").val();
+                var toDate = $("#toDate").val();
+                var filter = {
+                    fromDate: fromDate,
+                    toDate: toDate,
+                    condition:condition,
+                };
+
+                if (fromDate && toDate) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "incomeStatement",
+                        contentType: 'application/json',
+                        data: JSON.stringify(filter),
+                        success: function (response) {
+                            sales = response.sales ? response.sales : new Array();
+                            purchases = response.purchases ? response.purchases : new Array();
+                            otherIncomes = response.otherIncomes ? response.otherIncomes : new Array();
+                            expenses = response.expenses ? response.expenses : new Array();
+                            totalKgs = response.totalKgs ? response.totalKgs : 0;
+                            mpesapayments = response.mpesapayments ? response.mpesapayments : 0;
+                            checkoffsales = response.checkoffsales ? response.checkoffsales : 0;
+                            openingStockamount = response.openingStockamount ? response.openingStockamount : 0;
+                            salesBuyingPrices = response.salesBuyingPrices ? response.salesBuyingPrices : 0;
+                            purchasesprices = response.purchasesprices ? response.purchasesprices : 0;
+                            closingStockamount = response.closingStockamount ? response.closingStockamount : 0;
+                            getMonthName = response.getMonthName ? response.getMonthName : 0;
+                            if (filter.condition === "Store") {
+                                populateGeneralDetailsTablelistStore();
+                            }else{
+                                populateGeneralDetailsTablelist();
+                            }
+                        },
+                        failure: function (response) {
+                            $('#general_detailed_loading').hide();
+                            $('#general_detailed_loading1').hide();
+                            $('#general_detailed_loading2').hide();
+                            $('#general_detailed_loading3').hide();
+                            $('#general_detailed_loading4').hide();
+                        }
+                    }).then(function () {
+                        // ...
+                    });
+                }
+            }
+
+            function buildGeneralSummaryStat() {
+                var fromDate = $("#fromDate").val();
+                var toDate = $("#toDate").val();
+                var filter = {
+                    fromDate: fromDate,
+                    toDate: toDate,
+                };
+
+                if (fromDate && toDate) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "incomeStatementSummary",
+                        contentType: 'application/json',
+                        data: JSON.stringify(filter),
+                        success: function (response) {
+                            $('#general_summary_loading').hide();
+                            incomes = response.income ? response.income : new Array();
+                            expenses = response.expenses ? response.expenses : new Array();
+                            totalKgs = response.totalKgs ? response.totalKgs : 0;
+                            getLastMonthName = response.getLastMonthName ? response.getLastMonthName : "";
+                            lasttotalKgs = response.lasttotalKgs ? response.lasttotalKgs : 0;
+                            Remarkks = response.Remarkks ? response.Remarkks : "";
+                            checkthediff = response.checkthediff ? response.checkthediff : 0;
+                                
+                            populateGenaralSummaryTable();
+                        },
+                        failure: function (response) {
+                            $('#general_summary_loading').hide();
+                        }
+                    }).then(function () {
+                        // ...
+                    });
+                }
+            }
+
+            function populateGeneralDetailsTable() {
+                let itemTableRows = new Array();
+                var income = 0;
+                var saleTotal = 0;
+                var purchaesTotal = 0;
+                var finalpurchaesTotal = 0;
+                var closingbal = 0;
+                var grossTotal = 0;
+                var otherIncomesTotal = 0;
+                var expense = 0;
+                var dr = 0;
+                var cr = 0;
+                var TotalLtrs = 0;
+                var totalmilk = getprice * getKgs;
+                itemTableRows.push(`<tr>
+                                    <td colspan="1"><h5>MILK</h5></td>
+                                    <td>${getKgs.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                                    <td>${getprice.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                                    <td>${totalmilk.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                                </tr>`);
+                purchases.forEach(j => {
+                    //j.TransDate = j.TransDate ? j.TransDate : "";
+                    j.TransDate = new Date(j.TransDate).toLocaleDateString('en-GB');
+                    itemTableRows.push(`<tr>
+                                        <td>${j.Name}</td>
+                                        <td>${j.Quantity}</td>
+                                        <td>${j.Price}</td>
+                                        <td>${j.Amount.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                                        <td>${j.Letres.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                            </tr>`);
+                    dr += j.Amount;
+                    finalpurchaesTotal += (j.Amount);
+                    TotalLtrs += (j.Letres);
+                });
+                itemTableRows.push(`<tr>
+                            <td colspan="4"><h5>Production</h5></td>
+                            <td>${TotalLtrs.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                            <td>${finalpurchaesTotal.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                        </tr>`);
+                itemTableRows.push(`<tr>
+                                    <td colspan="5"><h5>Openning Stock</h5></td>
+                                    <td>${openingstock.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                                </tr>`);
+                purchaesTotal = openingstock + finalpurchaesTotal;
+                itemTableRows.push(`<tr>
+                                    <td colspan="5"><h5>Total Stock</h5></td>
+                                    <td>${purchaesTotal.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                                </tr>`);
+                sales.forEach(j => {
+                    //j.TransDate = j.TransDate ? j.TransDate : "";
+                    j.TransDate = new Date(j.TransDate).toLocaleDateString('en-GB');
+                    itemTableRows.push(`<tr>
+                                <td>${j.TransDate}</td>
+                                <td>${j.GlAcc}</td>
+                                <td>${j.AccName}</td>
+                                <td>${j.TransDescript}</td>
+                                <td>${j.Dr.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                                <td>${j.Cr.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                            </tr>`);
+                    dr += j.Dr;
+                    cr += j.Cr;
+                    saleTotal += (j.Dr - j.Cr);
+                });
+                itemTableRows.push(`<tr>
+                            <td colspan="5"><h5>Total Sales</h5></td>
+                            <td>${saleTotal.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                        </tr>`);
+                grossTotal = purchaesTotal-saleTotal  ;
+                itemTableRows.push(`<tr>
+                                            <td colspan="5"><h5>Closing Stock</h5></td>
+                                    <td>${grossTotal.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                                </tr>`);
+                itemTableRows.push(`<tr>
+                                    <td colspan="5"><h4>Total</h4></td>
+                            <td>${(grossTotal+saleTotal).toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                         </tr>`);
+
+                dr = 0;
+                cr = 0;
+                itemTableRows.push(`<tr>
+                    <td colspan="6"><h3>Expense</h3></td>
+                </tr>`);
+
+                expenses.forEach(j => {
+                    //j.TransDate = j.TransDate ? j.TransDate : "";
+                    j.TransDate = new Date(j.TransDate).toLocaleDateString('en-GB');
+                    itemTableRows.push(`<tr>
+                        <td>${j.TransDate}</td>
+                        <td>${j.GlAcc}</td>
+                        <td>${j.AccName}</td>
+                        <td>${j.TransDescript}</td>
+                        <td>${j.Dr.toLocaleString('en-US', {maximumFractionDigits:2})}</td>
+                        <td>${j.Cr.toLocaleString('en-US', {maximumFractionDigits:2})}</td>
+                    </tr>`);
+                    dr += j.Dr;
+                    cr += j.Cr;
+                    expense += (j.Dr - j.Cr );
+                });
+
+                itemTableRows.push(`<tr>
+                    <td colspan="5"><h3>Total Expenses</h3></td>
+                    <td>${expense.toLocaleString('en-US', {maximumFractionDigits:2})}</td>
+                </tr>`);
+                if (expense < 0) {
+                    expense = expense * -1;
+                }
+                var profit = grossTotal + saleTotal - expense;
+                itemTableRows.push(`<tr>
+                    <td colspan="5"><h4>Net Profit</h4></td>
+                    <td>${profit.toLocaleString('en-US', {maximumFractionDigits:2})}</td>
+                </tr>`);
+
+                if (isGeneral) {
+                    $('#general_detailed').html(itemTableRows);
+                    $('#general_detailed_loading').hide();
+                }
+                if (isStore) {
+                    $('#tbl_sum_details').html(itemTableRows);
+                    $('#general_detailed_loading1').hide();
+                }
+                if (isYoghurt) {
+                    $('#tbl_sum_yogodetails').html(itemTableRows);
+                    $('#general_detailed_loading2').hide();
+                }
+                if (isTanker) {
+                    $('#tbl_sum_tankerdetails').html(itemTableRows);
+                    $('#general_detailed_loading3').hide();
+                }
+                if (isAI) {
+                    $('#tbl_sum_aidetails').html(itemTableRows);
+                    $('#general_detailed_loading4').hide();
+                }
+                
+
+            }
+            function populateGenaralSummaryTable() {
+                let itemTableRows = new Array();
+                var income = 0;
+                var saleskgs = 0;
+                var expense = 0;
+                
+                itemTableRows.push(`<tr>
+                    <td colspan="3"><h3>${getLastMonthName}</h3></td>
+                    <td>${lasttotalKgs.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                </tr>`);
+                itemTableRows.push(`<tr>
+                            <td colspan="3"><h3>${Remarkks}</h3></td>
+                            <td>${checkthediff.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                        </tr>`);
+                itemTableRows.push(`<tr>
+                                    <td colspan="3"><h3>Total Collection</h3></td>
+                            <td>${totalKgs.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                            <td colspan="2"></td>
+                        </tr>`);
+
+                itemTableRows.push(`<tr>
+                    <td colspan="4"><h3>Income</h3></td>
+                </tr>`);
+                incomes.forEach(j => {
+                    itemTableRows.push(`<tr>
+                        <td>${j.Name}</td>
+                        <td>${j.Quantity.toLocaleString('en-US', {maximumFractionDigits:2})}</td>
+                        <td>${j.Price.toLocaleString('en-US', {maximumFractionDigits:2})}</td>
+                        <td>${j.Amount.toLocaleString('en-US', {maximumFractionDigits:2})}</td>
+                    </tr>`);
+                    income += j.Amount;
+                    saleskgs += j.Quantity;
+                });
+
+                itemTableRows.push(`<tr>
+                    <td colspan="1"><h2>TOTAL MILK SALES</h2></td>
+                    <td>${saleskgs.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                    <td colspan="2"><h1></h1></td>
+                    <td>${income.toLocaleString('en-US', {maximumFractionDigits:2})}</td>
+                </tr>`);
+
+                itemTableRows.push(`<tr class="border border-1">
+                    <td colspan="4"><h2>Expense</h2></td>
+                </tr>`);
+
+                expenses.forEach(j => {
+                    itemTableRows.push(`<tr>
+                        <td colspan="4">${j.Categoy}</td>
+                    </tr>`);
+                    j.voteheads.forEach(v => {
+                        itemTableRows.push(`<tr>
+                            <td>${v.AccNo}</td>
+                            <td colspan="2">${v.Name}</td>
+                            <td>${v.Amount.toLocaleString('en-US', {maximumFractionDigits:2})}</td>
+                        </tr>`);
+                    });
+                    itemTableRows.push(`<tr>
+                        <td colspan="4"><h1></h1></td>
+                        <td>${j.Total.toLocaleString('en-US', {maximumFractionDigits:2})}</td>
+                    </tr>`);
+                    expense += j.Total;
+                });
+
+                itemTableRows.push(`<tr>
+                    <td colspan="3"><h3>Total Expenses</h3></td>
+                    <td>${expense.toLocaleString('en-US', {maximumFractionDigits:2})}</td>
+                        </tr>`); 
+
+                itemTableRows.push(`<tr>
+                            <td colspan="3"><h3> </h3></td>
+                            <td>${getMonthName}</td>
+                        </tr>`);
+                itemTableRows.push(`<tr>
+                    <td colspan="3"><h3>TOTAL SALES</h3></td>
+                    <td>${income.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                </tr>`);
+                itemTableRows.push(`<tr>
+                            <td colspan="3"><h3>LESS TOTAL EXPENSES</h3></td>
+                            <td>${expense.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                        </tr>`);
+
+                var profit = income - expense;
+                itemTableRows.push(`<tr>
+                    <td colspan="3"><h3>NET SALES</h3></td>
+                    <td>${profit.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                </tr>`);
+
+                itemTableRows.push(`<tr>
+                    <td colspan="3"><h3>TOTAL LITRES</h3></td>
+                    <td>${totalKgs.toLocaleString('en-US', {maximumFractionDigits:2})}</td>
+                </tr>`);
+
+                $("#gen_summary_Collection").val(`Collection: ${totalKgs.toLocaleString('en-US', {maximumFractionDigits:2})}`);
+                var rate = profit / totalKgs;
+                itemTableRows.push(`<tr>
+                    <td colspan="3"><h3>MAXIMUM POSSIBLE RATE</h3></td>
+                    <td>${rate.toLocaleString('en-US', {maximumFractionDigits:2})}</td>
+                </tr>`);
+
+                $('#gen_rep_summary').html(itemTableRows);
+            }
+            function populateGeneralDetailsTablelist() {
+                let itemTableRows = new Array();
+                var income = 0;
+                var saleTotal = 0;
+                var purchaesTotal = 0;
+                var grossTotal = 0;
+                var otherIncomesTotal = 0;
+                var expense = 0;
+                var dr = 0;
+                var cr = 0;
+
+                itemTableRows.push(`<tr>
+                            <td colspan="6"><h3>Income</h3></td>
+                        </tr>`);
+
+                sales.forEach(j => {
+                    //j.TransDate = j.TransDate ? j.TransDate : "";
+                    j.TransDate = new Date(j.TransDate).toLocaleDateString('en-GB');
+                    itemTableRows.push(`<tr>
+                                <td>${j.TransDate}</td>
+                                <td>${j.GlAcc}</td>
+                                <td>${j.AccName}</td>
+                                <td>${j.TransDescript}</td>
+                                <td>${j.Dr.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                                <td>${j.Cr.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                            </tr>`);
+                    dr += j.Dr;
+                    cr += j.Cr;
+                    saleTotal += (j.Cr - j.Dr);
+                });
+                // itemTableRows.push(`<tr>
+                //             <td colspan="5"><h5>Actual Sales</h5></td>
+                //             <td>${saleTotal.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                //         </tr>`);
+
+                purchases.forEach(j => {
+                    //j.TransDate = j.TransDate ? j.TransDate : "";
+                    j.TransDate = new Date(j.TransDate).toLocaleDateString('en-GB');
+                    itemTableRows.push(`<tr>
+                                        <td>${j.TransDate}</td>
+                                        <td>${j.GlAcc}</td>
+                                        <td>${j.AccName}</td>
+                                        <td>${j.TransDescript}</td>
+                                        <td>${j.Dr.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                                        <td>${j.Cr.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                                    </tr>`);
+                    dr += j.Dr;
+                    cr += j.Cr;
+                    purchaesTotal += (j.Cr - j.Dr);
+                });
+                // itemTableRows.push(`<tr>
+                //                     // <td colspan="5"><h5>Cost of goods</h5></td>
+                //                     // <td>${purchaesTotal.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                //                 </tr>`);
+                grossTotal = saleTotal + purchaesTotal;
+                // itemTableRows.push(`<tr>
+                //                     // <td colspan="6"><h4>Gross Profit</h4></td>
+                //                     // <td>${grossTotal.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                //                 </tr>`);
+                // itemTableRows.push(`<tr>
+                //                             <td colspan="5"><h5>Other Income</h5></td>
+                //                          </tr>`);
+                otherIncomes.forEach(j => {
+                    //j.TransDate = j.TransDate ? j.TransDate : "";
+                    j.TransDate = new Date(j.TransDate).toLocaleDateString('en-GB');
+                    itemTableRows.push(`<tr>
+                                                <td>${j.TransDate}</td>
+                                                <td>${j.GlAcc}</td>
+                                                <td>${j.AccName}</td>
+                                                <td>${j.TransDescript}</td>
+                                                <td>${j.Dr.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                                                <td>${j.Cr.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                                            </tr>`);
+                    dr += j.Dr;
+                    cr += j.Cr;
+                    otherIncomesTotal += (j.Cr - j.Dr);
+                });
+                // itemTableRows.push(`<tr>
+                //                                 <td colspan="5"><h5>Other Income</h5></td>
+                //                                 <td>${otherIncomesTotal.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                //                             </tr>`);
+
+                income = income + (cr - dr);
+                itemTableRows.push(`<tr>
+                            <td colspan="5"><h5>Total Income</h5></td>
+                            <td>${income.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                        </tr>`);
+
+                dr = 0;
+                cr = 0;
+                itemTableRows.push(`<tr>
+                            <td colspan="6"><h3>Expense</h3></td>
+                        </tr>`);
+
+                expenses.forEach(j => {
+                    //j.TransDate = j.TransDate ? j.TransDate : "";
+                    j.TransDate = new Date(j.TransDate).toLocaleDateString('en-GB');
+                    itemTableRows.push(`<tr>
+                                <td>${j.TransDate}</td>
+                                <td>${j.GlAcc}</td>
+                                <td>${j.AccName}</td>
+                                <td>${j.TransDescript}</td>
+                                <td>${j.Dr.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                                <td>${j.Cr.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                            </tr>`);
+                    dr += j.Dr;
+                    cr += j.Cr;
+                    expense += (j.Dr - j.Cr);
+                });
+
+                itemTableRows.push(`<tr>
+                            <td colspan="5"><h3>Total Expenses</h3></td>
+                            <td>${expense.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                        </tr>`);
+                if (expense < 0) {
+                    expense = expense * -1;
+                }
+                var profit = income - expense;
+                itemTableRows.push(`<tr>
+                            <td colspan="5"><h4>Net Profit</h4></td>
+                            <td>${profit.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                        </tr>`);
+
+                if (isGeneral) {
+                    $('#general_detailed').html(itemTableRows);
+                    $('#general_detailed_loading').hide();
+                }
+                if (isStore) {
+                    $('#tbl_sum_details').html(itemTableRows);
+                    $('#general_detailed_loading1').hide();
+                }
+                if (isYoghurt) {
+                    $('#tbl_sum_yogodetails').html(itemTableRows);
+                    $('#general_detailed_loading2').hide();
+                }
+                if (isTanker) {
+                    $('#tbl_sum_tankerdetails').html(itemTableRows);
+                    $('#general_detailed_loading3').hide();
+                }
+                if (isAI) {
+                    $('#tbl_sum_aidetails').html(itemTableRows);
+                    $('#general_detailed_loading4').hide();
+                }
+
+
+            }
+            function populateGeneralDetailsTablelistStore() {
+                let itemTableRows = new Array();
+                var income = 0;
+                var saleTotal = 0;
+                var purchaesTotal = 0;
+                var TotalSales = 0;
+                var otherIncomesTotal = 0;
+                var expense = 0;
+                var dr = 0;
+                var cr = 0;
+
+                itemTableRows.push(`<tr>
+                                    <td colspan="6"><h5>Sales</h5></td>
+                                </tr>`);
+
+                itemTableRows.push(`<tr>
+                                    <td colspan="4"><h5>Credit Sales</h5></td>
+                                    <td>${checkoffsales.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                                </tr>`);
+                itemTableRows.push(`<tr>
+                                        <td colspan="4"><h5>MPESA</h5></td>
+                                       <td>${mpesapayments.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                                    </tr>`);
+                itemTableRows.push(`<tr>
+                                        <td colspan="4"><h5>Total Sales</h5></td>
+                                        <td>${(checkoffsales + mpesapayments).toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                                    </tr>`);
+
+                itemTableRows.push(`<tr>
+                                        <td colspan="3"><h5>Openning Stock</h5></td>
+                                        <td>${openingStockamount.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                                    </tr>`);
+                itemTableRows.push(`<tr>
+                                        <td colspan="3"><h5>Purchases</h5></td>
+                                        <td>${purchasesprices.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                                    </tr>`);
+                itemTableRows.push(`<tr>
+                                        <td colspan="4"><h5>Goods Available For Sale</h5></td>
+                                        <td>${(openingStockamount + purchasesprices).toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                                    </tr>`);
+                itemTableRows.push(`<tr>
+                                        <td colspan="3"><h5>Closing Stock</h5></td>
+                                        <td>${(openingStockamount + purchasesprices - salesBuyingPrices).toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                                    </tr>`);
+                itemTableRows.push(`<tr>
+                                       <td colspan="4"><h5>Cost Of Sales</h5></td>
+                                       <td>${(salesBuyingPrices).toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                                    </tr>`);
+                grossTotal = saleTotal + purchaesTotal;
+                itemTableRows.push(`<tr>
+                                        <td colspan="5"><h4>Gross Profit</h4></td>
+                                        <td>${(mpesapayments + checkoffsales - salesBuyingPrices).toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                                    </tr>`);
+
+                dr = 0;
+                cr = 0;
+                itemTableRows.push(`<tr>
+                                    <td colspan="6"><h3>Expenses</h3></td>
+                                </tr>`);
+
+                expenses.forEach(j => {
+                    j.TransDate = new Date(j.TransDate).toLocaleDateString('en-GB');
+                    itemTableRows.push(`<tr>
+                                        <td>${j.TransDate}</td>
+                                        <td>${j.GlAcc}</td>
+                                        <td>${j.AccName}</td>
+                                        <td>${j.TransDescript}</td>
+                                        <td>${j.Dr.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                                        <td>${j.Cr.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                                    </tr>`);
+                    dr += j.Dr;
+                    cr += j.Cr;
+                    expense += (j.Cr - j.Dr);
+                });
+
+                itemTableRows.push(`<tr>
+                                    <td colspan="5"><h3>Total Expenses</h3></td>
+                                    <td>${expense.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                                </tr>`);
+                if (expense < 0) {
+                    expense = expense * -1;
+                }
+                var profit = (mpesapayments + checkoffsales - salesBuyingPrices) - expense;
+                itemTableRows.push(`<tr>
+                                    <td colspan="5"><h4>Net Profit</h4></td>
+                                    <td>${profit.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+                                </tr>`);
+                if (isGeneral) {
+                    $('#general_detailed').html(itemTableRows);
+                    $('#general_detailed_loading').hide();
+                }
+                if (isStore) {
+                    $('#tbl_sum_details').html(itemTableRows);
+                    $('#general_detailed_loading1').hide();
+                }
+                if (isYoghurt) {
+                    $('#tbl_sum_yogodetails').html(itemTableRows);
+                    $('#general_detailed_loading2').hide();
+                }
+                if (isTanker) {
+                    $('#tbl_sum_tankerdetails').html(itemTableRows);
+                    $('#general_detailed_loading3').hide();
+                }
+                if (isAI) {
+                    $('#tbl_sum_aidetails').html(itemTableRows);
+                    $('#general_detailed_loading4').hide();
+                }
+            }
+        });
+    </script>
+}

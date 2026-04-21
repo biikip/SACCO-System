@@ -1,0 +1,91 @@
+﻿@model EASY_SACCO.Models.ShareTransaction
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>ShareTransaction</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strDocnumber)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strDocnumber)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strMemberNo)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strMemberNo)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strBankAc)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strBankAc)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strShareCode)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strShareCode)
+        </dd>
+        @*<dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strPaymentMode)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strPaymentMode)
+        </dd>*@
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.strAmount)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.strAmount)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strDescription)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strDescription)
+        </dd>
+      @*  <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strDateDeposited)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strDateDeposited)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strDateContribution)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strDateContribution)
+        </dd>*@
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strBalance)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strBalance)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strCredit)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strCredit)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.strDebit)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.strDebit)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.strId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

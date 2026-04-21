@@ -1,0 +1,422 @@
+﻿@Html.AntiForgeryToken()
+@model EASY_SACCO.Models.MembersRegistration
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using Syncfusion.EJ2
+@using Newtonsoft.Json
+
+@{
+    var CompanyName = HttpContextAccessor.HttpContext.Session.GetString("CompanyName");
+    var CompanyCode = HttpContextAccessor.HttpContext.Session.GetString("CompanyCode");
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+
+<head>
+    <link href="~/Syncfussion/styles/material.css" rel="stylesheet" />
+    <script src="~/Syncfussion/scripts/ej2.min.js"></script>
+    <style>
+        .header-space {
+            margin-top: 0;
+            padding-top: 0;
+        }
+
+        .e-ddl.e-input-group input.e-input::placeholder {
+            font-size: 16px; /* Increase or decrease as needed */
+            color: darkgrey; /* Set to a more visible color */
+            opacity: 1; /* Ensure full opacity for better visibility */
+        }
+        .container {
+            margin-top: 3px; /* or adjust to your preferred spacing */
+        }
+    </style>
+</head>
+
+<div class="row bg-white shadow-sm p-0 mb-4">
+    <div class="col-md-8">
+        <div style="color:black;font-size:x-large;" class="text-capitalize">Membership Registration</div>
+        <div style="color:black;">Add new members to the system</div>
+    </div>
+    <div class="col-4">
+        <div style="margin:8px;padding:8px;text-align:end">
+        <a asp-action="Index" asp-controller="MembersRegistrations" style="background:#0670ba;padding:4px;border-radius:8px;color:white"><i class="fa fa-eye" aria-hidden="true"></i> View Members</a>
+    </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="p-4 bg-white shadow-sm rounded">
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger"><strong>Error!</strong> @TempData["ErrorMessage"]</div>
+        }
+
+        <form asp-action="Create" asp-controller="MembersRegistrations" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <!-- Section Title -->
+            <div style="  background-color: #f3f3f3;color:#8b8b8b;margin-bottom: 8px;padding:8px;margin-top:8px;">
+                <strong style="color:black">Personal Information</strong>
+            </div>
+
+            <!-- Personal Info -->
+            <div class="row g-4">
+                <!-- Member Type -->
+                <div class="col-md-3">
+                    <label class="control-label">Member Type</label>
+                    <select asp-for="MemberType" class="form-control"
+                            dataSource="@ViewBag.strCIGGroupId">
+                        <option value="" class="form-control">Select Member Type</option>
+                        <option value="Individual">Individual</option>
+                        <option value="Group / Corporate">Group / Corporate</option>
+                    </select>
+                    <span asp-validation-for="MemberType" class="text-danger" />
+                </div>
+
+                <!-- Member No -->
+                <div class="col-md-3">
+                    <label class="form-label">Member No</label>
+                    <input asp-for="strMemberNo" class="form-control form-control-sm" placeholder="Member No" value="@ViewBag.memberno" readonly />
+                    <span asp-validation-for="strMemberNo" class="text-danger small"></span>
+                </div>
+
+                <!-- Group Name -->
+                <div class="col-md-6 group-name-section" style="display: none;">
+                    <label class="form-label">Group Name</label>
+                    <input asp-for="GroupName" class="form-control form-control-sm" />
+                    <span asp-validation-for="GroupName" class="text-danger small"></span>
+                </div>
+
+                <!-- Surname -->
+                <div class="col-md-3 surname-section">
+                    <label class="form-label">Surname</label>
+                    <input asp-for="strSurName" class="form-control form-control-sm" />
+                    <span asp-validation-for="strSurName" class="text-danger small"></span>
+                </div>
+
+                <!-- Other Name -->
+                <div class="col-md-3 othername-section">
+                    <label class="form-label">Other Name</label>
+                    <input asp-for="strOtherName" class="form-control form-control-sm" />
+                    <span asp-validation-for="strOtherName" class="text-danger small"></span>
+                </div>
+
+                <!-- Gender -->
+                <div class="col-md-3 gender-section">
+@*                     <label class="form-label">Gender</label>
+                    <ejs-dropdownlist id="strGender" ejs-for="strGender" placeholder="Select Gender" popupHeight="300px" style="color:black" dataSource="@ViewBag.strGender">
+                        <e-dropdownlist-fields text="strGender" value="strGender"></e-dropdownlist-fields>
+                    </ejs-dropdownlist>
+                </div> *@
+                    <label asp-for="strGender" class="control-label">Gender</label>
+                    <ejs-dropdownlist id="strGender" ejs-for="strGender" required filterBarPlaceholder="Search" allowFiltering="true" filtering="strGender" placeholder="Select Gender" popupHeight="300px" dataSource="@ViewBag.strGender">
+                        <e-dropdownlist-fields text="strGender" value="strGender"></e-dropdownlist-fields>
+                    </ejs-dropdownlist>
+                </div>
+                <!-- ID No -->
+                <div class="col-md-3">
+                    <label class="form-label">ID No / Cert No</label>
+                    <input asp-for="strIdNo" class="form-control form-control-sm" required />
+                    <span asp-validation-for="strIdNo" class="text-danger small"></span>
+                </div>
+
+                <!-- DOB -->
+                <div class="col-md-3 dob-section">
+                    <label class="form-label">Date of Birth</label>
+                    <input asp-for="strDOB" type="date" class="form-control form-control-sm" />
+                    <span asp-validation-for="strDOB" class="text-danger small"></span>
+                </div>
+
+                <!-- Phone -->
+                <div class="col-md-3">
+                    <label class="form-label">Phone Number</label>
+                    <input asp-for="strPhoneNo" class="form-control form-control-sm" />
+                    <span asp-validation-for="strPhoneNo" class="text-danger small"></span>
+                </div>
+
+                <!-- Email -->
+                <div class="col-md-3">
+                    <label class="form-label">Email</label>
+                    <input asp-for="strEmail" class="form-control form-control-sm" />
+                    <span asp-validation-for="strEmail" class="text-danger small"></span>
+                </div>
+
+                <!-- Address -->
+                <div class="col-md-3">
+                    <label class="form-label">Address</label>
+                    <input asp-for="strAddress" class="form-control form-control-sm" />
+                    <span asp-validation-for="strAddress" class="text-danger small"></span>
+                </div>
+
+                <!-- Group -->
+                <div class="col-md-3">
+                  <label class="control-label">CIG Group</label>
+                    <select asp-for="strCIGGroupId" asp-items="@ViewBag.strCIGGroupId "  class="form-control">
+                        <option value="" class="form-control">Select Group</option>
+                    </select>
+                    <span asp-validation-for="strCIGGroupId" class="text-danger" />
+                </div>
+
+                <!-- KRA -->
+                <div class="col-md-3">
+                    <label class="form-label">KRA PIN</label>
+                    <input asp-for="KraPin" class="form-control form-control-sm" />
+                </div>
+            </div>
+            <div id="individualMessage" class="alert alert-info" style="display: none;">
+                <strong>Individual Registration:</strong> Requires a fee of Ksh 1,500, a passport photo, KRA PIN, and National ID.
+            </div>
+            
+            <!-- Group Section -->
+            <div class="group-section mt-4" style="display: none;">
+                <div class="alert alert-info">
+                    <strong>Group Registration Fee:</strong> Ksh 2,500 is required. Please upload a valid group certificate and fill in the officials' details below.
+                </div>
+               
+                <div class="row g-4">
+                    <!-- Chairman -->
+                    <div class="col-md-4">
+                        <label class="form-label">Chairman Name</label>
+                        <input asp-for="ChairmanName" class="form-control form-control-sm" />
+                        <span asp-validation-for="ChairmanName" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Chairman ID No</label>
+                        <input asp-for="ChairmanIDNO" class="form-control form-control-sm" />
+                        <span asp-validation-for="ChairmanIDNO" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Chairman Phone No</label>
+                        <input asp-for="ChairmanPhoneNo" class="form-control form-control-sm" />
+                        <span asp-validation-for="ChairmanPhoneNo" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Treasurer -->
+                    <div class="col-md-4">
+                        <label class="form-label">Treasurer Name</label>
+                        <input asp-for="TreasurerName" class="form-control form-control-sm" />
+                        <span asp-validation-for="TreasurerName" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Treasurer ID No</label>
+                        <input asp-for="TreasurerIDNO" class="form-control form-control-sm" />
+                        <span asp-validation-for="TreasurerIDNO" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Treasurer Phone No</label>
+                        <input asp-for="TreasurerPhoneNo" class="form-control form-control-sm" />
+                        <span asp-validation-for="TreasurerPhoneNo" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Secretary -->
+                    <div class="col-md-4">
+                        <label class="form-label">Secretary Name</label>
+                        <input asp-for="SecretaryName" class="form-control form-control-sm" />
+                        <span asp-validation-for="SecretaryName" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Secretary ID No</label>
+                        <input asp-for="SecretaryIDNO" class="form-control form-control-sm" />
+                        <span asp-validation-for="SecretaryIDNO" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Secretary Phone No</label>
+                        <input asp-for="SecretaryPhoneNo" class="form-control form-control-sm" />
+                        <span asp-validation-for="SecretaryPhoneNo" class="text-danger small"></span>
+                    </div>
+                    <!-- Group Certificate -->
+                    <div class="col-md-4">
+                        <label class="form-label">Upload Group Certificate</label>
+                        <input type="file" class="form-control form-control-sm" name="GroupCertFile" accept="image/*,.pdf" required />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upload Documents -->
+            <div style="  background-color: #f3f3f3;color:#8b8b8b;margin-bottom: 8px;padding:8px;margin-top:8px;">
+                <strong style="color:black">Upload Documents</strong>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <label class="form-label">Upload Scanned ID No</label>
+                    <input name="ImageFile" type="file" class="form-control form-control-sm" required />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Upload Passport Photo</label>
+                    <input type="file" class="form-control form-control-sm" name="PassportPhotoFile" accept="image/*,.pdf" required />
+                </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="d-flex justify-content-left mt-2">
+                <input type="submit" value="Submit" class="btn btn-primary" style="background-color:#0670ba;width:10%">
+            </div>
+        </form>
+    </div>
+</div>
+
+    
+
+<script>
+    $(document).ready(function () {
+        $('#MemberType').change(function () {
+            var memberType = $(this).val();
+            if (memberType === 'Group / Corporate') {
+                $('.group-section').show();
+                $('.group-name-section').show();
+                $('.surname-section, .othername-section, .dob-section, .gender-section').hide();
+                $('#individualMessage').hide(); // Hide individual message
+            } else if (memberType === 'Individual') {
+                $('.group-section').hide();
+                $('.group-name-section').hide();
+                $('.surname-section, .othername-section, .dob-section, .gender-section').show();
+                $('#individualMessage').show(); // Show individual message
+            } else {
+                $('.group-section').hide();
+                $('.group-name-section').hide();
+                $('.surname-section, .othername-section, .dob-section, .gender-section').show();
+                $('#individualMessage').hide(); // Hide individual message
+            }
+        });
+    });
+
+</script>
+<script type="text/javascript">
+    $('input[name="strPhoneNo"]').blur(function () {
+        var phone = $(this).val();
+        checkUnique('Phone', phone, $(this));
+    });
+
+    $('input[name="strIdNo"]').blur(function () {
+        var id = $(this).val();
+        checkUnique('ID', id, $(this));
+    });
+
+    $('input[name="strEmail"]').blur(function () {
+        var email = $(this).val();
+        checkUnique('Email', email, $(this));
+    });
+
+    function checkUnique(field, value, element) {
+        if (value.trim() === '') return;
+
+        $.get('/MembersRegistrations/CheckUnique', { field: field, value: value }, function (isValid) {
+            if (!isValid) {
+                $(element).addClass('is-invalid');
+                if (field === 'Phone') {
+                    $(element).next('.text-danger').text('Phone Number already exists.');
+                } else if (field === 'ID') {
+                    $(element).next('.text-danger').text('ID Number already exists.');
+                } else if (field === 'Email') {
+                    $(element).next('.text-danger').text('Email already exists.');
+                }
+            } else {
+                $(element).removeClass('is-invalid');
+                $(element).next('.text-danger').text('');
+            }
+        });
+    }
+
+    function countrychange() {
+        // disable the state DropDownList
+        var state = document.getElementById('state').ej2_instances[0];
+        var city = document.getElementById('city').ej2_instances[0];
+        var country = document.getElementById('country').ej2_instances[0];
+        state.enabled = true;
+        //frame the query based on selected value in country DropDownList.
+        var tempQuery = new ej.data.Query().where('strCountyId', 'equal', country.value);
+        // set the framed query based on selected value in country DropDownList.
+        state.query = tempQuery;
+        // set null value to state DropDownList text property
+        state.text = null;
+        //  bind the property changes to state DropDownList
+        state.dataBind();
+        // set null value to city DropDownList text property
+        city.text = null;
+        // disable the city DropDownList
+        city.enabled = false;
+        // bind the property changes to City DropDownList
+        city.dataBind();
+    }
+    function statechange() {
+        var city = document.getElementById('city').ej2_instances[0];
+        var state = document.getElementById('state').ej2_instances[0];
+        city.enabled = true;
+        //Query the data source based on state DropDownList selected value
+        var tempQuery = new ej.data.Query().where('strSubCountyId', 'equal', state.value);
+        //set the framed query based on selected value in city DropDownList.
+        city.query = tempQuery;
+        //clear the existing selection
+        city.text = null;
+        //bind the property change to city DropDownList
+        city.dataBind();
+
+    }
+        function strFullName(e) {
+            var query = new ej.data.Query();
+            query = (e.text !== '') ? query.where('strFullName', 'startswith', e.text, true) : query;
+            e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strFullName)), query);
+        }
+    function strGender(e) {
+            var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strGender', 'startswith', e.text, true) : query;
+            e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strGender)), query);
+    }
+
+     function strStation(e) {
+            var query = new ej.data.Query();
+         query = (e.text !== '') ? query.where('strStationName', 'startswith', e.text, true) : query;
+            e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strStation)), query);
+    }
+    function strMemberType(e) {
+            var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strMemberType', 'startswith', e.text, true) : query;
+            e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strMemberType)), query);
+    }
+    function strMaritalstatus(e) {
+            var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strMaritalStatus', 'startswith', e.text, true) : query;
+            e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strMaritalstatus)), query);
+    }
+    function strAgenId(e) {
+            var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strFullName', 'startswith', e.text, true) : query;
+            e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strAgenId)), query);
+    }
+    function strCIGGroupId(e) {
+            var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strName', 'startswith', e.text, true) : query;
+            e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strCIGGroupId)), query);
+    }
+    function strCounty(e) {
+            var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strCounty', 'startswith', e.text, true) : query;
+            e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strCounty)), query);
+    }
+    function strCompanyCode(e) {
+            var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strCompanyName', 'startswith', e.text, true) : query;
+            e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strCompanyCode)), query);
+    }
+    function strActiveStatus(e) {
+            var query = new ej.data.Query();
+        query = (e.text !== '') ? query.where('strStatus', 'startswith', e.text, true) : query;
+            e.updateData(@Html.Raw(JsonConvert.SerializeObject(ViewBag.strActiveStatus)), query);
+    }
+        $('input[type=text]').each(function () {
+            var req = $(this).attr('data-val-required');
+            if (undefined != req) {
+                var label = $('label[for="' + $(this).attr('strIdNo') + '"]');
+                var text = label.text();
+                if (text.length > 0) {
+                    label.append('<span style="color:red"> *</span>');
+                }
+            }
+        });
+</script>
+<ejs-scripts></ejs-scripts>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,149 @@
+﻿@{
+    ViewData["Title"] = "LoanSchedule";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+<div class="row" style="background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+    <div class="col-8">
+
+        <div style="margin:8px;padding:8px;text-align:left">
+            <div style="color:black;font-size:xx-large;" class="text-capitalize">Loan Schedule </div>
+            <div style="color:gray;font-size:small;" class="text-capitalize">Loan Schedule </div>
+        </div>
+
+    </div>
+    <div class="col-4">
+        <div style="margin:8px;padding:8px;text-align:end">
+          
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div style="padding:20px;margin:8px;border-radius:16px;background-color:white;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)">
+
+        <form id="loanForm" asp-action="Calculate1">
+
+
+            <div class="form-group">
+                <label for="loanAmount"><strong style="color:black">Loan Amount</strong></label>
+                <input type="number" class="form-control" id="loanAmount" name="LoanAmount" value="@Math.Round(ViewBag.loanamount,2)">
+            </div>
+            <div class="form-group">
+                <label for="interestRate"><strong style="color:black">Annual Interest Rate (%)</strong></label>
+                <input type="number" class="form-control" id="interestRate" name="InterestRate" value="@Math.Round(ViewBag.interestrate,2)">
+            </div>
+            <div class="form-group">
+                <label for="loanTerm"><strong style="color:black">Loan Term (years)</strong></label>
+                <input type="number" class="form-control" id="loanTerm" name="LoanTerm" value="@ViewBag.repayperiod">
+            </div>
+            <div class="form-group">
+                <label for="repaymentMethod"><strong style="color:black">Repayment Method</strong></label>
+                <select class="form-control" id="repaymentMethod" name="RepaymentMethod" >
+                    <option value="Amortized">Amortized</option>
+                    <option value="ReducingBalance">Reducing Balance</option>
+                    <option value="StraightLine">Straight Line</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="startDate"><strong style="color:black">Start Date</strong></label>
+                <input type="date" class="form-control" id="startDate" name="StartDate">
+            </div>
+            <button type="submit" class=" btn-primary">Calculate</button>
+        </form>
+        <div class="row">
+            <div class="col-8">
+
+   
+            </div>
+            <div class="col-4">
+                <div style="margin:8px;padding:8px;text-align:end">
+                    <button type="button" class="btn-primary" onClick="printloanshedule()">Print  <span class="fa fa-print"></span></button>
+
+                </div>
+            </div>
+        </div>
+     
+        <div id="Printloanschedule">
+        <div style="margin:8px;padding:8px;background-color:white">
+                <table class="table  table-bordered  table-sm" style="color:black;">
+                    <thead style="background-color:whitesmoke;color:black;border:2px solid black">
+
+
+                       <tr>
+                            <th style="border:2px solid black">
+                            Due Date
+                        </th>
+                            <th style="border:2px solid black">
+                            Principal
+                        </th>
+                            <th style="border:2px solid black">
+                            Interest
+                        </th>
+                            <th style="border:2px solid black">
+                            Total Repayment
+                        </th style="border:2px solid black">
+
+                        <th style="border:2px solid black">
+                            Remaining Balance
+                        </th>
+
+
+                    </tr>
+                </thead>
+                <tbody id="intakes">
+                </tbody>
+
+            </table>
+
+        </div>
+
+        </div>
+    </div>
+</div>
+<br />
+<br />
+<br />
+<script>
+    $('#loanForm').submit(function (event) {
+        event.preventDefault();
+
+        var form = $(this);
+        var url = form.attr('action');
+
+        $.ajax({
+            type: 'POST',
+            url: "/Home/Calculate1",
+            data: form.serialize(),
+            success: function (data) {
+                $('#result').html(data);
+                populateIntake(data);
+            }
+        });
+        debugger
+        function populateIntake(intakes) {
+            debugger
+            let itemTableRows = new Array();
+            intakes.forEach(i => {
+
+                debugger
+                itemTableRows.push(`<tr>
+                                    <td>${i.dueDate}</td>
+                                   <td>${i.principal.toFixed(2)}</td>
+                                       <td>${i.interest.toFixed(2)}</td>
+                                        <td>${i.totalPayment.toFixed(2)}</td>
+                                       <td>${i.remainingBalance.toFixed(2)}</td>
+
+                                       </tr>`)
+            });
+
+            $('#intakes').html(itemTableRows);
+        }
+    });
+
+    function printloanshedule() {
+        const printContents = document.getElementById('Printloanschedule').innerHTML;
+        const originalContents = document.body.innerHTML;
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+    }
+</script>

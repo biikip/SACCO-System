@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="03/19/2025 23:47:02" ReportInfo.Modified="03/20/2025 00:56:08" ReportInfo.CreatorVersion="2025.1.0.0">
+  <Dictionary>
+    <MsSqlDataConnection Name="Connection" ConnectionString="rijcmlqM7gJFg/iaLrqMhRfGy5lGgQ/FHCzWhISbWD0UaeVUHGHvT8Xrh+a7Zy/TZ8QIuLqbulu6anRTNojiU6VI3UVhRX9OT3BALcK8S4nPJOh+AY3QgR6d6KVhwsywKaHQxSzyctRqOxe5SIsqPVe4BZQLv7W6NEBvXTrNce4hkLvoTTYtkznx424zF+KPnVs9dUe">
+      <TableDataSource Name="MembersRegistrations" DataType="System.Int32" Enabled="true" TableName="MembersRegistrations">
+        <Column Name="strId" DataType="System.Int32"/>
+        <Column Name="strCompanyCode" DataType="System.String"/>
+        <Column Name="strMemberNo" DataType="System.String"/>
+        <Column Name="strPhoneNo" DataType="System.String"/>
+        <Column Name="strMaritalstatus" Enabled="false" DataType="System.String"/>
+        <Column Name="strRegDate" DataType="System.DateTime"/>
+        <Column Name="strSurName" DataType="System.String"/>
+        <Column Name="strOtherName" DataType="System.String"/>
+        <Column Name="GroupName" DataType="System.String"/>
+        <Column Name="strGender" DataType="System.String"/>
+        <Column Name="strIdNo" DataType="System.String"/>
+        <Column Name="strDOB" DataType="System.DateTime"/>
+        <Column Name="strEmail" DataType="System.String"/>
+        <Column Name="strActiveStatus" DataType="System.String"/>
+        <Column Name="strAddress" Enabled="false" DataType="System.String"/>
+        <Column Name="strCIGGroupId" Enabled="false" DataType="System.String"/>
+        <Column Name="strCounty" Enabled="false" DataType="System.String"/>
+        <Column Name="strCountyId" Enabled="false" DataType="System.String"/>
+        <Column Name="strSubCountId" Enabled="false" DataType="System.String"/>
+        <Column Name="strWardId" Enabled="false" DataType="System.String"/>
+        <Column Name="strVillageId" Enabled="false" DataType="System.String"/>
+        <Column Name="KraPin" Enabled="false" DataType="System.String"/>
+        <Column Name="ScannedIdPath" Enabled="false" DataType="System.String"/>
+        <Column Name="GroupCertPath" Enabled="false" DataType="System.String"/>
+        <Column Name="PassportPhotoPath" Enabled="false" DataType="System.String"/>
+        <Column Name="MemberType" DataType="System.String"/>
+        <Column Name="ChairmanName" Enabled="false" DataType="System.String"/>
+        <Column Name="TreasurerName" Enabled="false" DataType="System.String"/>
+        <Column Name="SecretaryName" Enabled="false" DataType="System.String"/>
+        <Column Name="ChairmanIDNO" Enabled="false" DataType="System.String"/>
+        <Column Name="TreasurerIDNO" Enabled="false" DataType="System.String"/>
+        <Column Name="SecretaryIDNO" Enabled="false" DataType="System.String"/>
+        <Column Name="ChairmanPhoneNo" Enabled="false" DataType="System.String"/>
+        <Column Name="TreasurerPhoneNo" Enabled="false" DataType="System.String"/>
+        <Column Name="SecretaryPhoneNo" Enabled="false" DataType="System.String"/>
+        <Column Name="AgentsstrId" Enabled="false" DataType="System.String"/>
+        <Column Name="strFullName" Enabled="false" DataType="System.String"/>
+        <Column Name="photo" Enabled="false" DataType="System.String"/>
+        <Column Name="AuditId" Enabled="false" DataType="System.String"/>
+        <Column Name="AuditTime" Enabled="false" DataType="System.DateTime"/>
+      </TableDataSource>
+    </MsSqlDataConnection>
+  </Dictionary>
+  <ReportPage Name="Page1" Landscape="true" PaperWidth="297" PaperHeight="210" RawPaperSize="9" Watermark.Font="Arial, 60pt">
+    <ReportTitleBand Name="ReportTitle1" Width="1047.06" Height="37.8">
+      <TextObject Name="Text16" Left="75.6" Width="680.4" Height="18.9" Text="MEMBERSHIP REPORT" HorzAlign="Center" Font="Arial, 10pt"/>
+    </ReportTitleBand>
+    <PageHeaderBand Name="PageHeader1" Top="41.8" Width="1047.06" Height="28.35">
+      <TextObject Name="Text2" Width="94.5" Height="18.9" Text="Member No" Font="Arial, 10pt"/>
+      <TextObject Name="Text4" Left="122.85" Width="94.5" Height="18.9" Text="Names" Font="Arial, 10pt"/>
+      <TextObject Name="Text8" Left="349.65" Width="94.5" Height="18.9" Text="GroupName" Font="Arial, 10pt"/>
+      <TextObject Name="Text10" Left="463.05" Width="94.5" Height="18.9" Text="strIdNo" Font="Arial, 10pt"/>
+      <TextObject Name="Text12" Left="585.9" Width="94.5" Height="18.9" Text="MemberType" Font="Arial, 10pt"/>
+      <TextObject Name="Text14" Left="708.75" Width="94.5" Height="18.9" Text="strEmail" Font="Arial, 10pt"/>
+    </PageHeaderBand>
+    <DataBand Name="Data1" Top="74.15" Width="1047.06" Height="75.6" DataSource="MembersRegistrations">
+      <TextObject Name="Text1" Width="94.5" Height="18.9" Text="[MembersRegistrations.strMemberNo]" Font="Arial, 10pt"/>
+      <TextObject Name="Text5" Left="255.15" Top="56.7" Width="94.5" Height="18.9" Font="Arial, 10pt"/>
+      <TextObject Name="Text7" Left="349.65" Width="94.5" Height="18.9" Text="[MembersRegistrations.GroupName]" Font="Arial, 10pt"/>
+      <TextObject Name="Text9" Left="463.05" Width="94.5" Height="18.9" Text="[MembersRegistrations.strIdNo]" Font="Arial, 10pt"/>
+      <TextObject Name="Text11" Left="585.9" Width="94.5" Height="18.9" Text="[MembersRegistrations.MemberType]" Font="Arial, 10pt"/>
+      <TextObject Name="Text13" Left="708.75" Width="94.5" Height="18.9" Text="[MembersRegistrations.strEmail]" Font="Arial, 10pt"/>
+      <TextObject Name="Text15" Left="122.85" Width="217.35" Height="18.9" Text="[IIf([MembersRegistrations.MemberType] == &quot;Individual&quot;, [MembersRegistrations.strSurName] + &quot; &quot; + [MembersRegistrations.strOtherName], [MembersRegistrations.GroupName])]&#10;" Font="Arial, 10pt"/>
+    </DataBand>
+    <PageFooterBand Name="PageFooter1" Top="153.75" Width="1047.06" Height="18.9"/>
+  </ReportPage>
+</Report>
